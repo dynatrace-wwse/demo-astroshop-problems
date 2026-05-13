@@ -25,6 +25,10 @@ jobs:
     - name: MKDocs - install requirements, build, gh-deploy
       run: |
         pip install --break-system-packages -r docs/requirements/requirements-mkdocs.txt
-        git fetch origin gh-pages:gh-pages
+        if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+          git fetch origin gh-pages:gh-pages
+        else
+          echo "Remote branch gh-pages does not exist yet; skipping fetch (mkdocs gh-deploy will create it)."
+        fi
         mkdocs build
         mkdocs gh-deploy

@@ -11,7 +11,7 @@
 ### in the UI
 
 
-[http://localhost:30100](http://localhost:30100)
+Open the Astroshop URL shown in the greeting — run `printGreeting` in the terminal to display it.
 
 
 
@@ -19,7 +19,7 @@
 
 ### Manually via UI
 
-Go to the codespaces exposed port, since the astroshop is the first app deployed, the assigned port is 30100. THe url for the features flag should look something like [http://localhost:30100/feature](http://localhost:30100/feature)
+Open the Astroshop URL from the greeting (`printGreeting`) and append `/feature`. In GitHub Codespaces, the feature flag URL will look similar to `https://your-codespace-name-80.app.github.dev/feature`.
 
 ![features flag](img/features_flag.png)
 

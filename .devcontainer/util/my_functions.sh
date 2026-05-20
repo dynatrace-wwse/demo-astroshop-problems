@@ -742,6 +742,70 @@ JSON
 }
 
 # ----------------------------------------------------------------------
+# rollAstroshopRelease — actually roll a release on the Astroshop
+# deployments so the new pods carry the release version on labels +
+# pod-template annotations. The original ace-box workshop did this via
+# `helm upgrade --set default.image.tag=1.12.x`; the framework
+# deployApp astroshop deploys static yaml so we have to patch.
+#
+# Usage:  rollAstroshopRelease <version> [problem] [services...]
+# Example: rollAstroshopRelease 1.12.1 cpu
+# Without `services...` we roll the user-facing entrypoints + the
+# services the SRG cares about (frontend / frontend-proxy / cart / ad /
+# product-catalog / checkout). One pod restart per service.
+#
+# What this updates on each deployment's pod template:
+#   - label  app.kubernetes.io/version: <version>
+#   - label  release:                  <version>
+#   - label  problem:                  <problem>
+#   - annot. metadata.dynatrace.com/release.version: <version>
+#   - annot. metadata.dynatrace.com/release.problem: <problem>
+# Davis treats the label change + pod restart as a deployment boundary.
+ASTROSHOP_RELEASE_TARGETS=(frontend frontend-proxy cart ad product-catalog checkout)
+
+rollAstroshopRelease(){
+  local version="${1:?usage: rollAstroshopRelease <version> [problem] [services...]}"
+  local problem="${2:-none}"
+  shift 2 2>/dev/null || shift $(( $# > 0 ? 1 : 0 )) 2>/dev/null
+  local targets=("$@")
+  [ ${#targets[@]} -eq 0 ] && targets=("${ASTROSHOP_RELEASE_TARGETS[@]}")
+
+  printInfoSection "Rolling Astroshop release ${version} (${problem}) on ${#targets[@]} services"
+
+  # Patch each deployment's pod template with the new labels + annotations
+  # AND override OTEL_RESOURCE_ATTRIBUTES so spans carry service.version
+  # = <version>. OneAgent surfaces that as service.version on every span,
+  # which is what dashboards / DQL filter on (k8s labels aren't auto-
+  # captured into spans by default).
+  local svc
+  for svc in "${targets[@]}"; do
+    if ! kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" >/dev/null 2>&1; then
+      printWarn "  no deployment '$svc' — skipping"
+      continue
+    fi
+    kubectl -n "$ASTROSHOP_NAMESPACE" patch deployment "$svc" --type=strategic --patch \
+      "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"app.kubernetes.io/version\":\"${version}\",\"release\":\"${version}\",\"problem\":\"${problem}\"},\"annotations\":{\"metadata.dynatrace.com/release.version\":\"${version}\",\"metadata.dynatrace.com/release.problem\":\"${problem}\"}}}}}" \
+      >/dev/null
+
+    # Patch OTEL_RESOURCE_ATTRIBUTES on the first container — use a
+    # strategic-merge env update (key matched on name).
+    kubectl -n "$ASTROSHOP_NAMESPACE" set env deployment/"$svc" \
+      "OTEL_RESOURCE_ATTRIBUTES=service.name=\$(OTEL_SERVICE_NAME),service.namespace=astroshop,service.version=${version},release=${version},problem=${problem}" \
+      >/dev/null 2>&1 || true
+
+    printInfo "  patched ${svc} → release=${version} problem=${problem}"
+  done
+
+  # Wait for the rolling restart to finish on each
+  for svc in "${targets[@]}"; do
+    kubectl -n "$ASTROSHOP_NAMESPACE" rollout status deployment/"$svc" --timeout=60s 2>&1 \
+      | tail -1 | sed "s/^/  /"
+  done
+
+  # Fire the deployment event + bizevent (Davis correlation + workflow trigger)
+  sendDeploymentEvent "$version" staging "$problem"
+}
+
 # seedWorkshopReleases — end-to-end demo data: for each of the four
 # release variants, fire the deployment event + pipeline-run SDLC event
 # + per-deployment SRG verdict bizevent. Matches the "good build vs bad
@@ -764,10 +828,16 @@ seedWorkshopReleases(){
     fi
     printInfo "── ${version} (${problem}) → outcome=${outcome} verdict=${verdict}"
 
-    # 1. Deployment marker — also emit as SDLC event so it's queryable in
-    #    the events table even when there's no live astroshop entity to bind
-    #    to in this tenant (the COE tenant doesn't monitor the k3d cluster).
-    sendDeploymentEvent "$version" staging "$problem"
+    # 1. Roll the release on the astroshop deployments — patches pod
+    #    template labels (app.kubernetes.io/version, release, problem)
+    #    + annotations, restarts the pods, then fires the
+    #    CUSTOM_DEPLOYMENT event + bizevent that triggers the SRG
+    #    workflow. Falls back to event-only if not in-cluster.
+    if kubectl get ns "$ASTROSHOP_NAMESPACE" >/dev/null 2>&1; then
+      rollAstroshopRelease "$version" "$problem"
+    else
+      sendDeploymentEvent "$version" staging "$problem"
+    fi
     local now start
     now=$(date -u +"%Y-%m-%dT%H:%M:%S.000000000Z")
     start=$(date -u -d "30 seconds ago" +"%Y-%m-%dT%H:%M:%S.000000000Z")

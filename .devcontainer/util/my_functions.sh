@@ -571,3 +571,34 @@ JSON
     printWarn "Deployment event HTTP $code: $(cat /tmp/.event-resp | head -c 200)"
   fi
 }
+
+# ----------------------------------------------------------------------
+# bootstrapWorkshop — one command to bring up the full workshop content
+#
+# Why this is opt-in rather than in post-create:
+#   - installGitlab needs ~10 min for the helm chart to converge
+#   - sslip.io ingress is not reachable from CI runners (no ingress
+#     controller in scope), so installGitlab's wait loop hangs in CI
+#   - the CI integration test only validates framework basics; the
+#     workshop content is for Codespaces / local devcontainers
+#
+# Run order matters: cluster must be up; astroshop first (its ingress
+# is needed for the load test target URL); then gitlab + repos so the
+# load generator has somewhere to push from; then dtctl last (cheap).
+# ----------------------------------------------------------------------
+bootstrapWorkshop(){
+  printInfoSection "Bootstrapping the CI/CD Observability workshop"
+  printInfo "Phases: astroshop -> gitlab -> seed repos -> dtctl -> loadgen"
+  printInfo "Total time: ~15-20 minutes"
+
+  deployApp astroshop          || { printError "astroshop deploy failed"; return 1; }
+  installGitlab                || { printError "gitlab install failed"; return 1; }
+  seedGitlabRepos              || { printError "gitlab seed failed"; return 1; }
+  installDtctl                 || printWarn "dtctl install failed (non-fatal)"
+  deployLoadgenerator          || printWarn "loadgen deploy failed (non-fatal)"
+
+  printInfoSection "Workshop bootstrap complete"
+  printInfo "GitLab:   http://gitlab.$(detectIP).${MAGIC_DOMAIN:-sslip.io}"
+  printInfo "Astroshop: $(getAppURL astroshop 2>/dev/null || echo 'see printGreeting')"
+  printInfo "Next: dtctl auth login --context demo --environment <tenant>; applyDtctlConfigs"
+}

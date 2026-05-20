@@ -18,24 +18,20 @@ installK9s
 #deployCloudNative
 #deployApplicationMonitoring
 
-# Heavy workshop steps — skipped in CI (10-min integration-test budget).
-# These run automatically in Codespaces and local devcontainers but the
-# CI integration test only exercises the framework basics.
-if [[ -z "$CI" && -z "$GITHUB_ACTIONS" ]]; then
-  # The Astroshop (15+ pods) takes minutes to come Ready
-  deployApp astroshop
-  # GitLab in-cluster + seed Otel-App / Support groups with the migrated repos
-  installGitlab
-  seedGitlabRepos
-  # Dynatrace platform CLI for dashboards/SLOs/guardians/workflows-as-code
-  installDtctl
-else
-  printInfo "CI detected — skipping workshop bootstrap (deployApp astroshop, installGitlab, seedGitlabRepos, installDtctl)"
-fi
+# Workshop bootstrap (Astroshop + GitLab + seed repos + dtctl) is intentionally
+# NOT run from post-create. The CI integration test only needs the framework
+# basics; the workshop content takes 15+ minutes to come up. Users start the
+# workshop on demand:
+#
+#   bootstrapWorkshop      # deploys astroshop + gitlab + seeds repos + installs dtctl
+#
+# See `bootstrapWorkshop` in .devcontainer/util/my_functions.sh.
 
 # If the Codespace was created via Workflow end2end test will be done, otherwise
-# it'll verify if there are error in the logs and will show them in the greeting as well a monitoring 
+# it'll verify if there are error in the logs and will show them in the greeting as well a monitoring
 # notification will be sent on the instantiation details
 finalizePostCreation
 
 printInfoSection "Your dev container finished creating"
+printInfo "Workshop bootstrap is opt-in — run 'bootstrapWorkshop' to deploy"
+printInfo "Astroshop + GitLab + seed repos + dtctl. Takes ~15-20 minutes."

@@ -15,11 +15,12 @@ questions in detail.
 
 | # | Part | Where it lives in this repo |
 |---|---|---|
-| 1 | Pipeline emits a deployment event | `.github/actions/dt-deployment-event/action.yml` |
-| 2 | Load runs continuously against the candidate | `.devcontainer/migrate/astroshop_repos/loadgenerator/` |
-| 3 | Dynatrace measures SLOs against runtime + load | `dtctl/slos/*.yaml` |
-| 4 | Site Reliability Guardian evaluates the SLOs | `dtctl/workflows/on-deployment-event.yaml` |
-| 5 | Pipeline halts (or rolls back) on a FAIL verdict | `.github/workflows/release.yml`, `rollback.yml` |
+| 1 | Pipeline emits a deployment event (with PR + change metadata) | `.github/actions/dt-deployment-event/action.yml` |
+| 2 | PR lifecycle emits change events for the CI/CD Observability app | `.github/workflows/pr-events.yml` |
+| 3 | Load runs continuously against the candidate | `.devcontainer/migrate/astroshop_repos/loadgenerator/` |
+| 4 | Dynatrace measures SLOs against runtime + load | `dtctl/slos/*.yaml` |
+| 5 | Site Reliability Guardian evaluates the SLOs | `dtctl/workflows/on-deployment-event.yaml` |
+| 6 | Pipeline halts (or rolls back) on a FAIL verdict | `.github/workflows/release.yml`, `rollback.yml` |
 
 ---
 
@@ -35,10 +36,15 @@ three jobs:
 deploy-staging  →  validate (SRG gate)  →  promote-production
 ```
 
-### Step 2 — Deployment event fires (the "marker")
+### Step 2 — Deployment event fires (the "marker") with PR + change context
 
 Every job that touches an environment finishes with the reusable
-composite action:
+composite action. The action enriches the deployment event with PR
+metadata (number, title, author, files-changed, merge timestamp) and
+the commit message, so any Davis problem raised after the deployment
+shows **which PR caused it** right on the problem card — no diff
+hunting required. See [PR and change details on Davis problem tickets](cicd-observability.md#pr-and-change-details-on-davis-problem-tickets)
+for the full property list.
 
 ```yaml
 - name: Notify Dynatrace — deployment event (staging)

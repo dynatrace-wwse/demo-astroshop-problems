@@ -10,10 +10,7 @@ source .devcontainer/util/source_framework.sh
 # we want to monitor all interactions of the users in the live github pages.
 #exposeMkdocs
 
-# Load test against the astroshop frontend (locust + playwright)
-# Skipped in CI to keep the integration test inside its time budget.
-if [[ -z "$CI" && -z "$GITHUB_ACTIONS" ]]; then
-  deployLoadgenerator
-fi
+# Load generator is part of the opt-in workshop bootstrap — run
+# `bootstrapWorkshop` or `deployLoadgenerator` directly to start it.
 
 printInfoSection "Your dev.container finished starting up"

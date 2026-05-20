@@ -18,6 +18,8 @@ data appears anywhere in this file.
 
 - [What CI/CD observability gives you](#what-cicd-observability-gives-you)
 - [The Dynatrace CI/CD observability model](#the-dynatrace-cicd-observability-model)
+- [Personas — what each role wants to see](#personas--what-each-role-wants-to-see)
+- [PR and change details on Davis problem tickets](#pr-and-change-details-on-davis-problem-tickets)
 - [The 11 open questions and their answers](#the-11-open-questions-and-their-answers)
 - [Reference architecture for this repo](#reference-architecture-for-this-repo)
 - [Workshop demo flow (60 min)](#workshop-demo-flow-60-min)
@@ -78,6 +80,134 @@ The signal model that underpins these is three layers wide:
         |   PASS/WARN/FAIL via API/connector                              |
         | 6. Pipeline halts/promotes based on result                      |
 ```
+
+---
+
+## Personas — what each role wants to see
+
+CI/CD observability is "the same data, three views". Each persona asks
+different questions of the same underlying SDLC + deployment + runtime
+signals. If you build the data model around the **developer** persona
+and bolt on aggregates for the **CI/CD SRE** and **engineering lead**,
+the result is reusable across all three.
+
+### Developer
+
+| Question | Where the answer lives | Signal needed |
+|---|---|---|
+| "Is my PR safe to merge?" | SRG verdict on the PR check | SLOs evaluated over the load-test window; pipeline-run SDLC event with `vcs.pr.number` |
+| "Did my deploy cause this problem?" | Davis problem card → linked deployment event | `CUSTOM_DEPLOYMENT` with `pr.*` + `git.commit.*` properties |
+| "Which line of code did this?" | Trace → method-hotspots → permalink to git blame | OneAgent code-level traces + git commit on the deployment event |
+| "How long is my CI taking compared to last week?" | Pipeline Observability app, filter by author | Pipeline + task SDLC events with `ext.pipeline.run.trigger.user` |
+| "Are any of my tests flaky?" | Pipeline app, filter by `task.outcome == failed` over time | Task SDLC events with `task.retry` |
+
+What developers consistently complain about:
+- Adding observability config to every PR (counter: ship the reusable
+  workflow once; developers just `uses:` it).
+- Reading dashboards built for SREs (counter: a *developer dashboard*
+  with their PRs, their services, their problems).
+
+### CI/CD SRE / Platform engineer
+
+| Question | Where | Signal |
+|---|---|---|
+| DORA four keys per team | DORA dashboard from this repo's `dtctl/dashboards/cicd-overview.yaml` | Deployment + SDLC events with `deploymentProject` |
+| Pipeline duration / queue depth | Pipeline Observability app | Pipeline + task SDLC events with `start_time` / `end_time` |
+| Change Failure Rate by service | DQL: `events | filter event.kind=="DEPLOYMENT_EVENT"` joined with Davis problems opened within N minutes | CUSTOM_DEPLOYMENT + Davis problems |
+| Which release introduces the most regressions? | DQL on `srg_verdict == "FAIL"` grouped by `deploymentProject` | Workflow-emitted bizevent for verdict |
+| Is our pipeline observability *itself* healthy? | DQL: count of pipeline events ingested vs expected | SDLC ingest health |
+
+### Engineering lead
+
+| Question | Where | Signal |
+|---|---|---|
+| Are we shipping faster or slower this quarter? | DORA dashboard, 90-day trend | All of the above, aggregated |
+| Which teams are blocked at the gate? | SRG verdict timeline | Workflow bizevent + service ownership tag |
+| Are we adding risk faster than we burn it down? | Vulnerabilities trend vs deployment rate | Snyk / native scan events alongside deployment events |
+| How fast do we recover when things go wrong? | MTTR tile of the CI/CD overview dashboard | `recovery_timestamp - deployment timestamp` for problems linked to deployments |
+
+The trick for the engineering lead view: keep it to **four to six tiles
+at most**. Anything more and they stop opening it.
+
+---
+
+## PR and change details on Davis problem tickets
+
+The single highest-leverage thing you can do for the on-call experience
+is making sure that the Davis problem card answers the first question
+anyone asks: **"which change caused this?"**
+
+### What lands on the problem card today (out of the box)
+
+Davis already correlates each problem against deployments in the
+affected entity's history. The problem UI shows:
+
+- Deployment timestamp + name (from `CUSTOM_DEPLOYMENT`)
+- Linked entity (the service whose health changed)
+- "Affected releases" list
+
+That gets you *that a deployment happened around the time of the
+problem*. It doesn't yet tell you *which PR introduced it*.
+
+### What you add with this repo's GitHub Action
+
+`.github/actions/dt-deployment-event/action.yml` enriches the
+`CUSTOM_DEPLOYMENT` payload with PR + change metadata that surface as
+key/value pairs on the problem card under "Event properties":
+
+| Property | Source | Why it matters |
+|---|---|---|
+| `pr.number` | `github.event.pull_request.number` or resolved via `gh api .../commits/<sha>/pulls` | Link to the PR from the problem |
+| `pr.url` | github.event.pull_request.html_url | One-click to the PR |
+| `pr.title` | github.event.pull_request.title | Human-readable context — "PR #234: switch to async ad cache" |
+| `pr.author` | github.event.pull_request.user.login | Who to ping |
+| `pr.files_changed` | github.event.pull_request.changed_files | Quick risk assessment |
+| `pr.merged_at` | github.event.pull_request.merged_at | Timeline anchor |
+| `git.commit.id` | github.sha | Permalink to the diff |
+| `git.commit.message` | `git log -1 --pretty=%s` | First-line summary |
+| `git.commit.branch` | github.ref_name | Branch context |
+| `change.ticket` | action input | Jira/ServiceNow change ID if you have one |
+
+These are also indexed in Grail so DQL queries on the events table can
+group problems by author, file count, or change ticket.
+
+### How the on-call experience changes
+
+**Before** (raw deployment marker):
+> Problem P-1234 on service astroshop-adservice. Deployment "astroshop release 1.12.1" 8 minutes ago.
+
+**After** (with PR enrichment):
+> Problem P-1234 on service astroshop-adservice.
+> Deployment "astroshop release 1.12.1 — PR #234".
+> PR #234: *"switch to async ad cache"* by `alice@`, 5 files changed,
+> merged at 14:55Z. [Open PR](https://github.com/...) · [Diff](https://github.com/.../commit/abc1234)
+> Change ticket: `CHG-1142`.
+
+That's the difference between "page someone awake and ask them to
+investigate" and "page someone awake with the link to the PR already
+in their notification".
+
+### The PR lifecycle workflow
+
+`.github/workflows/pr-events.yml` fires a CHANGE event to the CI/CD
+Observability app on every `opened` / `synchronize` / `closed` PR
+action, so the app's PR view shows the PR independently of any
+deployment, with `event.category == "change"`. This gives the
+engineering lead a separate timeline of *intent to change* alongside
+the *actually deployed* timeline.
+
+### Tenant-side configuration to surface these on the problem card
+
+1. **Notification template** — add `{ProblemEvents}` placeholder in the
+   Slack / Teams / email problem notification so the PR fields show in
+   the body of the alert.
+2. **OpenPipeline rule** — optional: enrich the deployment event by
+   joining against the latest `change.ticket` from your ticket system
+   if you don't fire it from the pipeline.
+3. **Davis problem comments via Workflow** — for a slicker UI, the
+   `on-deployment-event.yaml` workflow can post the PR metadata as a
+   Davis problem comment when a problem opens within N minutes of a
+   deployment.
 
 ---
 

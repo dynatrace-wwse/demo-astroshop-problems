@@ -21,11 +21,11 @@
             "input": {
                 "assignees": "1",
                 "connection": "{{.gitlab_connection_id}}",
-                "description": "Release Validation for {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}} has started!\n\n The Issue will be updated once the Release validation has completed!\n----\n\nLinks\n---\n\n- Release Pipeline {{`{{`}} event()[\"extra_vars.pipeline_url\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
+                "description": "Release Validation for {{`{{`}}event()[\"deploymentVersion\"]{{`}}`}} has started!\n\n The Issue will be updated once the Release validation has completed!\n----\n\nLinks\n---\n\n- Release Pipeline {{`{{`}} event()[\"ciBackLink\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
                 "issue_type": "task",
                 "labels": "",
                 "projectId": "{{`{{`}} 3 {{`}}`}}",
-                "title": "Validation for Astroshop {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}}"
+                "title": "Validation for Astroshop {{`{{`}}event()[\"deploymentVersion\"]{{`}}`}}"
             },
             "name": "create_ticket",
             "position": {
@@ -204,15 +204,15 @@
                 "timeframeInputType": "expression",
                 "variables": [
                     {
-                        "definition": "{{`{{`}} event()['extra_vars.release_version'] {{`}}`}}",
+                        "definition": "{{`{{`}} event()['deploymentVersion'] {{`}}`}}",
                         "name": "release_version"
                     },
                     {
-                        "definition": "{{`{{`}} event()['extra_vars.pipeline_url'] {{`}}`}}",
+                        "definition": "{{`{{`}} event()['ciBackLink'] {{`}}`}}",
                         "name": "pipeline_url"
                     },
                     {
-                        "definition": "{{`{{`}} event()['extra_vars.problem'] {{`}}`}}",
+                        "definition": "{{`{{`}} event()['PROBLEM'] {{`}}`}}",
                         "name": "problem"
                     },
                     {
@@ -220,7 +220,7 @@
                         "name": "issue_url"
                     },
                     {
-                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.kubernetes/ui/entity/{{`{{`}} result(\"get_k8s_cluster\").records[0].id {{`}}`}}?gtf={{`{{`}} event()['timeframe.to'] {{`}}`}}+to+{{`{{`}} event()['timeframe.from'] {{`}}`}}\u0026gf=all\u0026filter=app%3AAstronomy+Shop",
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.kubernetes/ui/entity/{{`{{`}} result(\"get_k8s_cluster\").records[0].id if result(\"get_k8s_cluster\").records else \"\" {{`}}`}}?gtf={{`{{`}} event()['timeframe.to'] {{`}}`}}+to+{{`{{`}} event()['timeframe.from'] {{`}}`}}\u0026gf=all\u0026filter=app%3AAstronomy+Shop",
                         "name": "k8s"
                     },
                     {
@@ -236,7 +236,7 @@
                         "name": "distributed_traces"
                     },
                     {
-                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.services/#serviceComparison;serviceId={{`{{`}} result(\"get_frontend_svc\").records[0].id {{`}}`}};timeframe=custom{{`{{`}} event()['timeframe.from'] {{`}}`}}to{{`{{`}} event()['timeframe.to'] {{`}}`}};gtf=today;gf=all;tfshift=CustomTimeframe;ctfstart={{`{{`}}result(\"previous_succesful_evaluation\").records[0].ctfstart{{`}}`}}",
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.services/#serviceComparison;serviceId={{`{{`}} result(\"get_frontend_svc\").records[0].id if result(\"get_frontend_svc\").records else \"\" {{`}}`}};timeframe=custom{{`{{`}} event()['timeframe.from'] {{`}}`}}to{{`{{`}} event()['timeframe.to'] {{`}}`}};gtf=today;gf=all;tfshift=CustomTimeframe;ctfstart={{`{{`}}result(\"previous_succesful_evaluation\").records[0].ctfstart if result(\"previous_succesful_evaluation\").records else \"\"{{`}}`}}",
                         "name": "compare"
                     },
                     {
@@ -266,13 +266,13 @@
             "input": {
                 "assignees": "root",
                 "connection": "{{.gitlab_connection_id}}",
-                "description": "Release Validation for Release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}} has finished!\n\nThe validation failed! Check the links for more info\n----\n\nLinks\n---\n\n- Release Validation Overview {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.site.reliability.guardian/analysis/{{`{{`}} result(\"run_validation\")[\"guardian_id\"] {{`}}`}}?validationId=1\n- Release Pipline {{`{{`}} event()[\"extra_vars.pipeline_url\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
+                "description": "Release Validation for Release {{`{{`}}event()[\"deploymentVersion\"]{{`}}`}} has finished!\n\nThe validation failed! Check the links for more info\n----\n\nLinks\n---\n\n- Release Validation Overview {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.site.reliability.guardian/analysis/{{`{{`}} result(\"run_validation\")[\"guardian_id\"] {{`}}`}}?validationId=1\n- Release Pipline {{`{{`}} event()[\"ciBackLink\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
                 "iid": "{{`{{`}} result(\"create_ticket\")[\"issue\"][\"iid\"] {{`}}`}}",
                 "issue_type": "task",
                 "labels": "validation_failed",
                 "projectId": "{{`{{`}} 3 {{`}}`}}",
                 "state": "reopen",
-                "title": "Validation for Astroshop release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}}"
+                "title": "Validation for Astroshop release {{`{{`}}event()[\"deploymentVersion\"]{{`}}`}}"
             },
             "name": "validation_failure",
             "position": {
@@ -295,13 +295,13 @@
             "input": {
                 "assignees": "root",
                 "connection": "{{.gitlab_connection_id}}",
-                "description": "Release Validation for Release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}} has finished!\n\nThe validation was successful! Check the links for more info\n----\n\nLinks\n---\n\n- Release Validation Overview {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.site.reliability.guardian/analysis/{{`{{`}} result(\"run_validation\")[\"guardian_id\"] {{`}}`}}?validationId=1\n- Release Pipline {{`{{`}} event()[\"extra_vars.pipeline_url\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
+                "description": "Release Validation for Release {{`{{`}}event()[\"deploymentVersion\"]{{`}}`}} has finished!\n\nThe validation was successful! Check the links for more info\n----\n\nLinks\n---\n\n- Release Validation Overview {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.site.reliability.guardian/analysis/{{`{{`}} result(\"run_validation\")[\"guardian_id\"] {{`}}`}}?validationId=1\n- Release Pipline {{`{{`}} event()[\"ciBackLink\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
                 "iid": "{{`{{`}} result(\"create_ticket\")[\"issue\"][\"iid\"] {{`}}`}}",
                 "issue_type": "task",
                 "labels": "success",
                 "projectId": "{{`{{`}} 3 {{`}}`}}",
                 "state": "close",
-                "title": "Validation for Astroshop release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}}"
+                "title": "Validation for Astroshop release {{`{{`}}event()[\"deploymentVersion\"]{{`}}`}}"
             },
             "name": "validation_success",
             "position": {

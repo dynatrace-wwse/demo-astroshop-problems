@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "forcible": false,
+  "key": "IBM_MQ_TRACING_FEATURE_FORCIBLE"
+}

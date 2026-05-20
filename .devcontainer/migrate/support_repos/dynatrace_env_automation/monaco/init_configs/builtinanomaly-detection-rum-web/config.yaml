@@ -1,0 +1,9 @@
+configs:
+  - id: rum_anomaly_detection
+    config:
+      template: rum_anomaly_detection.json
+      skip: false
+    type:
+      settings:
+        schema: builtin:anomaly-detection.rum-web
+        scope: ["application-web", "webapp_astronomyshop", "id"]

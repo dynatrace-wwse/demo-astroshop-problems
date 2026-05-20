@@ -1,0 +1,23 @@
+{
+  "apiName": "Built-In Java MongoDB",
+  "apiColor": "#fff29a",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.novus.casbah.mongodb."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.mongodb."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.bson."
+    }
+  ]
+}

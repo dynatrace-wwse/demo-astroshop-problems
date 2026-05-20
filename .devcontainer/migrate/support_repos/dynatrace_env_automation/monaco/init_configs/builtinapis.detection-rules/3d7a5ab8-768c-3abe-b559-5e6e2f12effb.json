@@ -1,0 +1,12 @@
+{
+  "apiName": "EasyTravel ",
+  "apiColor": "#aeebf0",
+  "thirdPartyApi": false,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.dynatrace.easytravel"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+kind: dashboard
+name: CI/CD Overview - Astroshop
+description: |
+  DORA metrics + pipeline health for the Astroshop demo. Reads
+  CUSTOM_DEPLOYMENT events and workflow_run SDLC events.
+
+tiles:
+  - title: Deployments per day (Deployment Frequency)
+    type: data
+    query: |
+      fetch events, from: -7d
+      | filter event.kind == "DEPLOYMENT_EVENT"
+        and deploymentProject == "astroshop"
+      | summarize count = count(), by: { day = bin(timestamp, 1d) }
+      | sort day asc
+    visualization: lineChart
+    position: { x: 0, y: 0, w: 8, h: 4 }
+
+  - title: Latest release
+    type: data
+    query: |
+      fetch events, from: -24h
+      | filter event.kind == "DEPLOYMENT_EVENT"
+        and deploymentProject == "astroshop"
+      | sort timestamp desc
+      | fields deploymentVersion, Release_Stage, timestamp
+      | limit 1
+    visualization: singleValue
+    position: { x: 8, y: 0, w: 4, h: 4 }
+
+  - title: Change failure rate (last 7d)
+    type: data
+    query: |
+      fetch events, from: -7d
+      | filter event.kind == "DEPLOYMENT_EVENT"
+        and deploymentProject == "astroshop"
+      | summarize total = count(),
+                  failed = countIf(srg_verdict == "FAIL")
+      | fieldsAdd cfr = (failed / total) * 100
+      | fields cfr
+    visualization: singleValue
+    position: { x: 0, y: 4, w: 4, h: 4 }
+
+  - title: Lead time for changes (commit -> deploy)
+    type: data
+    query: |
+      fetch events, from: -7d
+      | filter event.kind == "DEPLOYMENT_EVENT"
+        and deploymentProject == "astroshop"
+      | fieldsAdd lead_time_s = timestamp - toTimestamp(git.commit.timestamp)
+      | summarize p50 = percentile(lead_time_s, 50),
+                  p95 = percentile(lead_time_s, 95)
+    visualization: table
+    position: { x: 4, y: 4, w: 8, h: 4 }
+
+  - title: Pipeline runs by outcome
+    type: data
+    query: |
+      fetch events, from: -7d
+      | filter event.kind == "SDLC_EVENT"
+        and event.type == "pipeline.run"
+      | summarize count = count(), by: { ci.outcome }
+    visualization: pieChart
+    position: { x: 0, y: 8, w: 6, h: 4 }
+
+  - title: Mean time to restore (MTTR)
+    type: data
+    query: |
+      fetch events, from: -7d
+      | filter event.kind == "DEPLOYMENT_EVENT"
+        and deploymentProject == "astroshop"
+        and srg_verdict == "FAIL"
+      | fieldsAdd mttr_s = recovery_timestamp - timestamp
+      | summarize p50 = percentile(mttr_s, 50),
+                  p95 = percentile(mttr_s, 95)
+    visualization: table
+    position: { x: 6, y: 8, w: 6, h: 4 }

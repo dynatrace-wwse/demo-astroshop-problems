@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In Wordpress",
+  "apiColor": "#b4e5f9",
+  "technology": "PHP",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FILE_NAME",
+      "matcher": "CONTAINS",
+      "pattern": "wp-includes/"
+    }
+  ]
+}

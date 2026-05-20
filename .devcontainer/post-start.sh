@@ -10,4 +10,7 @@ source .devcontainer/util/source_framework.sh
 # we want to monitor all interactions of the users in the live github pages.
 #exposeMkdocs
 
+# Load test against the astroshop frontend (locust + playwright)
+deployLoadgenerator
+
 printInfoSection "Your dev.container finished starting up"

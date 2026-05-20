@@ -1,0 +1,28 @@
+{
+  "apiName": "Built-In Oracle WebLogic",
+  "apiColor": "#7c38a1",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.weblogic."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.bea."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "bea."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "weblogic."
+    }
+  ]
+}

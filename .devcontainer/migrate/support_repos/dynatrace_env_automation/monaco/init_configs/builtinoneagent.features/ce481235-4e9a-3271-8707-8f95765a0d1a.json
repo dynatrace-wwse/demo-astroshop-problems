@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "instrumentation": false,
+  "key": "SENSOR_GO_MONGODB_FORCIBLE"
+}

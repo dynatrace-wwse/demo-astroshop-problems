@@ -1,0 +1,118 @@
+name: Dynatrace deployment event
+description: |
+  Sends a CUSTOM_DEPLOYMENT event to Dynatrace Events v2 + a pipeline-run
+  SDLC event that feeds the CI/CD Observability app. Reusable across
+  repos: callers pass version/stage/problem; secrets stay at org-level.
+
+inputs:
+  dt_tenant_url:
+    description: "Dynatrace tenant URL (https://abc12345.live.dynatrace.com)"
+    required: true
+  dt_api_token:
+    description: "API token with events.ingest + openpipeline.events.ingest scopes"
+    required: true
+  application:
+    description: "Logical app name (defaults to the repo name)"
+    required: false
+    default: ${{ github.event.repository.name }}
+  release_version:
+    description: "Version being released (e.g. 1.12.1)"
+    required: true
+  release_stage:
+    description: "Deployment stage (staging | production)"
+    required: false
+    default: staging
+  problem:
+    description: "Deliberate issue flag for the demo (none | cpu | memory | nplusone | error)"
+    required: false
+    default: none
+
+runs:
+  using: "composite"
+  steps:
+    - name: Fire CUSTOM_DEPLOYMENT (Events v2)
+      shell: bash
+      env:
+        DT: ${{ inputs.dt_tenant_url }}
+        TOKEN: ${{ inputs.dt_api_token }}
+        APP: ${{ inputs.application }}
+        VER: ${{ inputs.release_version }}
+        STAGE: ${{ inputs.release_stage }}
+        PROBLEM: ${{ inputs.problem }}
+        CI_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        SHA: ${{ github.sha }}
+        BRANCH: ${{ github.ref_name }}
+      run: |
+        set -euo pipefail
+        payload=$(cat <<JSON
+        {
+          "eventType": "CUSTOM_DEPLOYMENT",
+          "title": "${APP} release ${VER} (${PROBLEM})",
+          "entitySelector": "type(SERVICE),toRelationships.partOf(type(NAMESPACE),entityName.equals(${APP}))",
+          "timeout": 5,
+          "properties": {
+            "deploymentName": "${APP} release ${VER}",
+            "deploymentVersion": "${VER}",
+            "deploymentProject": "${APP}",
+            "ciBackLink": "${CI_URL}",
+            "Release_Stage": "${STAGE}",
+            "Application": "${APP}",
+            "PROBLEM": "${PROBLEM}",
+            "git.commit.id": "${SHA}",
+            "git.commit.branch": "${BRANCH}",
+            "Repository": "${{ github.repository }}"
+          }
+        }
+        JSON
+        )
+        # observability MUST NOT block delivery — non-fatal
+        code=$(curl -sk -o /tmp/dt-event.out -w '%{http_code}' \
+          -X POST "${DT%/}/api/v2/events/ingest" \
+          -H "Authorization: Api-Token ${TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d "$payload" || echo "000")
+        echo "Events v2 response: HTTP $code"
+        cat /tmp/dt-event.out | head -c 500 || true
+
+    - name: Fire pipeline-run SDLC event (feeds CI/CD Observability app)
+      shell: bash
+      env:
+        DT: ${{ inputs.dt_tenant_url }}
+        TOKEN: ${{ inputs.dt_api_token }}
+        APP: ${{ inputs.application }}
+        VER: ${{ inputs.release_version }}
+        STAGE: ${{ inputs.release_stage }}
+        PROBLEM: ${{ inputs.problem }}
+      run: |
+        set -euo pipefail
+        outcome=$([ "${{ job.status }}" = "success" ] && echo success || echo failed)
+        now=$(date -u +"%Y-%m-%dT%H:%M:%S.000000000Z")
+        start=$(date -u -d "60 seconds ago" +"%Y-%m-%dT%H:%M:%S.000000000Z")
+        payload=$(cat <<JSON
+        {
+          "cicd.pipeline.id": "${APP}-release",
+          "cicd.pipeline.run.id": ${{ github.run_id }},
+          "cicd.pipeline.name": "${APP} release pipeline",
+          "cicd.pipeline.run.outcome": "${outcome}",
+          "cicd.pipeline.run.url.full": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+          "ext.pipeline.build.name": "${APP} ${VER} (${PROBLEM})",
+          "ext.pipeline.run.trigger.user": "${{ github.actor }}",
+          "vcs.ref.head.name": "${{ github.ref_name }}",
+          "vcs.repository.name": "${{ github.repository }}",
+          "event.category": "pipeline",
+          "event.status": "finished",
+          "event.type": "deploy",
+          "event.provider": "github-actions",
+          "duration": 60,
+          "start_time": "${start}",
+          "end_time": "${now}"
+        }
+        JSON
+        )
+        code=$(curl -sk -o /tmp/dt-sdlc.out -w '%{http_code}' \
+          -X POST "${DT%/}/platform/ingest/custom/events.sdlc/github" \
+          -H "Authorization: Api-Token ${TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d "$payload" || echo "000")
+        echo "SDLC ingest response: HTTP $code"
+        cat /tmp/dt-sdlc.out | head -c 500 || true

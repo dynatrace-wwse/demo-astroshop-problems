@@ -1,0 +1,4 @@
+{
+  "key": "db.cassandra.keyspace",
+  "masking": "NOT_MASKED"
+}

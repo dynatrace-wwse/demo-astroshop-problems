@@ -1,0 +1,4 @@
+{
+  "key": "graphql.operation.resolver_call_count",
+  "masking": "NOT_MASKED"
+}

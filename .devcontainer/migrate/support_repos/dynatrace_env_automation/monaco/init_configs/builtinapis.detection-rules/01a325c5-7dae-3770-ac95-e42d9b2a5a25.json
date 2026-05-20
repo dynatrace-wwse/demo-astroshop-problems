@@ -1,0 +1,18 @@
+{
+  "apiName": "Built-In Java tests",
+  "apiColor": "#008cdb",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "junit.framework."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.junit."
+    }
+  ]
+}

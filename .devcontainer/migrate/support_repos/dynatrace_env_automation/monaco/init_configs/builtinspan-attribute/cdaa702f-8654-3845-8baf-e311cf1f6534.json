@@ -1,0 +1,4 @@
+{
+  "key": "http.target",
+  "masking": "MASK_ENTIRE_VALUE"
+}

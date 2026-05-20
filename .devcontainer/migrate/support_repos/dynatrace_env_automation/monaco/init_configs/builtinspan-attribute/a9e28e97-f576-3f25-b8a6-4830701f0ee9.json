@@ -1,0 +1,4 @@
+{
+  "key": "istio.namespace",
+  "masking": "NOT_MASKED"
+}

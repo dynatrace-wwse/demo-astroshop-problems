@@ -1,0 +1,17 @@
+configs:
+- id: webapp_detection_rule_astronomy
+  config:
+    parameters:
+      applicationweb__APPLICATION8C870F9811FC5AA4__id:
+        configId: webapp_astronomyshop
+        configType: application-web
+        property: id
+        type: reference
+    template: webapp_detection_rule_astronomy.json
+    skip: false
+   
+  type:
+    settings:
+      schema: builtin:rum.web.app-detection
+      schemaVersion: 2.1.1
+      scope: environment

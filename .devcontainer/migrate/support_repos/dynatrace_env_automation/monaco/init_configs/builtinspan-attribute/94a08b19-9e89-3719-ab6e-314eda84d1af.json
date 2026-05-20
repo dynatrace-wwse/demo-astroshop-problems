@@ -1,0 +1,4 @@
+{
+  "key": "messaging.kafka.consumer_group",
+  "masking": "NOT_MASKED"
+}

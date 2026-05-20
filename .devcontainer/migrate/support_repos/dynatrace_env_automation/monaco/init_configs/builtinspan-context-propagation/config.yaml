@@ -1,0 +1,11 @@
+configs:
+- id: bf4271cd-b2aa-3a72-bf46-08f85276bb1b
+  config:
+    template: bf4271cd-b2aa-3a72-bf46-08f85276bb1b.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABACBidWlsdGluOnNwYW4tY29udGV4dC1wcm9wYWdhdGlvbgAGdGVuYW50AAZ0ZW5hbnQAJDBhMGNkODM2LWVmNzEtM2Y3Yi04MGFlLWUwODZkZmMzY2EyNb7vVN4V2t6t
+  type:
+    settings:
+      schema: builtin:span-context-propagation
+      schemaVersion: 0.1.18
+      scope: environment

@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In JBoss",
+  "apiColor": "#fff29a",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.jboss."
+    }
+  ]
+}

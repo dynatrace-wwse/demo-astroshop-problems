@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "key": "DOTNET_ASPNETCORE_SINGLE_TRACING_MIDDLEWARE_REGISRATION"
+}

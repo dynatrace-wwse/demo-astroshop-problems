@@ -1,0 +1,416 @@
+{
+  "anomalyDetection": {
+    "loadingTimeThresholds": {
+      "enabled": false,
+      "thresholds": []
+    },
+    "outageHandling": {
+      "globalOutage": true,
+      "globalOutagePolicy": {
+        "consecutiveRuns": 1
+      },
+      "localOutage": false,
+      "localOutagePolicy": {
+        "affectedLocations": null,
+        "consecutiveRuns": null
+      },
+      "retryOnError": true
+    }
+  },
+  "automaticallyAssignedApps": [
+    "{{.applicationweb__APPLICATION81486CD960C894C9__id}}"
+  ],
+  "createdFrom": "GUI",
+  "enabled": true,
+  "events": [
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_51103C3DF6A3672D }}",
+      "name": "Loading of \"https://staging.astroshop.whydevslovedynatrace.com/\"",
+      "sequenceNumber": 1
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_E7FC40FE9A2F6E50 }}",
+      "name": "click",
+      "sequenceNumber": 2
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_BD86F90538A7CC4B }}",
+      "name": "click on \"Add To Cart\"",
+      "sequenceNumber": 3
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_0D7EF9ADF274202D }}",
+      "name": "click on \"Empty Cart\"",
+      "sequenceNumber": 4
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_7D0DC1A05D55506A }}",
+      "name": "click",
+      "sequenceNumber": 5
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_7D2AAA00BDE55F34 }}",
+      "name": "click on \"Add To Cart\"",
+      "sequenceNumber": 6
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_3C1913006205CB23 }}",
+      "name": "click on \"currency_code\"",
+      "sequenceNumber": 7
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_5133046FFB3A998E }}",
+      "name": "selectOption on \"currency_code\"",
+      "sequenceNumber": 8
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_F8D1CE7FC963A318 }}",
+      "name": "click on \"Optical Tube Assembly1€ 3183.55\"",
+      "sequenceNumber": 9
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_7E56D6B5FDA1FE82 }}",
+      "name": "click on \"Place Order\"",
+      "sequenceNumber": 10
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_804795ACA122892A }}",
+      "name": "click on \"Continue Shopping\"",
+      "sequenceNumber": 11
+    }
+  ],
+  "frequencyMin": 15,
+  "keyPerformanceMetrics": {
+    "loadActionKpm": "VISUALLY_COMPLETE",
+    "xhrActionKpm": "VISUALLY_COMPLETE"
+  },
+  "locations": [
+    "{{ .location }}"
+  ],
+  "managementZones": [],
+  "manuallyAssignedApps": [],
+  "name": "{{.name}}",
+  "script": {
+    "configuration": {
+      "chromiumStartupFlags": {
+        "disable-web-security": false
+      },
+      "device": {
+        "deviceName": "Desktop",
+        "orientation": "landscape"
+      },
+      "requestHeaders": {
+        "addHeaders": [
+          {
+            "name": "x-dynatrace-synthetic",
+            "value": "Dynatrace synthetic warmup"
+          }
+        ]
+      }
+    },
+    "events": [
+      {
+        "description": "Loading of \"https://staging.astroshop.whydevslovedynatrace.com/\"",
+        "type": "navigate",
+        "url": "https://staging.astroshop.whydevslovedynatrace.com/",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div:nth-child(2) div div div div:nth-child(2) a div div"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-453fd2c7-5 div.sc-453fd2c7-0 div.sc-453fd2c7-1 div.sc-453fd2c7-2 div.sc-453fd2c7-3 div.sc-bfbc57fa-0 a.sc-e8cdbf93-0 div.sc-e8cdbf93-2 div.sc-e8cdbf93-1:eq(0)"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Add To Cart\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "button"
+            },
+            {
+              "type": "css",
+              "value": "button:contains(\"Add To Cart\")"
+            },
+            {
+              "type": "css",
+              "value": ".sc-83a403b4-0"
+            },
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div div:nth-child(2) button:nth-child(6)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-d6305667-0 div.sc-d6305667-1 div.sc-d6305667-3 button.sc-83a403b4-0"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Empty Cart\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "button:eq(0)"
+            },
+            {
+              "type": "css",
+              "value": "button:contains(\"Empty Cart\")"
+            },
+            {
+              "type": "css",
+              "value": ".sc-83a403b4-0:eq(0)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div div div button:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-e5e4f84e-0 div.sc-e5e4f84e-1 div div.sc-e5e4f84e-3 button.sc-83a403b4-0"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div section:nth-child(2) div:nth-child(2) a div div"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-e5e4f84e-0 section.sc-a7f3c279-0 div.sc-a7f3c279-1 a.sc-e8cdbf93-0 div.sc-e8cdbf93-2 div.sc-e8cdbf93-1:eq(0)"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Add To Cart\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "button"
+            },
+            {
+              "type": "css",
+              "value": "button:contains(\"Add To Cart\")"
+            },
+            {
+              "type": "css",
+              "value": ".sc-83a403b4-0"
+            },
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div div:nth-child(2) button:nth-child(6)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-d6305667-0 div.sc-d6305667-1 div.sc-d6305667-3 button.sc-83a403b4-0"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"currency_code\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "select[name=\"currency_code\"]"
+            },
+            {
+              "type": "css",
+              "value": "div:contains(\"ZAR\"):eq(4)"
+            },
+            {
+              "type": "css",
+              "value": ".sc-3f7c9c3b-4"
+            },
+            {
+              "type": "css",
+              "value": "#__next header nav div div:nth-child(2) div div select:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#__next header.sc-cc7551ae-0 nav.sc-cc7551ae-1 div.sc-cc7551ae-2 div.sc-cc7551ae-5 div.sc-3f7c9c3b-0 div.sc-3f7c9c3b-1 select.sc-3f7c9c3b-4"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "description": "selectOption on \"currency_code\"",
+        "selections": [
+          {
+            "index": 8,
+            "value": "EUR"
+          }
+        ],
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "select[name=\"currency_code\"]"
+            },
+            {
+              "type": "css",
+              "value": "div:contains(\"ZAR\"):eq(4)"
+            },
+            {
+              "type": "css",
+              "value": ".sc-3f7c9c3b-4"
+            },
+            {
+              "type": "css",
+              "value": "#__next header nav div div:nth-child(2) div div select:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#__next header.sc-cc7551ae-0 nav.sc-cc7551ae-1 div.sc-cc7551ae-2 div.sc-cc7551ae-5 div.sc-3f7c9c3b-0 div.sc-3f7c9c3b-1 select.sc-3f7c9c3b-4"
+            }
+          ]
+        },
+        "type": "selectOption",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Optical Tube Assembly1€ 3183.55\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div div section:nth-child(2) div:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-e5e4f84e-0 div.sc-e5e4f84e-1 div section.sc-e51f4592-0 div.sc-e51f4592-3"
+            }
+          ]
+        },
+        "type": "click"
+      },
+      {
+        "button": 0,
+        "description": "click on \"Place Order\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "button[type=\"submit\"]"
+            },
+            {
+              "type": "css",
+              "value": "button:contains(\"Place Order\")"
+            },
+            {
+              "type": "css",
+              "value": ".sc-83a403b4-0:eq(2)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div form:nth-child(2) div:nth-child(10) button:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-e5e4f84e-0 div.sc-e5e4f84e-1 form.sc-5e4553cf-0 div.sc-5e4553cf-4 button.sc-83a403b4-0:eq(1)"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Continue Shopping\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "button[type=\"submit\"]"
+            },
+            {
+              "type": "css",
+              "value": "a:contains(\"Continue Shopping\")"
+            },
+            {
+              "type": "css",
+              "value": "button:contains(\"Continue Shopping\")"
+            },
+            {
+              "type": "css",
+              "value": ".sc-83a403b4-0"
+            },
+            {
+              "type": "css",
+              "value": "#__next main:nth-child(2) div div div:nth-child(4) a button"
+            },
+            {
+              "type": "css",
+              "value": "#__next main div.sc-b6e9b175-0 div.sc-b6e9b175-1 div.sc-b6e9b175-6 a button.sc-83a403b4-0"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      }
+    ],
+    "type": "clickpath",
+    "version": "1.0"
+  },
+  "tags": [],
+  "type": "BROWSER"
+}

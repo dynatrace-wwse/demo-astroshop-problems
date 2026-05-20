@@ -1,0 +1,16 @@
+{
+    "allowContextlessRequests": true,
+    "allowedEntities": [],
+    "credentialUsageSummary": [],
+    "description": "",
+    "externalVault": null,
+    "name": "{{.name}}",
+    "owner": "daniel.braaf@dynatrace.com",
+    "ownerAccessOnly": false,
+    "scope": "APP_ENGINE",
+    "token": "{{ .session_token }}",
+    "scopes": [
+        "APP_ENGINE"
+    ],
+    "type": "TOKEN"
+}

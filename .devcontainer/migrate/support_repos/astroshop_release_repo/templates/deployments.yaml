@@ -1,0 +1,1741 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: accountingservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-accountingservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-accountingservice
+    name: ${APPLICATION}-accountingservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-accountingservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: .NET
+          oneagent.dynatrace.com/inject: "true"
+        labels:
+          app.kubernetes.io/component: accountingservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-accountingservice
+          opentelemetry.io/name: ${APPLICATION}-accountingservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: KAFKA_SERVICE_ADDR
+            value: ${APPLICATION}-kafka:9092
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: DT_LOGLEVELCON
+          - name: DT_LOGCON_PROC
+          - name: DT_LOGGING_DESTINATION
+          - name: DT_LOGGING_DOTNET_FLAGS
+          - name: OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED
+            value: "false"
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          - name: OTEL_METRICS_EXPORTER
+            value: console,otlp
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-accountingservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: accountingservice
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -z -v -w30 ${APPLICATION}-kafka 9092; do echo waiting for kafka; sleep
+            2; done;
+          image: busybox:latest
+          imagePullPolicy: Always
+          name: wait-for-kafka
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: adservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-adservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-adservice
+    name: ${APPLICATION}-adservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-adservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: Java
+          oneagent.dynatrace.com/inject: "true"
+        labels:
+          app.kubernetes.io/component: adservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-adservice
+          opentelemetry.io/name: ${APPLICATION}-adservice
+          app.kubernetes.io/version: ${VERSION}
+      spec:
+        containers:
+        - env:
+          - name: DT_LIVEDEBUGGER_COMMIT
+            value: "main"   
+          - name: DT_LIVEDEBUGGER_REMOTE_ORIGIN
+            value: "${GITLAB_URL_PLACEHOLDER}/Otel-App/adservice" 
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: AD_SERVICE_PORT
+            value: "8080"
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4318
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          - name: DT_LOGLEVELCON
+          - name: DT_LOGCON_PROC
+          - name: DT_LOGGING_DESTINATION
+          - name: DT_LOGGING_JAVA_FLAGS
+          - name: JAVA_TOOL_OPTIONS
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          - name: OTEL_METRICS_EXPORTER
+            value: console,otlp
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-adservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: adservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: cartservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-cartservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-cartservice
+    name: ${APPLICATION}-cartservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-cartservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: .NET
+          oneagent.dynatrace.com/inject: "true"
+        labels:
+          app.kubernetes.io/component: cartservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-cartservice
+          opentelemetry.io/name: ${APPLICATION}-cartservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: CART_SERVICE_PORT
+            value: "8080"
+          - name: ASPNETCORE_URLS
+            value: http://*:$(CART_SERVICE_PORT)
+          - name: VALKEY_ADDR
+            value: ${APPLICATION}-valkey:6379
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: DT_LOGLEVELCON
+          - name: DT_LOGCON_PROC
+          - name: DT_LOGGING_DESTINATION
+          - name: DT_LOGGING_DOTNET_FLAGS
+          - name: OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED
+            value: "false"
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          - name: OTEL_METRICS_EXPORTER
+            value: console,otlp
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-cartservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: cartservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -z -v -w30 ${APPLICATION}-valkey 6379; do echo waiting for valkey;
+            sleep 2; done;
+          image: busybox:latest
+          imagePullPolicy: Always
+          name: wait-for-valkey
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: checkoutservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-checkoutservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-checkoutservice
+    name: ${APPLICATION}-checkoutservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-checkoutservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: go
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: checkoutservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-checkoutservice
+          opentelemetry.io/name: ${APPLICATION}-checkoutservice
+      spec:
+        containers:
+        - env:
+          - name: DT_LIVEDEBUGGER_COMMIT
+            value: "main"   
+          - name: DT_LIVEDEBUGGER_REMOTE_ORIGIN
+            value: "${GITLAB_URL_PLACEHOLDER}/Otel-App/paymentservice" 
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: CHECKOUT_SERVICE_PORT
+            value: "8080"
+          - name: CART_SERVICE_ADDR
+            value: ${APPLICATION}-cartservice:8080
+          - name: CURRENCY_SERVICE_ADDR
+            value: ${APPLICATION}-currencyservice:8080
+          - name: EMAIL_SERVICE_ADDR
+            value: http://${APPLICATION}-emailservice:8080
+          - name: PAYMENT_SERVICE_ADDR
+            value: ${APPLICATION}-paymentservice:8080
+          - name: PRODUCT_CATALOG_SERVICE_ADDR
+            value: ${APPLICATION}-productcatalogservice:8080
+          - name: SHIPPING_SERVICE_ADDR
+            value: ${APPLICATION}-shippingservice:8080
+          - name: KAFKA_SERVICE_ADDR
+            value: ${APPLICATION}-kafka:9092
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-checkoutservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: checkoutservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 20Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -z -v -w30 ${APPLICATION}-kafka 9092; do echo waiting for kafka; sleep
+            2; done;
+          image: busybox:latest
+          imagePullPolicy: Always
+          name: wait-for-kafka
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30     
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: currencyservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-currencyservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-currencyservice
+    name: ${APPLICATION}-currencyservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-currencyservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: cpp
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: currencyservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-currencyservice
+          opentelemetry.io/name: ${APPLICATION}-currencyservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: CURRENCY_SERVICE_PORT
+            value: "8080"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: VERSION
+            value: ${VERSION}
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-currencyservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: currencyservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 20Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: emailservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-emailservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-emailservice
+    name: ${APPLICATION}-emailservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-emailservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: ruby
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: emailservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-emailservice
+          opentelemetry.io/name: ${APPLICATION}-emailservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: EMAIL_SERVICE_PORT
+            value: "8080"
+          - name: APP_ENV
+            value: ${ENVIRONMENT}
+          - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4318/v1/traces
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-emailservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: emailservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 100Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: flagd
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-flagd
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-flagd
+    name: ${APPLICATION}-flagd
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-flagd
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: flagd
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: flagd
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-flagd
+          opentelemetry.io/name: ${APPLICATION}-flagd
+      spec:
+        containers:
+        - command:
+          - /flagd-build
+          - start
+          - --uri
+          - file:./etc/flagd/demo.flagd.json
+          env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: FLAGD_METRICS_EXPORTER
+            value: otel
+          - name: FLAGD_OTEL_COLLECTOR_URI
+            value: $(OTEL_COLLECTOR_NAME):4317
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ghcr.io/open-feature/flagd:v0.11.1
+          imagePullPolicy: ${imagePullPolicy}
+          name: flagd
+          ports:
+          - containerPort: 8013
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 300Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/flagd
+            name: config-rw
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: FLAGD_METRICS_EXPORTER
+            value: otel
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4318
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-flagdui
+          imagePullPolicy: ${imagePullPolicy}
+          name: flagd-ui
+          ports:
+          - containerPort: 4000
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 300Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/data
+            name: config-rw
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - cp /config-ro/demo.flagd.json /config-rw/demo.flagd.json && cat /config-rw/demo.flagd.json
+          image: busybox
+          imagePullPolicy: Always
+          name: init-config
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config-ro
+            name: config-ro
+          - mountPath: /config-rw
+            name: config-rw
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: config-rw
+        - configMap:
+            defaultMode: 420
+            name: ${APPLICATION}-flagd-config
+          name: config-ro
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: frauddetectionservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-frauddetectionservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-frauddetectionservice
+    name: ${APPLICATION}-frauddetectionservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-frauddetectionservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: Java
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: frauddetectionservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-frauddetectionservice
+          opentelemetry.io/name: ${APPLICATION}-frauddetectionservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: KAFKA_SERVICE_ADDR
+            value: ${APPLICATION}-kafka:9092
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4318
+          - name: JAVA_TOOL_OPTIONS
+            value: -javaagent:/app/opentelemetry-javaagent.jar
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-frauddetectionservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: frauddetectionservice
+          resources:
+            limits:
+              memory: 300Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -z -v -w30 ${APPLICATION}-kafka 9092; do echo waiting for kafka; sleep
+            2; done;
+          image: busybox:latest
+          imagePullPolicy: Always
+          name: wait-for-kafka
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: frontend
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-frontend
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-frontend
+    name: ${APPLICATION}-frontend
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-frontend
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: nodejs
+          oneagent.dynatrace.com/inject: "true"
+        labels:
+          app.kubernetes.io/component: frontend
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-frontend
+          opentelemetry.io/name: ${APPLICATION}-frontend
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: FRONTEND_PORT
+            value: "8080"
+          - name: FRONTEND_ADDR
+            value: :8080
+          - name: AD_SERVICE_ADDR
+            value: ${APPLICATION}-adservice:8080
+          - name: CART_SERVICE_ADDR
+            value: ${APPLICATION}-cartservice:8080
+          - name: CHECKOUT_SERVICE_ADDR
+            value: ${APPLICATION}-checkoutservice:8080
+          - name: CURRENCY_SERVICE_ADDR
+            value: ${APPLICATION}-currencyservice:8080
+          - name: PRODUCT_CATALOG_SERVICE_ADDR
+            value: ${APPLICATION}-productcatalogservice:8080
+          - name: RECOMMENDATION_SERVICE_ADDR
+            value: ${APPLICATION}-recommendationservice:8080
+          - name: SHIPPING_SERVICE_ADDR
+            value: ${APPLICATION}-shippingservice:8080
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_COLLECTOR_HOST
+            value: $(OTEL_COLLECTOR_NAME)
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: WEB_OTEL_SERVICE_NAME
+            value: frontend-web
+          - name: PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+          - name: DT_LOGLEVELCON
+          - name: DT_LOGCON_PROC
+          - name: DT_LOGGING_DESTINATION
+          - name: DT_LOGGING_NODEJS_FLAGS
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          - name: OTEL_METRICS_EXPORTER
+            value: console,otlp
+          - name: OTEL_NODE_DISABLED_INSTRUMENTATIONS
+          - name: NODE_OPTIONS
+          - name: NEXT_OTEL_VERBOSE
+            value: "0"
+          - name: ENV_PLATFORM
+            value: ${ENVIRONMENT}
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-frontend
+          imagePullPolicy: ${imagePullPolicy}
+          name: frontend
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: frontendproxy
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-frontendproxy
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-frontendproxy
+    name: ${APPLICATION}-frontendproxy
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-frontendproxy
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          dt.owner: dev-team-ux
+        labels:
+          app.kubernetes.io/component: frontendproxy
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-frontendproxy
+          opentelemetry.io/name: ${APPLICATION}-frontendproxy
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: ENVOY_PORT
+            value: "8080"
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: FLAGD_UI_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_UI_PORT
+            value: "4000"
+          - name: FRONTEND_HOST
+            value: ${APPLICATION}-frontend
+          - name: FRONTEND_PORT
+            value: "8080"
+          - name: GRAFANA_SERVICE_HOST
+            value: ${APPLICATION}-grafana
+          - name: GRAFANA_SERVICE_PORT
+            value: "80"
+          - name: IMAGE_PROVIDER_HOST
+            value: ${APPLICATION}-imageprovider
+          - name: IMAGE_PROVIDER_PORT
+            value: "8081"
+          - name: JAEGER_SERVICE_HOST
+            value: ${APPLICATION}-jaeger-query
+          - name: JAEGER_SERVICE_PORT
+            value: "16686"
+          - name: LOCUST_WEB_HOST
+            value: ${APPLICATION}-loadgenerator
+          - name: LOCUST_WEB_PORT
+            value: "8089"
+          - name: OTEL_COLLECTOR_HOST
+            value: $(OTEL_COLLECTOR_NAME)
+          - name: OTEL_COLLECTOR_PORT_GRPC
+            value: "4317"
+          - name: OTEL_COLLECTOR_PORT_HTTP
+            value: "4318"
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-frontendproxy
+          imagePullPolicy: ${imagePullPolicy}
+          name: frontendproxy
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 50Mi
+          securityContext:
+            runAsGroup: 101
+            runAsNonRoot: true
+            runAsUser: 101
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: imageprovider
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-imageprovider
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-imageprovider
+    name: ${APPLICATION}-imageprovider
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-imageprovider
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: nginx
+          metrics.dynatrace.com/port: "9113"
+          metrics.dynatrace.com/scrape: "true"
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: imageprovider
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-imageprovider
+          opentelemetry.io/name: ${APPLICATION}-imageprovider
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: IMAGE_PROVIDER_PORT
+            value: "8081"
+          - name: OTEL_COLLECTOR_PORT_GRPC
+            value: "4317"
+          - name: OTEL_COLLECTOR_HOST
+            value: $(OTEL_COLLECTOR_NAME)
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-imageprovider
+          imagePullPolicy: ${imagePullPolicy}
+          name: imageprovider
+          ports:
+          - containerPort: 8081
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 50Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: kafka
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-kafka
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-kafka
+    name: ${APPLICATION}-kafka
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-kafka
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: kafka
+          oneagent.dynatrace.com/inject: "true"
+        labels:
+          app.kubernetes.io/component: kafka
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-kafka
+          opentelemetry.io/name: ${APPLICATION}-kafka
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: KAFKA_ADVERTISED_LISTENERS
+            value: PLAINTEXT://${APPLICATION}-kafka:9092
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4318
+          - name: KAFKA_HEAP_OPTS
+            value: -Xmx400M -Xms400M
+          - name: KAFKA_OPTS
+            value: -Dotel.jmx.target.system=kafka-broker
+          - name: DT_LOGLEVELCON
+          - name: DT_LOGCON_PROC
+          - name: DT_LOGGING_DESTINATION
+          - name: DT_LOGGING_JAVA_FLAGS
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-kafka
+          imagePullPolicy: ${imagePullPolicy}
+          name: kafka
+          ports:
+          - containerPort: 9092
+            name: plaintext
+            protocol: TCP
+          - containerPort: 9093
+            name: controller
+            protocol: TCP
+          resources:
+            limits:
+              memory: 600Mi
+          securityContext:
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+# - apiVersion: apps/v1
+#   kind: Deployment
+#   metadata:
+#     annotations:
+#       deployment.kubernetes.io/revision: "1"
+#     labels:
+#       app.kubernetes.io/component: loadgenerator
+#       app.kubernetes.io/instance: ${APPLICATION}
+#       app.kubernetes.io/name: ${APPLICATION}-loadgenerator
+#       app.kubernetes.io/part-of: ${NAMESPACE}
+#       app.kubernetes.io/version: ${VERSION}
+#       opentelemetry.io/name: ${APPLICATION}-loadgenerator
+#     name: ${APPLICATION}-loadgenerator
+#     namespace: ${NAMESPACE}
+#   spec:
+#     progressDeadlineSeconds: 600
+#     replicas: 1
+#     revisionHistoryLimit: 10
+#     selector:
+#       matchLabels:
+#         opentelemetry.io/name: ${APPLICATION}-loadgenerator
+#     strategy:
+#       rollingUpdate:
+#         maxSurge: 25%
+#         maxUnavailable: 25%
+#       type: RollingUpdate
+#     template:
+#       metadata:
+#         annotations:
+#           metadata.dynatrace.com/process.technology: python
+#           oneagent.dynatrace.com/inject: "false"
+#         labels:
+#           app.kubernetes.io/component: loadgenerator
+#           app.kubernetes.io/instance: ${APPLICATION}
+#           app.kubernetes.io/name: ${APPLICATION}-loadgenerator
+#           opentelemetry.io/name: ${APPLICATION}-loadgenerator
+#       spec:
+#         containers:
+#         - env:
+#           - name: OTEL_SERVICE_NAME
+#             valueFrom:
+#               fieldRef:
+#                 apiVersion: v1
+#                 fieldPath: metadata.labels['app.kubernetes.io/component']
+#           - name: OTEL_COLLECTOR_NAME
+#             value: ${APPLICATION}-otel-gateway-collector
+#           - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#             value: cumulative
+#           - name: LOCUST_WEB_PORT
+#             value: "8089"
+#           - name: LOCUST_USERS
+#             value: "10"
+#           - name: LOCUST_SPAWN_RATE
+#             value: "1"
+#           - name: LOCUST_HOST
+#             value: https://${APPLICATION}.whydevslovedynatrace.com
+#           - name: LOCUST_HEADLESS
+#             value: "false"
+#           - name: LOCUST_AUTOSTART
+#             value: "true"
+#           - name: LOCUST_BROWSER_TRAFFIC_ENABLED
+#             value: "true"
+#           - name: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
+#             value: python
+#           - name: FLAGD_HOST
+#             value: ${APPLICATION}-flagd
+#           - name: FLAGD_PORT
+#             value: "8013"
+#           - name: OTEL_EXPORTER_OTLP_ENDPOINT
+#             value: http://$(OTEL_COLLECTOR_NAME):4317
+#           - name: OTEL_RESOURCE_ATTRIBUTES
+#             value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+#           image: ${REPOSITORY}:${VERSION}-loadgenerator
+#           imagePullPolicy: ${imagePullPolicy}
+#           name: loadgenerator
+#           ports:
+#           - containerPort: 8089
+#             name: service
+#             protocol: TCP
+#           resources:
+#             limits:
+#               memory: 2Gi
+#           terminationMessagePath: /dev/termination-log
+#           terminationMessagePolicy: File
+#         dnsPolicy: ClusterFirst
+#         restartPolicy: Always
+#         schedulerName: default-scheduler
+#         securityContext: {}
+#         serviceAccount: ${APPLICATION}
+#         serviceAccountName: ${APPLICATION}
+#         terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: paymentservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-paymentservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-paymentservice
+    name: ${APPLICATION}-paymentservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-paymentservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: nodejs
+          oneagent.dynatrace.com/inject: "true"
+        labels:
+          app.kubernetes.io/component: paymentservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-paymentservice
+          opentelemetry.io/name: ${APPLICATION}-paymentservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: PAYMENT_SERVICE_PORT
+            value: "8080"
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: DT_LOGLEVELCON
+          - name: DT_LOGCON_PROC
+          - name: DT_LOGGING_DESTINATION
+          - name: DT_LOGGING_NODEJS_FLAGS
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          - name: OTEL_METRICS_EXPORTER
+            value: console,otlp
+          - name: OTEL_NODE_DISABLED_INSTRUMENTATIONS
+          - name: NODE_OPTIONS
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-paymentservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: paymentservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: productcatalogservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-productcatalogservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-productcatalogservice
+    name: ${APPLICATION}-productcatalogservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-productcatalogservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: go
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: productcatalogservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-productcatalogservice
+          opentelemetry.io/name: ${APPLICATION}-productcatalogservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: PRODUCT_CATALOG_SERVICE_PORT
+            value: "8080"
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: OTEL_GO_AUTO_INSTRUMENTATION_ENABLED
+            value: "false"
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-productcatalogservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: productcatalogservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 20Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: quoteservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-quoteservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-quoteservice
+    name: ${APPLICATION}-quoteservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-quoteservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: PHP
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: quoteservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-quoteservice
+          opentelemetry.io/name: ${APPLICATION}-quoteservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: QUOTE_SERVICE_PORT
+            value: "8080"
+          - name: OTEL_PHP_AUTOLOAD_ENABLED
+            value: "true"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4318
+          - name: OTEL_PHP_DISABLED_INSTRUMENTATIONS
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-quoteservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: quoteservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 40Mi
+          securityContext:
+            runAsGroup: 33
+            runAsNonRoot: true
+            runAsUser: 33
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: recommendationservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-recommendationservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-recommendationservice
+    name: ${APPLICATION}-recommendationservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-recommendationservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: python
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: recommendationservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-recommendationservice
+          opentelemetry.io/name: ${APPLICATION}-recommendationservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: RECOMMENDATION_SERVICE_PORT
+            value: "8080"
+          - name: PRODUCT_CATALOG_SERVICE_ADDR
+            value: ${APPLICATION}-productcatalogservice:8080
+          - name: OTEL_PYTHON_LOG_CORRELATION
+            value: "true"
+          - name: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
+            value: python
+          - name: FLAGD_HOST
+            value: ${APPLICATION}-flagd
+          - name: FLAGD_PORT
+            value: "8013"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-recommendationservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: recommendationservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 500Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: shippingservice
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-shippingservice
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-shippingservice
+    name: ${APPLICATION}-shippingservice
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-shippingservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: rust
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: shippingservice
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-shippingservice
+          opentelemetry.io/name: ${APPLICATION}-shippingservice
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: SHIPPING_SERVICE_PORT
+            value: "8080"
+          - name: QUOTE_SERVICE_ADDR
+            value: http://${APPLICATION}-quoteservice:8080
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://$(OTEL_COLLECTOR_NAME):4317
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: ${REPOSITORY}:${VERSION}-shippingservice
+          imagePullPolicy: ${imagePullPolicy}
+          name: shippingservice
+          ports:
+          - containerPort: 8080
+            name: service
+            protocol: TCP
+          resources:
+            limits:
+              memory: 20Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    labels:
+      app.kubernetes.io/component: valkey
+      app.kubernetes.io/instance: ${APPLICATION}
+      app.kubernetes.io/name: ${APPLICATION}-valkey
+      app.kubernetes.io/part-of: ${NAMESPACE}
+      app.kubernetes.io/version: ${VERSION}
+      opentelemetry.io/name: ${APPLICATION}-valkey
+    name: ${APPLICATION}-valkey
+    namespace: ${NAMESPACE}
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        opentelemetry.io/name: ${APPLICATION}-valkey
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          metadata.dynatrace.com/process.technology: redis
+          metrics.dynatrace.com/port: "9121"
+          metrics.dynatrace.com/scrape: "true"
+          oneagent.dynatrace.com/inject: "false"
+        labels:
+          app.kubernetes.io/component: valkey
+          app.kubernetes.io/instance: ${APPLICATION}
+          app.kubernetes.io/name: ${APPLICATION}-valkey
+          opentelemetry.io/name: ${APPLICATION}-valkey
+      spec:
+        containers:
+        - env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.labels['app.kubernetes.io/component']
+          - name: OTEL_COLLECTOR_NAME
+            value: ${APPLICATION}-otel-gateway-collector
+          - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+            value: cumulative
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=${NAMESPACE},service.version=${VERSION}
+          image: valkey/valkey:7.2-alpine
+          imagePullPolicy: ${imagePullPolicy}
+          name: valkey
+          ports:
+          - containerPort: 6379
+            name: valkey
+            protocol: TCP
+          resources:
+            limits:
+              memory: 20Mi
+          securityContext:
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 999
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${APPLICATION}
+        serviceAccountName: ${APPLICATION}
+        terminationGracePeriodSeconds: 30
+kind: List
+metadata:

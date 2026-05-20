@@ -1,0 +1,4 @@
+{
+  "key": "rpc.grpc.status_code",
+  "masking": "NOT_MASKED"
+}

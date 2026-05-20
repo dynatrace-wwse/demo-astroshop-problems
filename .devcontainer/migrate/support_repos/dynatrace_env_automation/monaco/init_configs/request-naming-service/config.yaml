@@ -1,0 +1,8 @@
+configs:
+- id: 478841a4-8535-4986-b031-a62784ac011a
+  config:
+    name: /api/products/[PRODUCT_ID]
+    template: 478841a4-8535-4986-b031-a62784ac011a.json
+    skip: false
+  type:
+    api: request-naming-service

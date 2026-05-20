@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "instrumentation": true,
+  "forcible": false,
+  "key": "SENSOR_DOTNET_MONGODB_FORCIBLE"
+}

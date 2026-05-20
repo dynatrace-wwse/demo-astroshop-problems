@@ -1,0 +1,17 @@
+name: Astroshop ad-service latency (p95)
+description: 95th percentile response time of the ad-service stays under 250ms
+criteria:
+  - timeframeFrom: -1h
+    target: 95.0          # % of windows where p95 <= 250ms
+    warning: 98.0
+customSli:
+  indicator: |
+    timeseries p95 = percentile(dt.service.request.response_time, 95),
+      filter: { k8s.namespace.name == "astroshop"
+                and dt.entity.service == "astroshop-adservice" }
+    | fieldsAdd ok = if(p95[] <= 250000000, 1, else: 0)   # ns -> 250ms
+    | fieldsAdd sli = ok * 100
+tags:
+  - slo-type:latency
+  - app:astroshop
+  - service:adservice

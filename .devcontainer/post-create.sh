@@ -5,7 +5,7 @@ source .devcontainer/util/source_framework.sh
 
 setUpTerminal
 
-#startKindCluster
+startK3dCluster
 
 installK9s
 
@@ -19,8 +19,15 @@ installK9s
 #deployApplicationMonitoring
 
 # The Astroshop keeping changes of demo.live needs certmanagerdocker
-#deployApp astroshop
+deployApp astroshop
 
+# GitLab in-cluster + seed Otel-App / Support groups with the migrated repos
+installGitlab
+
+seedGitlabRepos
+
+# Dynatrace platform CLI for dashboards/SLOs/guardians/workflows-as-code
+installDtctl
 
 # If the Codespace was created via Workflow end2end test will be done, otherwise
 # it'll verify if there are error in the logs and will show them in the greeting as well a monitoring 

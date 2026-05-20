@@ -1,0 +1,4 @@
+{
+  "key": "db.redis.database_index",
+  "masking": "NOT_MASKED"
+}

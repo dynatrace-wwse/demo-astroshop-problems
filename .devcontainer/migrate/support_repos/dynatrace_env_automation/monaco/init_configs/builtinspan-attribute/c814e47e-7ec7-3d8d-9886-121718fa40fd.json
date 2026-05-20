@@ -1,0 +1,4 @@
+{
+  "key": "db.cassandra.idempotence",
+  "masking": "NOT_MASKED"
+}

@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "instrumentation": true,
+  "forcible": false,
+  "key": "SENSOR_JAVA_IMSSOAP_TAGGING_FORCIBLE"
+}

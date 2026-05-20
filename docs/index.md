@@ -7,31 +7,36 @@
 A self-contained, public-shareable workshop that shows how to use Dynatrace
 to **see every release** and **block the ones that will hurt production**.
 
-The repo boots a Codespace (or local Docker dev container), spins up:
+The repo boots a Codespace (or local Docker dev container) and, with
+one bash call (`bootstrapWorkshop`), brings up:
 
 - a k3d Kubernetes cluster with **Astroshop** (OpenTelemetry demo),
-- a self-hosted **GitLab** with 19 service repos + 3 support repos,
+- a self-hosted **in-cluster GitLab** with 19 service repos + 3 support
+  repos — the pipeline we showcase,
 - a **locust + Playwright** load generator continuously driving the shop,
-- the Dynatrace **dtctl** CLI for managing dashboards / SLOs / workflows
-  as code,
+- the Dynatrace **monaco** CLI applying SRG + workflows + dashboards
+  + tagging rules from `Support/Dynatrace_Monitoring_as_Code` to your
+  tenant,
+- the Dynatrace **dtctl** CLI for kubectl-style day-to-day ops.
 
-then walks through emitting `CUSTOM_DEPLOYMENT` events, ingesting pipeline
-events into the **Dynatrace CI/CD Observability app**, gating promotion
-with a **Site Reliability Guardian**, and auto-rolling-back via the
-**GitHub Connector**.
+The end-to-end story: the GitLab pipeline that walks the four
+Astroshop release variants emits `CUSTOM_DEPLOYMENT` + pipeline-run +
+task events; the **Site Reliability Guardian** (`Astroshop - Staging
+- Quality gate`, 11 test-step latency objectives) evaluates each one
+over the load-test window; the bad-build variants are blocked from
+promotion to production, and the SRG-driving workflow opens a GitLab
+issue via the **Dynatrace GitLab Connector**.
+
+Equivalent **GitHub Actions** artefacts live under `.github/` so teams
+on GitHub get the same loop with one file change.
 
 ## Why this exists
 
-Customers ask the same handful of questions every time:
-
-- *"Do I have to send CUSTOM_DEPLOYMENT events manually, or is it automated?"*
-- *"How do we keep this scalable across 100s of repos?"*
-- *"Is Snyk the only path for security signals?"*
-- *"How do I block a production deployment in GitHub Actions when the SLO fails?"*
-
-The [CI/CD Observability Q&A](cicd-observability.md) answers them with
-runnable examples from this repo. The [Stop bad builds](stop-bad-builds.md)
-page is the end-to-end narrative tying it all together.
+Teams ask the same handful of questions every time. The
+[Q&A](cicd-observability.md) answers all eleven with runnable examples
+that point at this repo's artefacts. The [Stop bad builds](stop-bad-builds.md)
+page is the end-to-end narrative. The [Monaco config](monaco-config.md)
+page inventories every platform resource the workshop ships.
 
 ## Bad releases shipped in this repo
 
@@ -45,10 +50,12 @@ to demo Davis correlation, trace comparison, SRG verdicts, and rollback.
 | `1.12.2` | `memory` | retained `byte[]` array in `GarbageCollectionTrigger` |
 | `1.12.3` | `nplusone` | repeated DB calls per cart item |
 
-!!! tip "What will we do"
-    Provision the full stack with two commands, then watch the same
-    pipeline that delivers `1.12.0` *block* `1.12.1` thanks to SLO-based
-    quality gates.
+!!! tip "What we will do"
+    Provision the full stack with `bootstrapWorkshop`, then watch the
+    same GitLab pipeline that delivers `1.12.0` *block* `1.12.1`
+    thanks to the SRG. `seedWorkshopReleases` produces the demo data
+    in seconds for a 1-pass + 3-fail story your tenant shows
+    immediately.
 
 <p align="center">
   <img src="img/dt_professors.png" alt="Workshop" width="180">

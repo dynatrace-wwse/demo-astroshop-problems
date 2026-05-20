@@ -37,46 +37,54 @@ on GitHub.
 
 ### Step 1 — Pipeline runs
 
-`.github/workflows/release.yml` is the sample. A maintainer dispatches
-it with `release_version: 1.12.1` and `problem: cpu`. The pipeline has
-three jobs:
+The GitLab project `Support/Astroshop_Automated_Load_test` walks the
+four release variants in a single pipeline; for each variant the
+trigger fires `.gitlab.release-ci.yml` in `Otel-App/<service>`. Three
+logical stages:
 
 ```
 deploy-staging  →  validate (SRG gate)  →  promote-production
 ```
 
-### Step 2 — Deployment event fires (the "marker") with PR + change context
+A maintainer who wants to demo one variant directly can also run
+`seedWorkshopReleases` from the dev container — it fires the same
+event sequence in seconds, without provisioning the GitLab runner.
 
-Every job that touches an environment finishes with the reusable
-composite action. The action enriches the deployment event with PR
-metadata (number, title, author, files-changed, merge timestamp) and
-the commit message, so any Davis problem raised after the deployment
-shows **which PR caused it** right on the problem card — no diff
-hunting required. See [PR and change details on Davis problem tickets](cicd-observability.md#pr-and-change-details-on-davis-problem-tickets)
+### Step 2 — Deployment event fires (the "marker") with MR + change context
+
+Each GitLab job that touches an environment sources `my_functions.sh`
+and calls `sendDeploymentEvent`. The helper enriches the
+`CUSTOM_DEPLOYMENT` payload with `git.commit.*`, `Repository`,
+`Release_Stage`, `PROBLEM`, and any merge-request context it can
+resolve (`pr.number`, `pr.url`, `pr.title`, `pr.author`), so any
+Davis problem raised after the deployment shows **which MR caused
+it** right on the problem card — no diff hunting required. See
+[PR and change details on Davis problem tickets](cicd-observability.md#pr-and-change-details-on-davis-problem-tickets)
 for the full property list.
 
 ```yaml
-- name: Notify Dynatrace — deployment event (staging)
-  uses: ./.github/actions/dt-deployment-event
-  with:
-    dt_tenant_url:   ${{ secrets.DT_TENANT_URL }}
-    dt_api_token:    ${{ secrets.DT_API_TOKEN }}
-    application:     astroshop
-    release_version: ${{ inputs.release_version }}
-    release_stage:   staging
-    problem:         ${{ inputs.problem }}
+# .gitlab-ci.yml fragment
+notify-deploy:
+  stage: deploy-staging
+  script:
+    - source .devcontainer/util/my_functions.sh
+    - sendDeploymentEvent $VERSION staging $PROBLEM
+    - sendPipelineEvent astroshop-release $CI_PIPELINE_ID \
+        "Astroshop release pipeline" success \
+        $CI_COMMIT_REF_NAME $CI_PROJECT_PATH $GITLAB_USER_LOGIN 240
+  allow_failure: true   # observability never blocks delivery
 ```
 
-The action sends **two** things:
+The helpers send **two** things:
 
 1. `POST /api/v2/events/ingest` — a `CUSTOM_DEPLOYMENT` event so Davis
    can correlate any problems against this release.
-2. `POST /platform/ingest/custom/events.sdlc/github` — a
-   pipeline-run SDLC event in the shape the **CI/CD Observability
-   community app** expects.
+2. `POST /platform/ingest/custom/events.sdlc/gitlab` — pipeline + task
+   SDLC events in the shape the **CI/CD Observability community app**
+   expects.
 
-Both calls are `continue-on-error: true` in spirit: observability never
-blocks delivery.
+GitHub equivalent (`.github/actions/dt-deployment-event/`) is one
+`uses:` line; same payload shape.
 
 ### Step 3 — Load drives the SLO window
 
@@ -112,57 +120,75 @@ blocking behaviour is reproducible without a tenant.
 
 ### Step 5 — The pipeline halts
 
+In the GitLab pipeline:
+
 ```yaml
-- name: Stop bad build
-  if: steps.guardian.outputs.verdict != 'pass'
-  run: |
-    echo "::error::SRG verdict=fail — refusing to promote $VER to production"
-    exit 1
+validate:
+  stage: gate
+  script:
+    - test "$(runDeploymentValidation $VERSION staging $PROBLEM)" = "pass"
+  # If runDeploymentValidation prints anything other than 'pass', the
+  # job fails and the dependent promote stage is skipped.
+
+promote-production:
+  stage: deploy-prod
+  needs: [validate]
+  when: on_success   # only runs if validate passed
 ```
 
-The `promote-production` job has `if: needs.validate.outputs.verdict == 'pass'`,
-so it never runs. The release is *visible everywhere* (CI/CD app, Davis
-correlation, dashboards) but *cannot reach production*.
+The promote stage never runs. The release is *visible everywhere*
+(CI/CD app, Davis correlation, dashboards) but *cannot reach
+production*.
+
+The GitHub Actions equivalent in `.github/workflows/release.yml` uses
+`if: needs.validate.outputs.verdict == 'pass'` for the same effect.
 
 ### Step 6 — Optional auto-rollback in production
 
 If a release *does* make it to production and the post-deploy guardian
-later fails, the Dynatrace Workflow
-(`dtctl/workflows/on-deployment-event.yaml`) dispatches the
-`Rollback astroshop` workflow via the GitHub Connector:
+later fails, the Dynatrace Workflow (`labs/srg-workflow.json` in
+monaco) uses the **GitLab Connector** to open a GitLab issue OR
+dispatch a rollback pipeline on the previous good tag. The same
+workflow can call the **GitHub Connector** instead — only the action
+type changes:
 
 ```yaml
+# In the monaco-defined workflow
 rollback_on_fail:
-  action: dynatrace.github.connector:dispatch-workflow
+  action: dynatrace.gitlab.connector:gitlab-issue-create   # or
+          # dynatrace.github.connector:dispatch-workflow
   input:
-    repository: <org>/<repo>
-    workflow: rollback.yml
-    ref: main
-    inputs:
-      release_version: "{{ result('read_payload').release_version }}"
+    connection: "{{ .gitlab_connection_id }}"
+    projectId: 3
+    title: "Rollback astroshop {{ event()['deploymentVersion'] }}"
+    description: "SRG verdict failed — rolling back."
 ```
 
 ---
 
-## Reproducing the demo without a Dynatrace tenant
+## Reproducing the demo without provisioning the GitLab pipeline
 
-The public release workflow uses a deterministic gate (`problem != none → fail`),
-so even forks without Dynatrace credentials can show the blocking
-behaviour in green/red:
+If you don't want to wait for the full `bootstrapWorkshop`, the bash
+helpers in this repo replay the same event sequence directly to your
+tenant:
 
+```bash
+# tokens + URL are in .devcontainer/.env (gitignored, 0600)
+set -a; source .devcontainer/.env; set +a
+source .devcontainer/util/source_framework.sh
+seedWorkshopReleases
+# → 4 CUSTOM_DEPLOYMENT + 4 pipeline runs + 24 task events + 4 SRG verdicts
+#   1.12.0 = pass, 1.12.1/2/3 = fail
 ```
-gh workflow run release.yml -f release_version=1.12.1 -f problem=cpu
-# → deploy-staging passes
-# → validate fails on the "Stop bad build" step
-# → promote-production is skipped
-```
 
-To run it *with* Dynatrace, set the two secrets in your repo / org:
+To replay against your *own* tenant (instead of COE), set these in
+`.devcontainer/.env`:
 
-| Secret | Value |
+| Var | Value |
 |---|---|
 | `DT_TENANT_URL` | `https://<tenant-id>.live.dynatrace.com` |
-| `DT_API_TOKEN` | API token with `events.ingest` + `openpipeline.events.ingest` |
+| `DT_API_TOKEN` | API token with `events.ingest` + `openpipeline.events_sdlc.custom` |
+| `DT_PLATFORM_TOKEN` | OAuth platform token (`dt0s16…`) — needed by monaco / dtctl |
 
 ---
 

@@ -71,6 +71,77 @@ applyDtctlConfigs(){
 }
 
 # ----------------------------------------------------------------------
+# monaco — Dynatrace Monitoring-as-Code CLI
+# (github.com/Dynatrace/dynatrace-configuration-as-code)
+# ----------------------------------------------------------------------
+MONACO_VERSION="${MONACO_VERSION:-2.28.7}"
+
+installMonaco(){
+  printInfoSection "Installing monaco v$MONACO_VERSION"
+  if command -v monaco >/dev/null 2>&1; then
+    printInfo "monaco already installed: $(monaco version 2>/dev/null | head -1)"
+    return 0
+  fi
+  local bindir="$HOME/.local/bin"
+  mkdir -p "$bindir"
+  local arch
+  case "$(uname -m)" in
+    x86_64|amd64) arch=amd64 ;;
+    aarch64|arm64) arch=arm64 ;;
+    *) printError "unsupported arch $(uname -m)"; return 1 ;;
+  esac
+  curl -fsSL "https://github.com/Dynatrace/dynatrace-configuration-as-code/releases/download/v${MONACO_VERSION}/monaco-linux-${arch}" \
+    -o "$bindir/monaco"
+  chmod +x "$bindir/monaco"
+  case ":$PATH:" in *":$bindir:"*) ;; *) export PATH="$bindir:$PATH" ;; esac
+  printInfo "monaco installed: $(monaco version 2>/dev/null | head -1)"
+}
+
+# Apply the monaco config under
+# .devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/ to the
+# current DT_ENVIRONMENT. Requires:
+#   DT_ENVIRONMENT          tenant platform URL (https://<id>.apps.dynatrace.com)
+#   DT_API_TOKEN            classic Api-Token (any read scope is enough)
+#   DT_PLATFORM_TOKEN       OAuth platform token (dt0s16...) — the source of truth
+# Optional (defaults wired so monaco can still deploy on COE-only tenants):
+#   WORKFLOW_ACTOR_ID       owner UUID for workflows
+#   GITLAB_EXTERNAL_ENDPOINT, GITLAB_HOST, GITLAB_PRIVATE_TOKEN  — set when the
+#                           in-cluster GitLab is reachable from this tenant
+#   ACTIVE_GATE_NODE_ID     synthetic location host (needed for synthetic monitor)
+applyMonacoConfig(){
+  local monaco_dir="${MONACO_DIR:-$REPO_PATH/.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco}"
+  if [ ! -f "$monaco_dir/manifest.yml" ]; then
+    printWarn "No monaco manifest at $monaco_dir/manifest.yml — skipping"
+    return 0
+  fi
+  if [ -z "$DT_ENVIRONMENT" ] || [ -z "$DT_PLATFORM_TOKEN" ]; then
+    printWarn "DT_ENVIRONMENT or DT_PLATFORM_TOKEN not set — skipping monaco deploy"
+    return 0
+  fi
+
+  installMonaco
+
+  printInfoSection "Applying monaco config from $monaco_dir to $DT_ENVIRONMENT"
+  # Map / fill the env vars monaco expects from what we have.
+  export DT_PLATFORM_TENANT_URL="$DT_ENVIRONMENT"
+  export DT_API_TOKEN="${DT_API_TOKEN:?DT_API_TOKEN must be set}"
+  export DT_PLATFORM_TOKEN
+  : "${WORKFLOW_ACTOR_ID:=00000000-0000-0000-0000-000000000000}"
+  : "${DT_TENANT_URL_NO_HTTP:=$(echo "$DT_ENVIRONMENT" | sed -E 's|https?://||')}"
+  : "${GITLAB_EXTERNAL_ENDPOINT:=http://gitlab.placeholder.sslip.io}"
+  : "${GITLAB_HOST:=gitlab.placeholder.sslip.io}"
+  : "${GITLAB_PRIVATE_TOKEN:=placeholder-gitlab-pat}"
+  : "${ACTIVE_GATE_NODE_ID:=placeholder-ag-node}"
+  export WORKFLOW_ACTOR_ID DT_TENANT_URL_NO_HTTP \
+         GITLAB_EXTERNAL_ENDPOINT GITLAB_HOST GITLAB_PRIVATE_TOKEN \
+         ACTIVE_GATE_NODE_ID
+
+  ( cd "$monaco_dir" && monaco deploy manifest.yml --continue-on-error ) \
+    | grep -E "Deployment successful|ERROR|configs deployed" | tail -20
+  printInfo "monaco deploy finished (see ${monaco_dir}/.logs/ for full output)"
+}
+
+# ----------------------------------------------------------------------
 # GitLab — install via official helm chart on sslip.io magic domain
 # ----------------------------------------------------------------------
 installGitlab(){
@@ -713,17 +784,22 @@ JSON
 # ----------------------------------------------------------------------
 bootstrapWorkshop(){
   printInfoSection "Bootstrapping the CI/CD Observability workshop"
-  printInfo "Phases: astroshop -> gitlab -> seed repos -> dtctl -> loadgen"
+  printInfo "Phases: astroshop -> gitlab -> seed repos -> dtctl + monaco -> loadgen"
   printInfo "Total time: ~15-20 minutes"
 
   deployApp astroshop          || { printError "astroshop deploy failed"; return 1; }
   installGitlab                || { printError "gitlab install failed"; return 1; }
   seedGitlabRepos              || { printError "gitlab seed failed"; return 1; }
   installDtctl                 || printWarn "dtctl install failed (non-fatal)"
+  installMonaco                || printWarn "monaco install failed (non-fatal)"
+  applyMonacoConfig            || printWarn "monaco apply failed (non-fatal — likely no DT_PLATFORM_TOKEN)"
   deployLoadgenerator          || printWarn "loadgen deploy failed (non-fatal)"
 
   printInfoSection "Workshop bootstrap complete"
   printInfo "GitLab:   http://gitlab.$(detectIP).${MAGIC_DOMAIN:-sslip.io}"
   printInfo "Astroshop: $(getAppURL astroshop 2>/dev/null || echo 'see printGreeting')"
-  printInfo "Next: dtctl auth login --context demo --environment <tenant>; applyDtctlConfigs"
+  printInfo "Tenant:   ${DT_ENVIRONMENT:-<not configured>}"
+  printInfo ""
+  printInfo "Next: source .devcontainer/.env (DT_PLATFORM_TOKEN, DT_API_TOKEN, DT_TENANT_URL)"
+  printInfo "      then run 'seedWorkshopReleases' to populate demo data"
 }

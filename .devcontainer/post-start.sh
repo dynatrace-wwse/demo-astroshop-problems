@@ -11,6 +11,9 @@ source .devcontainer/util/source_framework.sh
 #exposeMkdocs
 
 # Load test against the astroshop frontend (locust + playwright)
-deployLoadgenerator
+# Skipped in CI to keep the integration test inside its time budget.
+if [[ -z "$CI" && -z "$GITHUB_ACTIONS" ]]; then
+  deployLoadgenerator
+fi
 
 printInfoSection "Your dev.container finished starting up"

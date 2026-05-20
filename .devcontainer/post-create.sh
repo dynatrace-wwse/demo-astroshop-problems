@@ -18,20 +18,19 @@ installK9s
 #deployCloudNative
 #deployApplicationMonitoring
 
-# The Astroshop keeping changes of demo.live needs certmanagerdocker
-deployApp astroshop
-
-# Heavy steps below — skipped in CI (10-min integration-test budget). The
-# integration test exercises the framework + astroshop only; the workshop
-# extras run in Codespaces / local devcontainers.
+# Heavy workshop steps — skipped in CI (10-min integration-test budget).
+# These run automatically in Codespaces and local devcontainers but the
+# CI integration test only exercises the framework basics.
 if [[ -z "$CI" && -z "$GITHUB_ACTIONS" ]]; then
+  # The Astroshop (15+ pods) takes minutes to come Ready
+  deployApp astroshop
   # GitLab in-cluster + seed Otel-App / Support groups with the migrated repos
   installGitlab
   seedGitlabRepos
   # Dynatrace platform CLI for dashboards/SLOs/guardians/workflows-as-code
   installDtctl
 else
-  printInfo "CI detected — skipping installGitlab / seedGitlabRepos / installDtctl"
+  printInfo "CI detected — skipping workshop bootstrap (deployApp astroshop, installGitlab, seedGitlabRepos, installDtctl)"
 fi
 
 # If the Codespace was created via Workflow end2end test will be done, otherwise

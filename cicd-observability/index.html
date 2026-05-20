@@ -1,0 +1,2082 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../stop-bad-builds/">
+      
+      
+        <link rel="next" href="../cleanup/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+    
+    
+      
+        <title>6. Open questions Q&A - Dynatrace Enablement Lab: Astroshop Problem Scenarios</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+  
+      
+    
+  
+  <script type="text/javascript"
+    src="https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"
+    crossorigin="anonymous"></script>
+  
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cicd-observability-with-dynatrace-workshop-qa" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Dynatrace Enablement Lab: Astroshop Problem Scenarios" class="md-header__button md-logo" aria-label="Dynatrace Enablement Lab: Astroshop Problem Scenarios" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Dynatrace Enablement Lab: Astroshop Problem Scenarios
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6. Open questions Q&A
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Dynatrace Enablement Lab: Astroshop Problem Scenarios" class="md-nav__button md-logo" aria-label="Dynatrace Enablement Lab: Astroshop Problem Scenarios" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    Dynatrace Enablement Lab: Astroshop Problem Scenarios
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-codespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Codespaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-content/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4. Content
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stop-bad-builds/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Stop bad builds
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    6. Open questions Q&A
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    6. Open questions Q&A
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-cicd-observability-gives-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      What CI/CD observability gives you
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-dynatrace-cicd-observability-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Dynatrace CI/CD observability model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#personas-what-each-role-wants-to-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      Personas — what each role wants to see
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Personas — what each role wants to see">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-sre-platform-engineer" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD SRE / Platform engineer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Engineering lead
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-and-change-details-on-davis-problem-tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      PR and change details on Davis problem tickets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR and change details on Davis problem tickets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-lands-on-the-problem-card-today-out-of-the-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      What lands on the problem card today (out of the box)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-add-with-this-repos-github-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      What you add with this repo's GitHub Action
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-on-call-experience-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      How the on-call experience changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pr-lifecycle-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      The PR lifecycle workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tenant-side-configuration-to-surface-these-on-the-problem-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tenant-side configuration to surface these on the problem card
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-11-open-questions-and-their-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      The 11 open questions and their answers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The 11 open questions and their answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-is-the-link-between-deployments-and-production-problems-purely-dependent-on-manually-sending-custom_deployment-events-through-the-events-api-or-is-there-an-automated-mechanism-in-the-sdlc-pipelines-that-creates-deployment-markers-automatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q1. Is the link between deployments and production problems purely dependent on manually sending CUSTOM_DEPLOYMENT events through the Events API? Or is there an automated mechanism in the SDLC pipelines that creates deployment markers automatically?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-how-do-we-send-custom_deployment-events-do-we-configure-this-globally-or-per-repository-how-do-we-reduce-developer-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q2. How do we send CUSTOM_DEPLOYMENT events? Do we configure this globally or per repository? How do we reduce developer overhead?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-is-security-and-quality-signals-what-the-snyk-extension-provides-it-asks-for-an-activegate-group-how-does-that-data-route-to-openpipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q3. Is "security and quality signals" what the Snyk extension provides? It asks for an ActiveGate group. How does that data route to OpenPipeline?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-does-the-ingestion-source-itself-determine-how-data-is-normalized-for-cicd-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q4. Does the ingestion source itself determine how data is normalized for CI/CD observability?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-are-there-guidelines-best-practices-for-designing-the-github-actions-that-fire-these-events-naming-conventions-when-to-fire-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q5. Are there guidelines / best practices for designing the GitHub Actions that fire these events? Naming conventions, when to fire, etc.?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-to-use-srg-slo-based-quality-gates-properly-what-do-we-depend-on-synthetic-monitor-continuous-testing-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q6. To use SRG (SLO-based quality gates) properly, what do we depend on — synthetic monitor, continuous testing, etc.?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q7-we-want-to-block-a-production-pipeline-based-on-an-srg-evaluation-that-ran-post-staging-deployment-how-do-we-do-that-in-github-actions-what-does-it-depend-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q7. We want to block a production pipeline based on an SRG evaluation that ran post-staging deployment. How do we do that in GitHub Actions? What does it depend on?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q8-flow-post-prod-deployment-execute-srg-on-slos-trigger-rollback-what-are-the-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q8. Flow: post-prod deployment → execute SRG on SLOs → trigger rollback. What are the dependencies?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q9-is-the-github-pipeline-observability-tutorial-the-recommended-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q9. Is the GitHub pipeline-observability tutorial the recommended path?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q10-for-the-events-api-whats-the-recommended-approach-curl-powershell-cmd-who-configures-it-and-where-specific-use-case-only-or-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q10. For the Events API, what's the recommended approach (curl / PowerShell / cmd)? Who configures it, and where? Specific use case only, or central?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q11-is-the-dynatrace-github-connector-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q11. Is the Dynatrace GitHub Connector recommended?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-architecture-for-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference architecture for this repo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference architecture for this repo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-running-looks-like" class="md-nav__link">
+    <span class="md-ellipsis">
+      What "running" looks like
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-demo-flow-60-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workshop demo flow (60 min)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cleanup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7. Cleanup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8. Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-next/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9. What's next?
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-cicd-observability-gives-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      What CI/CD observability gives you
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-dynatrace-cicd-observability-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Dynatrace CI/CD observability model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#personas-what-each-role-wants-to-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      Personas — what each role wants to see
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Personas — what each role wants to see">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-sre-platform-engineer" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD SRE / Platform engineer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Engineering lead
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-and-change-details-on-davis-problem-tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      PR and change details on Davis problem tickets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR and change details on Davis problem tickets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-lands-on-the-problem-card-today-out-of-the-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      What lands on the problem card today (out of the box)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-you-add-with-this-repos-github-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      What you add with this repo's GitHub Action
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-on-call-experience-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      How the on-call experience changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pr-lifecycle-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      The PR lifecycle workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tenant-side-configuration-to-surface-these-on-the-problem-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tenant-side configuration to surface these on the problem card
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-11-open-questions-and-their-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      The 11 open questions and their answers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The 11 open questions and their answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-is-the-link-between-deployments-and-production-problems-purely-dependent-on-manually-sending-custom_deployment-events-through-the-events-api-or-is-there-an-automated-mechanism-in-the-sdlc-pipelines-that-creates-deployment-markers-automatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q1. Is the link between deployments and production problems purely dependent on manually sending CUSTOM_DEPLOYMENT events through the Events API? Or is there an automated mechanism in the SDLC pipelines that creates deployment markers automatically?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-how-do-we-send-custom_deployment-events-do-we-configure-this-globally-or-per-repository-how-do-we-reduce-developer-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q2. How do we send CUSTOM_DEPLOYMENT events? Do we configure this globally or per repository? How do we reduce developer overhead?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-is-security-and-quality-signals-what-the-snyk-extension-provides-it-asks-for-an-activegate-group-how-does-that-data-route-to-openpipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q3. Is "security and quality signals" what the Snyk extension provides? It asks for an ActiveGate group. How does that data route to OpenPipeline?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-does-the-ingestion-source-itself-determine-how-data-is-normalized-for-cicd-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q4. Does the ingestion source itself determine how data is normalized for CI/CD observability?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-are-there-guidelines-best-practices-for-designing-the-github-actions-that-fire-these-events-naming-conventions-when-to-fire-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q5. Are there guidelines / best practices for designing the GitHub Actions that fire these events? Naming conventions, when to fire, etc.?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-to-use-srg-slo-based-quality-gates-properly-what-do-we-depend-on-synthetic-monitor-continuous-testing-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q6. To use SRG (SLO-based quality gates) properly, what do we depend on — synthetic monitor, continuous testing, etc.?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q7-we-want-to-block-a-production-pipeline-based-on-an-srg-evaluation-that-ran-post-staging-deployment-how-do-we-do-that-in-github-actions-what-does-it-depend-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q7. We want to block a production pipeline based on an SRG evaluation that ran post-staging deployment. How do we do that in GitHub Actions? What does it depend on?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q8-flow-post-prod-deployment-execute-srg-on-slos-trigger-rollback-what-are-the-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q8. Flow: post-prod deployment → execute SRG on SLOs → trigger rollback. What are the dependencies?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q9-is-the-github-pipeline-observability-tutorial-the-recommended-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q9. Is the GitHub pipeline-observability tutorial the recommended path?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q10-for-the-events-api-whats-the-recommended-approach-curl-powershell-cmd-who-configures-it-and-where-specific-use-case-only-or-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q10. For the Events API, what's the recommended approach (curl / PowerShell / cmd)? Who configures it, and where? Specific use case only, or central?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q11-is-the-dynatrace-github-connector-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q11. Is the Dynatrace GitHub Connector recommended?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-architecture-for-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference architecture for this repo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference architecture for this repo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-running-looks-like" class="md-nav__link">
+    <span class="md-ellipsis">
+      What "running" looks like
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-demo-flow-60-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workshop demo flow (60 min)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="cicd-observability-with-dynatrace-workshop-qa">CI/CD Observability with Dynatrace — Workshop Q&amp;A<a class="headerlink" href="#cicd-observability-with-dynatrace-workshop-qa" title="Permanent link">#</a></h1>
+<p>This document distills the most common questions teams ask when they start
+wiring CI/CD pipelines (GitHub Actions, GitLab, Jenkins, Azure DevOps, …)
+into Dynatrace, and answers each from a Dynatrace performance-engineering
+perspective. Examples reference the <code>demo-astroshop-problems</code> repository,
+which deploys the OpenTelemetry demo (Astroshop) on a local k3d cluster,
+deliberately rolls out four broken release variants (CPU, memory, n+1,
+error), drives load with a locust-based generator, and emits release events
+into a Dynatrace tenant via Workflows and the Events v2 API.</p>
+<p>The intent is a public, workshop-ready reference — no customer-specific
+data appears anywhere in this file.</p>
+<hr />
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="#what-cicd-observability-gives-you">What CI/CD observability gives you</a></li>
+<li><a href="#the-dynatrace-cicd-observability-model">The Dynatrace CI/CD observability model</a></li>
+<li><a href="#personas--what-each-role-wants-to-see">Personas — what each role wants to see</a></li>
+<li><a href="#pr-and-change-details-on-davis-problem-tickets">PR and change details on Davis problem tickets</a></li>
+<li><a href="#the-11-open-questions-and-their-answers">The 11 open questions and their answers</a></li>
+<li><a href="#reference-architecture-for-this-repo">Reference architecture for this repo</a></li>
+<li><a href="#workshop-demo-flow-60-min">Workshop demo flow (60 min)</a></li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+<hr />
+<h2 id="what-cicd-observability-gives-you">What CI/CD observability gives you<a class="headerlink" href="#what-cicd-observability-gives-you" title="Permanent link">#</a></h2>
+<p>Four outcomes are repeatable across customers, and they map directly to
+the DORA metrics SREs are usually asked to report on:</p>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>DORA metric it powers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Automatically link deployments to production problems</td>
+<td>Change Failure Rate, MTTR</td>
+</tr>
+<tr>
+<td>Measure DORA / SRE metrics from real pipeline data</td>
+<td>Deployment Frequency, Lead Time for Changes</td>
+</tr>
+<tr>
+<td>Detect risky releases early and consistently</td>
+<td>Change Failure Rate (predictive)</td>
+</tr>
+<tr>
+<td>Shift security and quality feedback left</td>
+<td>(governance / risk)</td>
+</tr>
+</tbody>
+</table>
+<p>The signal model that underpins these is three layers wide:</p>
+<ol>
+<li><strong>Deployment events</strong> — structured <code>CUSTOM_DEPLOYMENT</code> events sent to
+   Dynatrace at the moment of a release. Carry commit, branch, repo,
+   environment, version, and pipeline URL. Davis correlates production
+   problems against these timestamps.</li>
+<li><strong>Pipeline execution signals</strong> — workflow and job-level events ingested
+   via webhooks (GitHub) or job hooks (GitLab/Jenkins/ADO) into Dynatrace
+   OpenPipeline. These power lead-time, failure-rate, and queue-depth
+   analyses.</li>
+<li><strong>Security and quality signals</strong> — Snyk/CodeQL/SonarQube/Trivy results
+   ingested as logs or events alongside runtime signals so risk can be
+   reasoned about end-to-end.</li>
+</ol>
+<hr />
+<h2 id="the-dynatrace-cicd-observability-model">The Dynatrace CI/CD observability model<a class="headerlink" href="#the-dynatrace-cicd-observability-model" title="Permanent link">#</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------+          +---------------------+         +----------------------+
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|   CI/CD system    |          |     Dynatrace       |         |  Production runtime  |
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>|  (GitHub/GitLab)  |          |     platform        |         |  (k8s, hosts, apps)  |
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>+-------------------+          +---------------------+         +----------------------+
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        |                                |                                |
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        | 1. CUSTOM_DEPLOYMENT event     |                                |
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        |-------------------------------&gt;| Events v2                      |
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        |                                |                                |
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        | 2. workflow_run / job webhooks |                                |
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        |-------------------------------&gt;| OpenPipeline (SDLC events)     |
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        |                                |                                |
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        | 3. Snyk / CodeQL findings      |                                |
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        |-------------------------------&gt;| security.events ingest         |
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        |                                |                                |
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        |                                | 4. Davis AI correlates         |
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        |                                |    deployment -&gt; problem -----&gt;|
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        |                                |                                |
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        |                                | 5. SRG validates SLOs against  |
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        |&lt;-------------------------------|    runtime + load test data    |
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        |   PASS/WARN/FAIL via API/connector                              |
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        | 6. Pipeline halts/promotes based on result                      |
+</span></code></pre></div>
+<hr />
+<h2 id="personas-what-each-role-wants-to-see">Personas — what each role wants to see<a class="headerlink" href="#personas-what-each-role-wants-to-see" title="Permanent link">#</a></h2>
+<p>CI/CD observability is "the same data, three views". Each persona asks
+different questions of the same underlying SDLC + deployment + runtime
+signals. If you build the data model around the <strong>developer</strong> persona
+and bolt on aggregates for the <strong>CI/CD SRE</strong> and <strong>engineering lead</strong>,
+the result is reusable across all three.</p>
+<h3 id="developer">Developer<a class="headerlink" href="#developer" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Where the answer lives</th>
+<th>Signal needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Is my PR safe to merge?"</td>
+<td>SRG verdict on the PR check</td>
+<td>SLOs evaluated over the load-test window; pipeline-run SDLC event with <code>vcs.pr.number</code></td>
+</tr>
+<tr>
+<td>"Did my deploy cause this problem?"</td>
+<td>Davis problem card → linked deployment event</td>
+<td><code>CUSTOM_DEPLOYMENT</code> with <code>pr.*</code> + <code>git.commit.*</code> properties</td>
+</tr>
+<tr>
+<td>"Which line of code did this?"</td>
+<td>Trace → method-hotspots → permalink to git blame</td>
+<td>OneAgent code-level traces + git commit on the deployment event</td>
+</tr>
+<tr>
+<td>"How long is my CI taking compared to last week?"</td>
+<td>Pipeline Observability app, filter by author</td>
+<td>Pipeline + task SDLC events with <code>ext.pipeline.run.trigger.user</code></td>
+</tr>
+<tr>
+<td>"Are any of my tests flaky?"</td>
+<td>Pipeline app, filter by <code>task.outcome == failed</code> over time</td>
+<td>Task SDLC events with <code>task.retry</code></td>
+</tr>
+</tbody>
+</table>
+<p>What developers consistently complain about:
+- Adding observability config to every PR (counter: ship the reusable
+  workflow once; developers just <code>uses:</code> it).
+- Reading dashboards built for SREs (counter: a <em>developer dashboard</em>
+  with their PRs, their services, their problems).</p>
+<h3 id="cicd-sre-platform-engineer">CI/CD SRE / Platform engineer<a class="headerlink" href="#cicd-sre-platform-engineer" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Where</th>
+<th>Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DORA four keys per team</td>
+<td>DORA dashboard from this repo's <code>dtctl/dashboards/cicd-overview.yaml</code></td>
+<td>Deployment + SDLC events with <code>deploymentProject</code></td>
+</tr>
+<tr>
+<td>Pipeline duration / queue depth</td>
+<td>Pipeline Observability app</td>
+<td>Pipeline + task SDLC events with <code>start_time</code> / <code>end_time</code></td>
+</tr>
+<tr>
+<td>Change Failure Rate by service</td>
+<td>DQL: <code>events | filter event.kind=="DEPLOYMENT_EVENT"</code> joined with Davis problems opened within N minutes</td>
+<td>CUSTOM_DEPLOYMENT + Davis problems</td>
+</tr>
+<tr>
+<td>Which release introduces the most regressions?</td>
+<td>DQL on <code>srg_verdict == "FAIL"</code> grouped by <code>deploymentProject</code></td>
+<td>Workflow-emitted bizevent for verdict</td>
+</tr>
+<tr>
+<td>Is our pipeline observability <em>itself</em> healthy?</td>
+<td>DQL: count of pipeline events ingested vs expected</td>
+<td>SDLC ingest health</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-lead">Engineering lead<a class="headerlink" href="#engineering-lead" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Where</th>
+<th>Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Are we shipping faster or slower this quarter?</td>
+<td>DORA dashboard, 90-day trend</td>
+<td>All of the above, aggregated</td>
+</tr>
+<tr>
+<td>Which teams are blocked at the gate?</td>
+<td>SRG verdict timeline</td>
+<td>Workflow bizevent + service ownership tag</td>
+</tr>
+<tr>
+<td>Are we adding risk faster than we burn it down?</td>
+<td>Vulnerabilities trend vs deployment rate</td>
+<td>Snyk / native scan events alongside deployment events</td>
+</tr>
+<tr>
+<td>How fast do we recover when things go wrong?</td>
+<td>MTTR tile of the CI/CD overview dashboard</td>
+<td><code>recovery_timestamp - deployment timestamp</code> for problems linked to deployments</td>
+</tr>
+</tbody>
+</table>
+<p>The trick for the engineering lead view: keep it to <strong>four to six tiles
+at most</strong>. Anything more and they stop opening it.</p>
+<hr />
+<h2 id="pr-and-change-details-on-davis-problem-tickets">PR and change details on Davis problem tickets<a class="headerlink" href="#pr-and-change-details-on-davis-problem-tickets" title="Permanent link">#</a></h2>
+<p>The single highest-leverage thing you can do for the on-call experience
+is making sure that the Davis problem card answers the first question
+anyone asks: <strong>"which change caused this?"</strong></p>
+<h3 id="what-lands-on-the-problem-card-today-out-of-the-box">What lands on the problem card today (out of the box)<a class="headerlink" href="#what-lands-on-the-problem-card-today-out-of-the-box" title="Permanent link">#</a></h3>
+<p>Davis already correlates each problem against deployments in the
+affected entity's history. The problem UI shows:</p>
+<ul>
+<li>Deployment timestamp + name (from <code>CUSTOM_DEPLOYMENT</code>)</li>
+<li>Linked entity (the service whose health changed)</li>
+<li>"Affected releases" list</li>
+</ul>
+<p>That gets you <em>that a deployment happened around the time of the
+problem</em>. It doesn't yet tell you <em>which PR introduced it</em>.</p>
+<h3 id="what-you-add-with-this-repos-github-action">What you add with this repo's GitHub Action<a class="headerlink" href="#what-you-add-with-this-repos-github-action" title="Permanent link">#</a></h3>
+<p><code>.github/actions/dt-deployment-event/action.yml</code> enriches the
+<code>CUSTOM_DEPLOYMENT</code> payload with PR + change metadata that surface as
+key/value pairs on the problem card under "Event properties":</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Source</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pr.number</code></td>
+<td><code>github.event.pull_request.number</code> or resolved via <code>gh api .../commits/&lt;sha&gt;/pulls</code></td>
+<td>Link to the PR from the problem</td>
+</tr>
+<tr>
+<td><code>pr.url</code></td>
+<td>github.event.pull_request.html_url</td>
+<td>One-click to the PR</td>
+</tr>
+<tr>
+<td><code>pr.title</code></td>
+<td>github.event.pull_request.title</td>
+<td>Human-readable context — "PR #234: switch to async ad cache"</td>
+</tr>
+<tr>
+<td><code>pr.author</code></td>
+<td>github.event.pull_request.user.login</td>
+<td>Who to ping</td>
+</tr>
+<tr>
+<td><code>pr.files_changed</code></td>
+<td>github.event.pull_request.changed_files</td>
+<td>Quick risk assessment</td>
+</tr>
+<tr>
+<td><code>pr.merged_at</code></td>
+<td>github.event.pull_request.merged_at</td>
+<td>Timeline anchor</td>
+</tr>
+<tr>
+<td><code>git.commit.id</code></td>
+<td>github.sha</td>
+<td>Permalink to the diff</td>
+</tr>
+<tr>
+<td><code>git.commit.message</code></td>
+<td><code>git log -1 --pretty=%s</code></td>
+<td>First-line summary</td>
+</tr>
+<tr>
+<td><code>git.commit.branch</code></td>
+<td>github.ref_name</td>
+<td>Branch context</td>
+</tr>
+<tr>
+<td><code>change.ticket</code></td>
+<td>action input</td>
+<td>Jira/ServiceNow change ID if you have one</td>
+</tr>
+</tbody>
+</table>
+<p>These are also indexed in Grail so DQL queries on the events table can
+group problems by author, file count, or change ticket.</p>
+<h3 id="how-the-on-call-experience-changes">How the on-call experience changes<a class="headerlink" href="#how-the-on-call-experience-changes" title="Permanent link">#</a></h3>
+<p><strong>Before</strong> (raw deployment marker):</p>
+<blockquote>
+<p>Problem P-1234 on service astroshop-adservice. Deployment "astroshop release 1.12.1" 8 minutes ago.</p>
+</blockquote>
+<p><strong>After</strong> (with PR enrichment):</p>
+<blockquote>
+<p>Problem P-1234 on service astroshop-adservice.
+Deployment "astroshop release 1.12.1 — PR #234".
+PR #234: <em>"switch to async ad cache"</em> by <code>alice@</code>, 5 files changed,
+merged at 14:55Z. <a href="https://github.com/...">Open PR</a> · <a href="https://github.com/.../commit/abc1234">Diff</a>
+Change ticket: <code>CHG-1142</code>.</p>
+</blockquote>
+<p>That's the difference between "page someone awake and ask them to
+investigate" and "page someone awake with the link to the PR already
+in their notification".</p>
+<h3 id="the-pr-lifecycle-workflow">The PR lifecycle workflow<a class="headerlink" href="#the-pr-lifecycle-workflow" title="Permanent link">#</a></h3>
+<p><code>.github/workflows/pr-events.yml</code> fires a CHANGE event to the CI/CD
+Observability app on every <code>opened</code> / <code>synchronize</code> / <code>closed</code> PR
+action, so the app's PR view shows the PR independently of any
+deployment, with <code>event.category == "change"</code>. This gives the
+engineering lead a separate timeline of <em>intent to change</em> alongside
+the <em>actually deployed</em> timeline.</p>
+<h3 id="tenant-side-configuration-to-surface-these-on-the-problem-card">Tenant-side configuration to surface these on the problem card<a class="headerlink" href="#tenant-side-configuration-to-surface-these-on-the-problem-card" title="Permanent link">#</a></h3>
+<ol>
+<li><strong>Notification template</strong> — add <code>{ProblemEvents}</code> placeholder in the
+   Slack / Teams / email problem notification so the PR fields show in
+   the body of the alert.</li>
+<li><strong>OpenPipeline rule</strong> — optional: enrich the deployment event by
+   joining against the latest <code>change.ticket</code> from your ticket system
+   if you don't fire it from the pipeline.</li>
+<li><strong>Davis problem comments via Workflow</strong> — for a slicker UI, the
+   <code>on-deployment-event.yaml</code> workflow can post the PR metadata as a
+   Davis problem comment when a problem opens within N minutes of a
+   deployment.</li>
+</ol>
+<hr />
+<h2 id="the-11-open-questions-and-their-answers">The 11 open questions and their answers<a class="headerlink" href="#the-11-open-questions-and-their-answers" title="Permanent link">#</a></h2>
+<h3 id="q1-is-the-link-between-deployments-and-production-problems-purely-dependent-on-manually-sending-custom_deployment-events-through-the-events-api-or-is-there-an-automated-mechanism-in-the-sdlc-pipelines-that-creates-deployment-markers-automatically">Q1. Is the link between deployments and production problems purely dependent on manually sending <code>CUSTOM_DEPLOYMENT</code> events through the Events API? Or is there an automated mechanism in the SDLC pipelines that creates deployment markers automatically?<a class="headerlink" href="#q1-is-the-link-between-deployments-and-production-problems-purely-dependent-on-manually-sending-custom_deployment-events-through-the-events-api-or-is-there-an-automated-mechanism-in-the-sdlc-pipelines-that-creates-deployment-markers-automatically" title="Permanent link">#</a></h3>
+<p><strong>Short answer:</strong> Both exist, and you almost always want both layers.</p>
+<ol>
+<li><strong>Automatic correlation, no events required.</strong> Dynatrace already knows
+   when a process or container restarts, when an image tag changes on a
+   pod, and when an Azure App Service revision flips. Davis treats these
+   as implicit deployment boundaries and correlates problems against them.
+   No code, no API, no events. This is your floor.</li>
+<li><strong>Explicit <code>CUSTOM_DEPLOYMENT</code> events.</strong> Layered on top, you send one
+   event per "logical release" so Davis (and your dashboards) can group
+   pods that came from the same pipeline run, attribute a problem to a
+   specific commit, and reason at the granularity <em>you</em> care about — not
+   only at the granularity of "a pod restarted".</li>
+</ol>
+<p><strong>Why you want both:</strong> The implicit layer is free and catches everything,
+including hotfixes done outside the pipeline. The explicit layer adds
+<em>business context</em> (pipeline URL, commit, ticket ID, change ticket,
+release version) that Davis surfaces in the Problems UI and that you can
+query in DQL.</p>
+<p><strong>Reference in this repo:</strong>
+<a href="../.devcontainer/migrate/support_repos/automated_load_test/scripts/event.sh"><code>.devcontainer/migrate/support_repos/automated_load_test/scripts/event.sh</code></a>
+shows the pattern — a workflow run is triggered via the Automation API,
+which then posts the <code>CUSTOM_DEPLOYMENT</code> event with <code>Release</code>,
+<code>Pipelineurl</code>, <code>stage</code>, <code>Repository</code>, <code>Release_Version</code>, and
+<code>Application</code> properties.</p>
+<hr />
+<h3 id="q2-how-do-we-send-custom_deployment-events-do-we-configure-this-globally-or-per-repository-how-do-we-reduce-developer-overhead">Q2. How do we send <code>CUSTOM_DEPLOYMENT</code> events? Do we configure this globally or per repository? How do we reduce developer overhead?<a class="headerlink" href="#q2-how-do-we-send-custom_deployment-events-do-we-configure-this-globally-or-per-repository-how-do-we-reduce-developer-overhead" title="Permanent link">#</a></h3>
+<p><strong>Short answer:</strong> Centralize the implementation, distribute via a
+reusable workflow / shared action / library — developers add one line.</p>
+<p><strong>Three implementation patterns, ranked by how well they scale:</strong></p>
+<ol>
+<li><strong>(Recommended) Reusable workflow / shared action.</strong> Build it once,
+   call it from every repo. In GitHub Actions:</li>
+</ol>
+<p><div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># In every service repo, a single job:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">jobs</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">notify-deploy</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-org/.github/.github/workflows/dt-deployment-event.yml@v1</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.repository.name }}</span>
+</span></code></pre></div>
+   Developers don't see Dynatrace at all — secrets, payload shape, retry
+   logic, and field naming all live in the central workflow.</p>
+<ol>
+<li>
+<p><strong>Pipeline-side helper script.</strong> A bash/PowerShell helper that wraps
+   the <code>POST /api/v2/events</code> call (or <code>dtctl apply -f event.yaml</code>). Lives
+   in a shared <code>ci-tools</code> repo and is curl'd into each pipeline. Simpler
+   to ship than a reusable workflow but the API surface is exposed to the
+   repo.</p>
+</li>
+<li>
+<p><strong>Per-repo bespoke script.</strong> Avoid. Drift is guaranteed within months.</p>
+</li>
+</ol>
+<p><strong>Field-naming convention we recommend (matches what this repo emits):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Source</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event.type</code></td>
+<td>hard-coded</td>
+<td><code>CUSTOM_DEPLOYMENT</code></td>
+</tr>
+<tr>
+<td><code>deploymentName</code></td>
+<td>pipeline</td>
+<td><code>astroshop release 1.12.1</code></td>
+</tr>
+<tr>
+<td><code>deploymentVersion</code></td>
+<td>git tag / build var</td>
+<td><code>1.12.1</code></td>
+</tr>
+<tr>
+<td><code>deploymentProject</code></td>
+<td>repo name</td>
+<td><code>astroshop</code></td>
+</tr>
+<tr>
+<td><code>ciBackLink</code></td>
+<td>pipeline URL</td>
+<td><code>${CI_JOB_URL}</code></td>
+</tr>
+<tr>
+<td><code>remediationAction</code></td>
+<td>rollback URL</td>
+<td><code>${ROLLBACK_URL}</code></td>
+</tr>
+<tr>
+<td><code>Release_Stage</code></td>
+<td>env name</td>
+<td><code>staging</code> / <code>production</code></td>
+</tr>
+<tr>
+<td><code>git.commit.id</code></td>
+<td><code>${{ github.sha }}</code></td>
+<td><code>abc123…</code></td>
+</tr>
+<tr>
+<td><code>git.commit.branch</code></td>
+<td><code>${{ github.ref_name }}</code></td>
+<td><code>main</code></td>
+</tr>
+</tbody>
+</table>
+<p>These are searchable in Grail with DQL such as:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fetch events, from:now() - 24h
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>| filter event.kind == &quot;DEPLOYMENT_EVENT&quot; and deploymentProject == &quot;astroshop&quot;
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| sort timestamp desc
+</span></code></pre></div>
+<p><strong>Authentication:</strong> prefer an <strong>OAuth client + access token</strong> for v2
+endpoints. Scope it tightly (<code>events.ingest</code>) and rotate via your
+secrets manager. Don't bake API tokens into repos.</p>
+<p><strong>PoC plan inside this repo:</strong>
+1. <code>installDtctl</code> (added to <code>.devcontainer/util/my_functions.sh</code>) gives
+   us a CLI in the dev container.
+2. A reusable GitHub Action under <code>.github/actions/dt-deployment-event/</code>
+   wraps the call.
+3. <code>dtctl/events/sample-deployment.yaml</code> is committed and exercised
+   from a sample workflow under <code>.github/workflows/</code>.</p>
+<hr />
+<h3 id="q3-is-security-and-quality-signals-what-the-snyk-extension-provides-it-asks-for-an-activegate-group-how-does-that-data-route-to-openpipeline">Q3. Is "security and quality signals" what the Snyk extension provides? It asks for an ActiveGate group. How does that data route to OpenPipeline?<a class="headerlink" href="#q3-is-security-and-quality-signals-what-the-snyk-extension-provides-it-asks-for-an-activegate-group-how-does-that-data-route-to-openpipeline" title="Permanent link">#</a></h3>
+<p><strong>Short answer:</strong> Snyk is one provider. Multiple security signals reach
+OpenPipeline through different doors.</p>
+<p><strong>Three ingestion paths for security data:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Path</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Snyk extension</strong></td>
+<td>Snyk → ActiveGate (pull from Snyk API) → Dynatrace <code>security.events</code> table</td>
+<td>If Snyk is your SCA/Container-scan tool and you want Dynatrace to <em>pull</em> findings on a schedule</td>
+</tr>
+<tr>
+<td><strong>CI-pushed findings</strong></td>
+<td>Pipeline runs <code>snyk test --json</code> → posts to <code>/platform/ingest/v1/security.events</code></td>
+<td>Findings arrive on every build, tied to the same release context as the deployment event</td>
+</tr>
+<tr>
+<td><strong>Native Dynatrace App/Container/Code-level vulnerabilities</strong></td>
+<td>OneAgent / RVA scanner</td>
+<td>Always-on, no setup. Use as the <em>truth source</em> for what's actually exposed in production</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The ActiveGate group</strong> is there because Snyk's API is queried <em>from</em>
+the ActiveGate, not from your tenant. The group lets you scope which AG
+talks to Snyk (e.g., dedicated security AGs in a hardened network zone).</p>
+<p><strong>How it reaches OpenPipeline:</strong> The Snyk extension writes events into
+the built-in <code>security.events</code> ingest endpoint (<code>/platform/ingest/v1/security.events</code>).
+From there, OpenPipeline is <em>the</em> place you reshape, enrich, route, or
+fan-out those events — for example, joining them with the deployment
+event so a build that introduced a critical CVE is tagged "risky" before
+it reaches production.</p>
+<p><strong>Recommendation:</strong> Build CI-pushed findings <em>and</em> the Snyk extension in
+parallel. They complement each other:
+- CI-push = real-time risk at build time.
+- Snyk extension = backstop / scheduled reconciliation, catches drift.</p>
+<hr />
+<h3 id="q4-does-the-ingestion-source-itself-determine-how-data-is-normalized-for-cicd-observability">Q4. Does the ingestion source itself determine how data is normalized for CI/CD observability?<a class="headerlink" href="#q4-does-the-ingestion-source-itself-determine-how-data-is-normalized-for-cicd-observability" title="Permanent link">#</a></h3>
+<p><strong>Short answer:</strong> Yes — pick the <em>purpose-built</em> endpoint for each
+signal so the platform applies the right schema, and don't fan everything
+through one generic ingest URL.</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Endpoint</th>
+<th>Result table / kind</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deployment</td>
+<td><code>POST /api/v2/events</code> (event.type=CUSTOM_DEPLOYMENT)</td>
+<td>Events, kind=DEPLOYMENT_EVENT</td>
+</tr>
+<tr>
+<td>Pipeline run / job</td>
+<td><code>POST /platform/ingest/v1/events.sdlc</code></td>
+<td>Events, kind=SDLC_EVENT</td>
+</tr>
+<tr>
+<td>Security finding</td>
+<td><code>POST /platform/ingest/v1/security.events</code></td>
+<td>security.events</td>
+</tr>
+<tr>
+<td>Logs (general)</td>
+<td>OTLP / log ingest</td>
+<td>logs</td>
+</tr>
+<tr>
+<td>Custom business event</td>
+<td><code>POST /platform/ingest/v1/events</code> (Bizevents)</td>
+<td>bizevents</td>
+</tr>
+</tbody>
+</table>
+<p>Each endpoint owns: schema validation, default attribute extraction,
+default retention, and which apps surface it. Misroute a deployment as a
+plain log and you lose the auto-correlation with Davis problems; misroute
+a security finding as a deployment event and the Security Investigator
+app won't see it.</p>
+<p><strong>OpenPipeline</strong> can rewrite/route data <em>after</em> ingestion, but it can't
+recover schema fields you didn't send.</p>
+<p><strong>Rule of thumb:</strong> signal type → endpoint → schema. OpenPipeline is for
+enrichment and routing, not for fixing up sloppy ingestion.</p>
+<hr />
+<h3 id="q5-are-there-guidelines-best-practices-for-designing-the-github-actions-that-fire-these-events-naming-conventions-when-to-fire-etc">Q5. Are there guidelines / best practices for designing the GitHub Actions that fire these events? Naming conventions, when to fire, etc.?<a class="headerlink" href="#q5-are-there-guidelines-best-practices-for-designing-the-github-actions-that-fire-these-events-naming-conventions-when-to-fire-etc" title="Permanent link">#</a></h3>
+<p>Yes. The ones that survive contact with reality:</p>
+<p><strong>When to fire:</strong>
+- <strong>Deployment event:</strong> the moment the artifact lands in the target
+  environment — <em>after</em> the rollout has reported success, <em>before</em> you
+  start the post-deploy validation. Firing too early (e.g., when the
+  workflow starts) creates phantom deployments if the job is cancelled.
+- <strong>Start-of-test event:</strong> when synthetic / load tests start. Lets you
+  bound the analysis window for SRG.
+- <strong>End-of-test event:</strong> when they complete. SRG uses the
+  <code>from</code>/<code>to</code> from these events.
+- <strong>Promotion / rollback events:</strong> the <em>human-meaningful</em> moments. Not
+  technical ones.</p>
+<p><strong>Naming conventions:</strong>
+- Workflow file name: <code>dt-&lt;action&gt;.yml</code> (e.g., <code>dt-deployment-event.yml</code>).
+- Action inputs: lower_snake_case (<code>application</code>, <code>release_version</code>,
+  <code>git_commit_sha</code>).
+- Event property keys: <code>dot.notation</code> matching OTel conventions where they
+  exist (<code>git.commit.id</code>, <code>service.name</code>, <code>deployment.environment</code>).
+- Version strings: SemVer if you can; otherwise build IDs that sort
+  lexicographically.</p>
+<p><strong>Defensive design:</strong>
+- Always provide a fallback for <code>ciBackLink</code> so you never lose the link
+  between an event and the pipeline that fired it.
+- <code>continue-on-error: true</code> for the Dynatrace step. The deploy succeeds
+  even if Dynatrace ingest is briefly unavailable — observability should
+  never block delivery.
+- Retry with exponential backoff (3 attempts, jitter).
+- Emit one event per <em>logical release</em>, not one per service in a
+  monorepo, unless services release independently.</p>
+<p><strong>Two action implementations to consider:</strong></p>
+<ol>
+<li><strong>Composite action that wraps curl</strong> — simplest, no Docker, runs on
+   any runner.</li>
+<li><strong>Docker action that wraps <code>dtctl</code></strong> — richer (can read existing
+   workflows, do diff/apply), but ties you to runners that can run
+   Docker.</li>
+</ol>
+<hr />
+<h3 id="q6-to-use-srg-slo-based-quality-gates-properly-what-do-we-depend-on-synthetic-monitor-continuous-testing-etc">Q6. To use SRG (SLO-based quality gates) properly, what do we depend on — synthetic monitor, continuous testing, etc.?<a class="headerlink" href="#q6-to-use-srg-slo-based-quality-gates-properly-what-do-we-depend-on-synthetic-monitor-continuous-testing-etc" title="Permanent link">#</a></h3>
+<p><strong>Short answer:</strong> SRG is a function of SLOs and SLOs need <em>signal</em>.
+Without signal, SRG passes everything because every guardian is "OK by
+default". Three categories of signal feed it:</p>
+<ol>
+<li><strong>Runtime signal (free).</strong> OneAgent on the workloads. Gets you the
+   four Golden Signals (latency, traffic, errors, saturation) for every
+   service automatically. Use this to gate releases against the
+   environment's behavior.</li>
+<li><strong>Load test signal.</strong> Sustained, repeatable traffic so latency
+   percentiles converge. Without this, an SRG that gates on p95 will be
+   noisy because a quiet environment has small samples. This repo ships a
+   locust-based generator that exercises Astroshop's purchase flow with
+   <code>WebsiteBrowserUser</code> (Playwright headless), which produces realistic
+   end-to-end traces.</li>
+<li><strong>Synthetic signal.</strong> HTTP and full-browser checks that verify the
+   app is <em>available</em> and that critical user journeys work. Use these
+   for SLOs about availability and journey success, especially when
+   organic traffic is low.</li>
+</ol>
+<p><strong>Optional but high-value:</strong>
+- <strong>Business / KPI signal.</strong> A conversion-rate or revenue SLI lets SRG
+  reason about user impact, not just technical health. The Astroshop's
+  <code>purchase_completed</code> business event is the canonical example.
+- <strong>Quality / security signal.</strong> Snyk/CodeQL findings as SLI inputs
+  (e.g., "zero new criticals" must be ≤ 0).</p>
+<p><strong>Anti-patterns to avoid:</strong>
+- Gating on raw counters (<code>error_count</code>) instead of ratios (<code>error_rate</code>)
+  — counters scale with traffic, so an SRG over a quiet weekend can
+  green-light a regression.
+- Using averages instead of percentiles for latency.
+- Defining the SLO target as "this week's value minus 5%" — that's a
+  ratchet that always passes the <em>first</em> time and never the second.</p>
+<hr />
+<h3 id="q7-we-want-to-block-a-production-pipeline-based-on-an-srg-evaluation-that-ran-post-staging-deployment-how-do-we-do-that-in-github-actions-what-does-it-depend-on">Q7. We want to block a production pipeline based on an SRG evaluation that ran post-staging deployment. How do we do that in GitHub Actions? What does it depend on?<a class="headerlink" href="#q7-we-want-to-block-a-production-pipeline-based-on-an-srg-evaluation-that-ran-post-staging-deployment-how-do-we-do-that-in-github-actions-what-does-it-depend-on" title="Permanent link">#</a></h3>
+<p><strong>Two integration patterns. Pick one per team.</strong></p>
+<p><strong>Pattern A — pipeline polls Dynatrace (pull):</strong>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Trigger SRG</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dtctl execute guardian release-readiness --from $START --to $END</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait for verdict</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="no">while [ &quot;$(dtctl get evaluation $ID -o json | jq -r .state)&quot; = &quot;RUNNING&quot; ]; do</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="no">sleep 10</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="no">done</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fail if not PASS</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="no">verdict=$(dtctl get evaluation $ID -o json | jq -r .verdict)</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="no">[ &quot;$verdict&quot; = &quot;PASS&quot; ] || exit 1</span>
+</span></code></pre></div>
+Pros: pipeline-native, easy to debug. Cons: long-running job consumes a
+runner.</p>
+<p><strong>Pattern B — Dynatrace Workflow calls back into GitHub (push):</strong>
+The Dynatrace Workflow that runs the guardian uses the <em>Dynatrace GitHub
+Connector</em> to set a commit status or dispatch a <code>repository_dispatch</code>
+event. The promotion job in GitHub waits on that status check.</p>
+<p>Pros: no polling, no idle runners. Cons: more moving parts, callback
+auth to manage.</p>
+<p><strong>Dependencies in either case:</strong>
+- An SLO definition (<code>dtctl apply -f slo.yaml</code>).
+- An SRG / guardian (<code>dtctl apply -f guardian.yaml</code>) that references the
+  SLO objectives.
+- A <em>signal source</em> — load test or synthetic — that runs <em>between</em>
+  <code>START</code> and <code>END</code> so the SLO has data points to evaluate against.
+- A <code>START_TEST</code> / <code>END_TEST</code> event pair so the guardian's time window
+  is well-defined (see <code>event.sh</code> in this repo for the pattern).
+- OAuth client (<code>automation:workflows:run</code>) for the workflow path.</p>
+<p><strong>This repo will ship both patterns under <code>dtctl/guardians/</code>.</strong></p>
+<hr />
+<h3 id="q8-flow-post-prod-deployment-execute-srg-on-slos-trigger-rollback-what-are-the-dependencies">Q8. Flow: post-prod deployment → execute SRG on SLOs → trigger rollback. What are the dependencies?<a class="headerlink" href="#q8-flow-post-prod-deployment-execute-srg-on-slos-trigger-rollback-what-are-the-dependencies" title="Permanent link">#</a></h3>
+<p>This is the same building blocks as Q7 plus a rollback hook. The end-to-
+end loop:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>deploy(prod)
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  └─&gt; CUSTOM_DEPLOYMENT event (Release_Stage=production)
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>       └─&gt; Dynatrace Workflow trigger &quot;deployment in prod&quot;
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>            ├─&gt; wait for soak window (10-30 min)
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>            ├─&gt; evaluate guardian (SLOs over the soak window)
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            ├─&gt; if FAIL:
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>            │     ├─&gt; create Davis problem (severity=ERROR_EVENT)
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            │     ├─&gt; notify on-call (Slack/PagerDuty action)
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>            │     └─&gt; trigger rollback action:
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>            │          - GitHub Connector → re-run &quot;rollback-to-previous&quot;
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>            │            workflow with previous version as input
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>            │          - or call ArgoCD `app rollback` via REST
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>            │          - or `kubectl rollout undo` from a controlled runner
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>            └─&gt; if PASS: emit &quot;promoted&quot; bizevent and close the loop
+</span></code></pre></div>
+<p><strong>Dependencies:</strong>
+- SLOs already exist (otherwise the guardian has nothing to evaluate).
+- A <em>previous good version</em> is identifiable. Easiest: the
+  <code>CUSTOM_DEPLOYMENT</code> payload from the previous successful release lives
+  in Grail; the Workflow queries for the last <code>result=PASS</code>.
+- The rollback action is idempotent and safe to call from automation.
+  This is the part teams usually <em>don't</em> have — they have to build the
+  inverse of their deploy job. Build it once, treat it as a peer of
+  deploy.
+- OAuth scopes for <code>automation:workflows:run</code>,
+  <code>events.ingest</code>, and whatever the rollback connector needs.</p>
+<p><strong>Risk to flag:</strong> automated rollback on a regression that the SLO
+<em>incorrectly</em> believes is real (e.g., a quiet-traffic false negative)
+can be more disruptive than the regression. Start with rollback gated on
+human approval (<code>Connector → "Open PR" → human merges</code> pattern).
+Promote to fully automated only once the SLOs have demonstrated low
+false-positive rates over multiple cycles.</p>
+<hr />
+<h3 id="q9-is-the-github-pipeline-observability-tutorial-the-recommended-path">Q9. Is the GitHub pipeline-observability tutorial the recommended path?<a class="headerlink" href="#q9-is-the-github-pipeline-observability-tutorial-the-recommended-path" title="Permanent link">#</a></h3>
+<p><strong>Yes, if</strong> GitHub is the CI/CD system of record and the team is
+comfortable with workflows + webhooks. The tutorial wires:</p>
+<ul>
+<li><code>workflow_run</code> and <code>workflow_job</code> GitHub webhooks → Dynatrace
+  OpenPipeline.</li>
+<li>OpenPipeline parses them into <code>dt.entity.cloud.github_workflow_run</code>
+  events and links runs to jobs.</li>
+<li>A built-in dashboard ships under "Pipeline Observability" in the
+  Dynatrace Hub.</li>
+</ul>
+<p><strong>Caveats:</strong>
+- GitHub webhooks need a public endpoint your Dynatrace tenant can
+  receive. Either:
+  - Use the Dynatrace-managed webhook endpoint on
+    <code>*.live.dynatrace.com</code> (recommended), or
+  - Front it with an ActiveGate / reverse proxy if your org won't allow
+    GitHub to call SaaS directly.
+- The default schema is good but specific to GitHub Actions —
+  cross-tool aggregation (GitHub + Jenkins + GitLab) needs a normalized
+  schema layer in OpenPipeline.
+- For private repos, you need a GitHub App or PAT with
+  <code>repo</code>/<code>actions:read</code> scopes.</p>
+<p><strong>Recommendation:</strong> use the tutorial as your <em>baseline</em>, and design an
+OpenPipeline rule that normalizes pipeline events from <em>any</em> CI system
+to a single schema (<code>ci.system</code>, <code>ci.pipeline.id</code>, <code>ci.run.id</code>,
+<code>ci.job.id</code>, <code>ci.outcome</code>, <code>ci.duration</code>). Dashboards then work
+regardless of CI vendor.</p>
+<hr />
+<h3 id="q10-for-the-events-api-whats-the-recommended-approach-curl-powershell-cmd-who-configures-it-and-where-specific-use-case-only-or-central">Q10. For the Events API, what's the recommended approach (curl / PowerShell / cmd)? Who configures it, and where? Specific use case only, or central?<a class="headerlink" href="#q10-for-the-events-api-whats-the-recommended-approach-curl-powershell-cmd-who-configures-it-and-where-specific-use-case-only-or-central" title="Permanent link">#</a></h3>
+<p><strong>Recommended approach, in priority order:</strong></p>
+<ol>
+<li><strong><code>dtctl apply -f event.yaml</code></strong> — declarative, reviewable, diff-able,
+   AI-agent friendly. Same shape works in GitHub Actions, GitLab CI,
+   Jenkins, Azure Pipelines.</li>
+<li><strong>Official GitHub Action</strong> (<code>dynatrace-ace/dt-deployment-event</code> or
+   the dtctl-based equivalent) — wraps the call with sensible defaults.</li>
+<li><strong>Raw curl</strong> — fine as a fallback, but you re-implement retry, auth
+   refresh, and payload validation yourself.</li>
+</ol>
+<p>PowerShell or <code>cmd.exe</code> are last-resort options used only because a
+Windows-only build agent has nothing else. They work, but you'll
+re-write them when you migrate runners.</p>
+<p><strong>Who configures it:</strong>
+- <strong>Platform / Observability team</strong> owns the central reusable workflow,
+  the OAuth client, the secret, and the payload schema.
+- <strong>Service teams</strong> consume it by calling the workflow with a couple of
+  inputs (<code>application</code>, <code>environment</code>). They never touch the API
+  directly.</p>
+<p><strong>Where it's done in the code:</strong>
+- The trigger is in the CI pipeline (<code>.github/workflows/release.yml</code> or
+  equivalent).
+- The payload template is in a <em>central</em> repo (e.g., <code>org-ci-tools</code>),
+  <em>not</em> duplicated across services.
+- The OAuth client is registered against the tenant once; the secret is
+  pushed to GitHub org-level secrets.</p>
+<p><strong>Specific vs central:</strong> Central, always. A per-service event hand-roll
+is the single biggest source of "we have CI/CD observability but the
+data is useless" you'll encounter.</p>
+<hr />
+<h3 id="q11-is-the-dynatrace-github-connector-recommended">Q11. Is the Dynatrace GitHub Connector recommended?<a class="headerlink" href="#q11-is-the-dynatrace-github-connector-recommended" title="Permanent link">#</a></h3>
+<p><strong>Yes for the Workflow → GitHub direction.</strong> It removes the need for
+custom Lambda / Azure Function relays when a Dynatrace Workflow needs
+to act on a repo (open an issue, dispatch a workflow, set a commit
+status). Setup is OAuth, scoped per workflow, no infra to operate.</p>
+<p><strong>Use it when:</strong>
+- You want SRG verdicts to surface as GitHub commit statuses.
+- You want Davis problems to auto-open GitHub issues with reproducer
+  context.
+- You want automated rollback to dispatch a <code>workflow_dispatch</code> event
+  on a guarded branch.</p>
+<p><strong>Don't use it as a replacement for:</strong>
+- Sending events <em>from</em> GitHub to Dynatrace — that's the reusable
+  workflow / curl direction described in Q2/Q10.
+- Webhook ingestion of pipeline events — that's the GitHub →
+  OpenPipeline path in Q9.</p>
+<p><strong>Dependencies:</strong>
+- A Dynatrace OAuth client.
+- A GitHub App installed on the target org with the scopes your
+  workflows actually use (least-privilege).</p>
+<hr />
+<h2 id="reference-architecture-for-this-repo">Reference architecture for this repo<a class="headerlink" href="#reference-architecture-for-this-repo" title="Permanent link">#</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>.devcontainer/
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  util/my_functions.sh           # installGitlab, seedGitlabRepos,
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                 # deployLoadgenerator, installDtctl
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  migrate/                       # staged assets (gitlab repos, loadgen)
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  post-create.sh                 # deploys cluster, astroshop, gitlab,
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                                 # seeds repos, installs dtctl
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  post-start.sh                  # starts the load generator
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>dtctl/                           # NEW — declarative platform config
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  dashboards/
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    cicd-overview.yaml           # DORA + pipeline health
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    release-comparison.yaml      # response time across releases
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  slos/
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    astroshop-availability.yaml
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    astroshop-latency.yaml
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    astroshop-error-rate.yaml
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  guardians/                     # SRG definitions
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    release-readiness.yaml       # blocks staging-&gt;prod promotion
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    post-deploy-soak.yaml        # post-prod soak window
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  workflows/
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    on-deployment-event.yaml     # triggers guardian on CUSTOM_DEPLOYMENT
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    post-deploy-rollback.yaml    # rollback via GitHub connector
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  events/
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    sample-deployment.yaml       # canonical deployment event payload
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>.github/workflows/
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  dt-deployment-event.yml        # reusable workflow (Q2 pattern 1)
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  release.yml                    # exercises the full flow
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>docs/
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>  cicd-observability.md          # this file
+</span></code></pre></div>
+<h3 id="what-running-looks-like">What "running" looks like<a class="headerlink" href="#what-running-looks-like" title="Permanent link">#</a></h3>
+<ol>
+<li><code>make start</code> → boots dev container, k3d cluster, OneAgent (CNFS).</li>
+<li><code>post-create.sh</code> → deploys Astroshop, installs GitLab in-cluster,
+   seeds the 19 service repos + 3 support repos, installs <code>dtctl</code>,
+   applies the <code>dtctl/</code> artifacts to the tenant.</li>
+<li><code>post-start.sh</code> → deploys the locust loadgen against the Astroshop
+   ingress URL, generating traffic continuously.</li>
+<li>Releases are flipped between <code>1.12.0/none</code>, <code>1.12.1/cpu</code>,
+   <code>1.12.2/memory</code>, <code>1.12.3/n+1</code> either manually
+   (<code>./scripts/flip-release.sh 1.12.1 cpu</code>) or hourly via the
+   <code>start_load_generator</code> stage of the GitLab pipeline.</li>
+<li>Each flip emits a <code>CUSTOM_DEPLOYMENT</code> event, which triggers the
+   SRG via a Dynatrace Workflow, which writes a verdict back as a
+   bizevent and (for the bad releases) opens a Davis problem.</li>
+</ol>
+<hr />
+<h2 id="workshop-demo-flow-60-min">Workshop demo flow (60 min)<a class="headerlink" href="#workshop-demo-flow-60-min" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Topic</th>
+<th>What to show</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–5</td>
+<td>Setup overview</td>
+<td>The repo layout, <code>make start</code> already running</td>
+</tr>
+<tr>
+<td>5–15</td>
+<td>Implicit vs explicit deployment events</td>
+<td>Restart a pod → Davis sees it. Then fire <code>CUSTOM_DEPLOYMENT</code> and show the richer context in Problems</td>
+</tr>
+<tr>
+<td>15–25</td>
+<td>Release comparison via traces</td>
+<td>Flip Astroshop to <code>1.12.1/cpu</code>, open the loadtest test step <code>04 - ad service</code>, compare with <code>1.12.0/none</code> in the Trace Comparison view</td>
+</tr>
+<tr>
+<td>25–35</td>
+<td>SRG in action</td>
+<td>Trigger <code>release-readiness</code> guardian on the bad release, show FAIL verdict, walk through which SLO objectives broke</td>
+</tr>
+<tr>
+<td>35–45</td>
+<td>Rollback the bad release via Workflow</td>
+<td>The post-deploy workflow detects FAIL, calls the GitHub Connector to dispatch the rollback workflow</td>
+</tr>
+<tr>
+<td>45–55</td>
+<td>Pipeline observability</td>
+<td>GitHub workflow_run events in OpenPipeline → DORA dashboard</td>
+</tr>
+<tr>
+<td>55–60</td>
+<td>Q&amp;A and "how do I take this home"</td>
+<td>The reusable workflow pattern, dtctl skill for AI agents</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">#</a></h2>
+<ul>
+<li>Pipeline observability with GitHub tutorial — <code>https://docs.dynatrace.com/docs/deliver/pipeline-observability-sdlc-events/tutorials/pipeline-observability-use-case-github</code></li>
+<li>Deployment events v2 API — <code>https://docs.dynatrace.com/docs/dynatrace-api/environment-api/events-v2/post-event</code></li>
+<li>Site Reliability Guardian — <code>https://docs.dynatrace.com/docs/deliver/site-reliability-guardian</code></li>
+<li>Dynatrace GitHub Connector — <code>https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/github/github-workflows-setup</code></li>
+<li><code>dtctl</code> CLI — <code>https://github.com/dynatrace-oss/dtctl</code></li>
+<li>Monitoring-as-Code (<code>monaco</code>) — <code>https://github.com/dynatrace/dynatrace-configuration-as-code</code></li>
+<li>This repo's load test pattern — see <code>.devcontainer/migrate/astroshop_repos/loadgenerator/</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../stop-bad-builds/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 5. Stop bad builds">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                5. Stop bad builds
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../cleanup/" class="md-footer__link md-footer__link--next" aria-label="Next: 7. Cleanup">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                7. Cleanup
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.tracking", "navigation.top", "navigation.sections", "navigation.footer", "toc.follow", "search.highlight", "search.suggest", "search.share"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

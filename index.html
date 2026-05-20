@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-to-to-use-this-template" class="md-skip">
+        <a href="#astroshop-cicd-observability-stop-bad-builds-before-they-hit-production" class="md-skip">
           Skip to content
         </a>
       
@@ -269,6 +269,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -297,6 +299,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -305,9 +309,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-to-to-use-this-template" class="md-nav__link">
+  <a href="#why-this-exists" class="md-nav__link">
     <span class="md-ellipsis">
-      How to to use this template?
+      Why this exists
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bad-releases-shipped-in-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bad releases shipped in this repo
     </span>
   </a>
   
@@ -388,11 +401,51 @@
   
   
     <li class="md-nav__item">
+      <a href="stop-bad-builds/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Stop bad builds
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cicd-observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6. Open questions Q&A
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="cleanup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    5. Cleanup
+    7. Cleanup
   </span>
   
 
@@ -412,7 +465,7 @@
         
   
   <span class="md-ellipsis">
-    6. Resources
+    8. Resources
   </span>
   
 
@@ -432,7 +485,7 @@
         
   
   <span class="md-ellipsis">
-    7. What's next?
+    9. What's next?
   </span>
   
 
@@ -458,6 +511,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -466,9 +521,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-to-to-use-this-template" class="md-nav__link">
+  <a href="#why-this-exists" class="md-nav__link">
     <span class="md-ellipsis">
-      How to to use this template?
+      Why this exists
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bad-releases-shipped-in-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bad releases shipped in this repo
     </span>
   </a>
   
@@ -492,8 +556,6 @@
   
 
 
-  <h1>1. About</h1>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   dynatrace.sendBizEvent('page_load', {"page": "1. About"});
@@ -505,27 +567,76 @@ document.addEventListener('DOMContentLoaded', function() {
 <p>This is an enablement project created by the Center of Excellence - Enablement Team at Dynatrace.</p>
 <p><strong>Support is provided via GitHub issues only</strong>. The materials provided in this repository are offered "as-is" without any warranties, express or implied. Use them at your own risk.</p>
 </div>
-<h2 id="how-to-to-use-this-template">How to to use this template?<a class="headerlink" href="#how-to-to-use-this-template" title="Permanent link">#</a></h2>
-<p>This is a template which will guide you on creating your own Hands-On training. 
-Within this tutorial you'll learn the basics how the codespaces work and how the documentation works, so you can build your own Hands-On training in no time.</p>
+<h1 id="astroshop-cicd-observability-stop-bad-builds-before-they-hit-production">Astroshop CI/CD Observability — stop bad builds before they hit production<a class="headerlink" href="#astroshop-cicd-observability-stop-bad-builds-before-they-hit-production" title="Permanent link">#</a></h1>
+<p>A self-contained, public-shareable workshop that shows how to use Dynatrace
+to <strong>see every release</strong> and <strong>block the ones that will hurt production</strong>.</p>
+<p>The repo boots a Codespace (or local Docker dev container), spins up:</p>
 <ul>
-<li>Prerequisites </li>
-<li>Setting up the professors environment</li>
-<li>Writing the documentation</li>
-<li>How MkDocs work</li>
-<li>How to write your own functions</li>
-<li>Create Github documentation and publish it</li>
-<li>Tipp &amp; tricks</li>
-<li>Troubleshooting</li>
+<li>a k3d Kubernetes cluster with <strong>Astroshop</strong> (OpenTelemetry demo),</li>
+<li>a self-hosted <strong>GitLab</strong> with 19 service repos + 3 support repos,</li>
+<li>a <strong>locust + Playwright</strong> load generator continuously driving the shop,</li>
+<li>the Dynatrace <strong>dtctl</strong> CLI for managing dashboards / SLOs / workflows
+  as code,</li>
 </ul>
-<p align="center">
-  <img src="img/dt_professors.png" alt="Professors" width="200">
-</p>
-
+<p>then walks through emitting <code>CUSTOM_DEPLOYMENT</code> events, ingesting pipeline
+events into the <strong>Dynatrace CI/CD Observability app</strong>, gating promotion
+with a <strong>Site Reliability Guardian</strong>, and auto-rolling-back via the
+<strong>GitHub Connector</strong>.</p>
+<h2 id="why-this-exists">Why this exists<a class="headerlink" href="#why-this-exists" title="Permanent link">#</a></h2>
+<p>Customers ask the same handful of questions every time:</p>
+<ul>
+<li><em>"Do I have to send CUSTOM_DEPLOYMENT events manually, or is it automated?"</em></li>
+<li><em>"How do we keep this scalable across 100s of repos?"</em></li>
+<li><em>"Is Snyk the only path for security signals?"</em></li>
+<li><em>"How do I block a production deployment in GitHub Actions when the SLO fails?"</em></li>
+</ul>
+<p>The <a href="cicd-observability/">CI/CD Observability Q&amp;A</a> answers them with
+runnable examples from this repo. The <a href="stop-bad-builds/">Stop bad builds</a>
+page is the end-to-end narrative tying it all together.</p>
+<h2 id="bad-releases-shipped-in-this-repo">Bad releases shipped in this repo<a class="headerlink" href="#bad-releases-shipped-in-this-repo" title="Permanent link">#</a></h2>
+<p>The Astroshop has four deliberately broken releases. Flip between them
+to demo Davis correlation, trace comparison, SRG verdicts, and rollback.</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Problem</th>
+<th>What you see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1.12.0</code></td>
+<td><code>none</code></td>
+<td>baseline, SRG passes</td>
+</tr>
+<tr>
+<td><code>1.12.1</code></td>
+<td><code>cpu</code></td>
+<td>empty-loop CPU spike in <code>AdService.computeAds()</code></td>
+</tr>
+<tr>
+<td><code>1.12.2</code></td>
+<td><code>memory</code></td>
+<td>retained <code>byte[]</code> array in <code>GarbageCollectionTrigger</code></td>
+</tr>
+<tr>
+<td><code>1.12.3</code></td>
+<td><code>nplusone</code></td>
+<td>repeated DB calls per cart item</td>
+</tr>
+</tbody>
+</table>
 <div class="admonition tip">
 <p class="admonition-title">What will we do</p>
-<p>In this tutorial we will learn how easy it is to create an enablement using codespaces and a Kubernetes cluster!</p>
+<p>Provision the full stack with two commands, then watch the same
+pipeline that delivers <code>1.12.0</code> <em>block</em> <code>1.12.1</code> thanks to SLO-based
+quality gates.</p>
 </div>
+<p align="center">
+  <img src="img/dt_professors.png" alt="Workshop" width="180">
+</p>
+
 <div class="grid cards">
 <ul>
 <li><a href="2-getting-started/">Yes! let's begin <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>

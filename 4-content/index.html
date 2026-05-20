@@ -12,7 +12,7 @@
         <link rel="prev" href="../3-codespaces/">
       
       
-        <link rel="next" href="../cleanup/">
+        <link rel="next" href="../stop-bad-builds/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#accessing-the-astroshop" class="md-skip">
+        <a href="#workshop-content" class="md-skip">
           Skip to content
         </a>
       
@@ -331,6 +331,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -359,6 +361,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -367,28 +371,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#whats-running-after-post-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's running after post-create
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#accessing-the-astroshop" class="md-nav__link">
     <span class="md-ellipsis">
       Accessing the Astroshop
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Accessing the Astroshop">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flipping-the-release-problem-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flipping the release / problem variant
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flipping the release / problem variant">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#in-kubernetes" class="md-nav__link">
+  <a href="#manual-flip-from-the-dev-container" class="md-nav__link">
     <span class="md-ellipsis">
-      in Kubernetes
+      Manual flip from the dev container
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#in-the-ui" class="md-nav__link">
+  <a href="#manual-flip-via-the-astroshop-ui" class="md-nav__link">
     <span class="md-ellipsis">
-      in the UI
+      Manual flip via the Astroshop UI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hourly-auto-flip-via-the-gitlab-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hourly auto-flip via the GitLab pipeline
     </span>
   </a>
   
@@ -400,53 +431,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#triggering-problems" class="md-nav__link">
+  <a href="#stop-bad-builds-the-integrated-demo" class="md-nav__link">
     <span class="md-ellipsis">
-      Triggering Problems
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Triggering Problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manually-via-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manually via UI
+      Stop bad builds — the integrated demo
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#manually-via-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manually via REST API
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scheduling-problems" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scheduling Problems
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
       
+        <li class="md-nav__item">
+  <a href="#cicd-observability-the-dynatrace-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Observability — the Dynatrace app
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#resources-cap-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources cap &amp; cleanup
+    </span>
+  </a>
   
 </li>
       
@@ -465,11 +472,51 @@
   
   
     <li class="md-nav__item">
+      <a href="../stop-bad-builds/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Stop bad builds
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cicd-observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6. Open questions Q&A
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../cleanup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    5. Cleanup
+    7. Cleanup
   </span>
   
 
@@ -489,7 +536,7 @@
         
   
   <span class="md-ellipsis">
-    6. Resources
+    8. Resources
   </span>
   
 
@@ -509,7 +556,7 @@
         
   
   <span class="md-ellipsis">
-    7. What's next?
+    9. What's next?
   </span>
   
 
@@ -535,6 +582,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -543,28 +592,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#whats-running-after-post-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's running after post-create
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#accessing-the-astroshop" class="md-nav__link">
     <span class="md-ellipsis">
       Accessing the Astroshop
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Accessing the Astroshop">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flipping-the-release-problem-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flipping the release / problem variant
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flipping the release / problem variant">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#in-kubernetes" class="md-nav__link">
+  <a href="#manual-flip-from-the-dev-container" class="md-nav__link">
     <span class="md-ellipsis">
-      in Kubernetes
+      Manual flip from the dev container
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#in-the-ui" class="md-nav__link">
+  <a href="#manual-flip-via-the-astroshop-ui" class="md-nav__link">
     <span class="md-ellipsis">
-      in the UI
+      Manual flip via the Astroshop UI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hourly-auto-flip-via-the-gitlab-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hourly auto-flip via the GitLab pipeline
     </span>
   </a>
   
@@ -576,53 +652,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#triggering-problems" class="md-nav__link">
+  <a href="#stop-bad-builds-the-integrated-demo" class="md-nav__link">
     <span class="md-ellipsis">
-      Triggering Problems
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Triggering Problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manually-via-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manually via UI
+      Stop bad builds — the integrated demo
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#manually-via-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manually via REST API
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scheduling-problems" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scheduling Problems
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
       
+        <li class="md-nav__item">
+  <a href="#cicd-observability-the-dynatrace-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Observability — the Dynatrace app
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#resources-cap-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources cap &amp; cleanup
+    </span>
+  </a>
   
 </li>
       
@@ -644,43 +696,130 @@
   
 
 
-  <h1>4. Content</h1>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   dynatrace.sendBizEvent('page_load', {"page": "4. Content"});
 });
 </script>
 
+<h1 id="workshop-content">Workshop content<a class="headerlink" href="#workshop-content" title="Permanent link">#</a></h1>
+<h2 id="whats-running-after-post-create">What's running after <code>post-create</code><a class="headerlink" href="#whats-running-after-post-create" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Where</th>
+<th>Bootstrapped by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k3d cluster</td>
+<td>dev container</td>
+<td>framework <code>startK3dCluster</code></td>
+</tr>
+<tr>
+<td>Astroshop</td>
+<td><code>astroshop</code> namespace</td>
+<td><code>deployApp astroshop</code></td>
+</tr>
+<tr>
+<td>GitLab</td>
+<td><code>gitlab</code> namespace, ingress at <code>gitlab.&lt;ip&gt;.sslip.io</code></td>
+<td><code>installGitlab</code></td>
+</tr>
+<tr>
+<td>19 service repos + 3 support repos</td>
+<td>inside GitLab</td>
+<td><code>seedGitlabRepos</code></td>
+</tr>
+<tr>
+<td>Locust loadgen</td>
+<td><code>astroshop-load</code> namespace</td>
+<td><code>deployLoadgenerator</code> (post-start)</td>
+</tr>
+<tr>
+<td>dtctl CLI</td>
+<td><code>~/.local/bin/dtctl</code></td>
+<td><code>installDtctl</code></td>
+</tr>
+<tr>
+<td>Dashboards / SLOs / Workflows</td>
+<td>tenant</td>
+<td><code>applyDtctlConfigs</code> (manual)</td>
+</tr>
+</tbody>
+</table>
+<p><code>printGreeting</code> shows the URLs for each.</p>
 <h2 id="accessing-the-astroshop">Accessing the Astroshop<a class="headerlink" href="#accessing-the-astroshop" title="Permanent link">#</a></h2>
-<h3 id="in-kubernetes">in Kubernetes<a class="headerlink" href="#in-kubernetes" title="Permanent link">#</a></h3>
-<h3 id="in-the-ui">in the UI<a class="headerlink" href="#in-the-ui" title="Permanent link">#</a></h3>
-<p>Open the Astroshop URL shown in the greeting — run <code>printGreeting</code> in the terminal to display it.</p>
-<h2 id="triggering-problems">Triggering Problems<a class="headerlink" href="#triggering-problems" title="Permanent link">#</a></h2>
-<h3 id="manually-via-ui">Manually via UI<a class="headerlink" href="#manually-via-ui" title="Permanent link">#</a></h3>
-<p>Open the Astroshop URL from the greeting (<code>printGreeting</code>) and append <code>/feature</code>. In GitHub Codespaces, the feature flag URL will look similar to <code>https://your-codespace-name-80.app.github.dev/feature</code>.</p>
+<p>Run <code>printGreeting</code> in the terminal — it lists the public URL on
+<code>sslip.io</code>. In Codespaces it's <code>https://&lt;codespace&gt;-80.app.github.dev/</code>.</p>
+<h2 id="flipping-the-release-problem-variant">Flipping the release / problem variant<a class="headerlink" href="#flipping-the-release-problem-variant" title="Permanent link">#</a></h2>
+<p>The four release variants live on dedicated branches in the seeded
+GitLab repos (<code>main</code>, <code>usecase/cpu</code>, <code>usecase/memory</code>, <code>usecase/n+1</code>,
+<code>usecase/error</code>).</p>
+<h3 id="manual-flip-from-the-dev-container">Manual flip from the dev container<a class="headerlink" href="#manual-flip-from-the-dev-container" title="Permanent link">#</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Send the deployment event + SDLC pipeline event to Dynatrace</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sendDeploymentEvent<span class="w"> </span><span class="m">1</span>.12.1<span class="w"> </span>staging<span class="w"> </span>cpu
+</span></code></pre></div>
+<h3 id="manual-flip-via-the-astroshop-ui">Manual flip via the Astroshop UI<a class="headerlink" href="#manual-flip-via-the-astroshop-ui" title="Permanent link">#</a></h3>
+<p>The Astroshop also exposes its own feature-flag UI — open the URL from
+the greeting and append <code>/feature</code>. In Codespaces this is something like
+<code>https://&lt;codespace&gt;-80.app.github.dev/feature</code>.</p>
 <p><img alt="features flag" src="../img/features_flag.png" /></p>
-<h3 id="manually-via-rest-api">Manually via REST API<a class="headerlink" href="#manually-via-rest-api" title="Permanent link">#</a></h3>
-<h3 id="scheduling-problems">Scheduling Problems<a class="headerlink" href="#scheduling-problems" title="Permanent link">#</a></h3>
-<h3 id="_1"><a class="headerlink" href="#_1" title="Permanent link">#</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Fraud<span class="w"> </span>Detection<span class="w"> </span>Service<span class="w"> </span>gets<span class="w"> </span>OOM<span class="w"> </span>Kill,<span class="w"> </span>reason:
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dynatrace-operator<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>fsnotify<span class="w"> </span>watcher:<span class="w"> </span>too<span class="w"> </span>many<span class="w"> </span>open<span class="w"> </span>files
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>fs.inotify.max_user_watches<span class="o">=</span><span class="m">524288</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>fs.inotify.max_user_instances<span class="o">=</span><span class="m">512</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>fs.inotify.max_queued_events<span class="o">=</span><span class="m">16384</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span>fs.inotify.max_user_watches<span class="o">=</span><span class="m">524288</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/sysctl.conf
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">echo</span><span class="w"> </span>fs.inotify.max_user_instances<span class="o">=</span><span class="m">512</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/sysctl.conf
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">echo</span><span class="w"> </span>fs.inotify.max_queued_events<span class="o">=</span><span class="m">16384</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/sysctl.conf
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-p
+<h3 id="hourly-auto-flip-via-the-gitlab-pipeline">Hourly auto-flip via the GitLab pipeline<a class="headerlink" href="#hourly-auto-flip-via-the-gitlab-pipeline" title="Permanent link">#</a></h3>
+<p>The seeded <code>Support/Astroshop_Release</code> repo (<code>gitlab-ci.yml</code>) walks the
+four releases on a schedule, emitting Workflow runs and CUSTOM_DEPLOYMENT
+events at each stage — perfect for the unattended "let it run while we
+talk" demo.</p>
+<h2 id="stop-bad-builds-the-integrated-demo">Stop bad builds — the integrated demo<a class="headerlink" href="#stop-bad-builds-the-integrated-demo" title="Permanent link">#</a></h2>
+<p>This is the meat of the workshop. See <a href="../stop-bad-builds/">Stop bad builds</a>
+for the full narrative; the short version:</p>
+<ol>
+<li>Pipeline deploys <code>1.12.0</code> to staging → CUSTOM_DEPLOYMENT event fires.</li>
+<li>Locust hammers the shop while OneAgent records traces + Golden Signals.</li>
+<li>SRG validates the SLOs over the load-test window → PASS.</li>
+<li>Pipeline promotes to production.</li>
+<li>Repeat with <code>1.12.1</code>/cpu — SRG returns FAIL → pipeline <strong>halts</strong> before
+   the <code>promote-production</code> job. The <code>Rollback astroshop</code> workflow can be
+   dispatched from the Dynatrace Workflow via the GitHub Connector.</li>
+</ol>
+<h2 id="cicd-observability-the-dynatrace-app">CI/CD Observability — the Dynatrace app<a class="headerlink" href="#cicd-observability-the-dynatrace-app" title="Permanent link">#</a></h2>
+<p>This repo is wired to feed the
+<a href="https://github.com/Dynatrace/community-examples/tree/main/dynatrace%20apps/CI-CD%20Pipeline">community <strong>CI/CD Observability</strong> app</a>.
+The app is "available upon request" — your Dynatrace contact activates
+it on your tenant, then the data path is:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>GitHub Action / bash helper
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │  (POST)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ▼
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/platform/ingest/custom/events.sdlc/&lt;provider&gt;     ←  OpenPipeline rules
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │                                                 in the app translate
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ▼                                                 these to SDLC events
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Grail (events table, kind=SDLC_EVENT)
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    │
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    ▼
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>CI/CD Observability app dashboards / flamegraph
+</span></code></pre></div>
+<p>The bash helper <code>seedCicdPipelineData</code> (see
+<code>.devcontainer/util/my_functions.sh</code>) generates a four-release demo run
+with all task events shaped exactly per the
+<a href="https://github.com/Dynatrace/community-examples/tree/main/dynatrace%20apps/CI-CD%20Pipeline#-custom-events-format">app's documented schema</a>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DT_TENANT_URL</span><span class="o">=</span>https://&lt;tenant&gt;.live.dynatrace.com
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DT_API_TOKEN</span><span class="o">=</span>&lt;token<span class="w"> </span>with<span class="w"> </span>openpipeline.events.ingest&gt;
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>seedCicdPipelineData
+</span></code></pre></div>
+<h2 id="resources-cap-cleanup">Resources cap &amp; cleanup<a class="headerlink" href="#resources-cap-cleanup" title="Permanent link">#</a></h2>
+<p>The four broken-release pipelines deliberately stress the cluster. If a
+codespace runs out of file descriptors:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>fs.inotify.max_user_watches<span class="o">=</span><span class="m">524288</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>fs.inotify.max_user_instances<span class="o">=</span><span class="m">512</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>fs.inotify.max_queued_events<span class="o">=</span><span class="m">16384</span>
 </span></code></pre></div>
 <div class="grid cards">
 <ul>
-<li><a href="../cleanup/">Let's continue<span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
+<li><a href="../stop-bad-builds/">Stop bad builds <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
+<li><a href="../cicd-observability/">Open questions Q&amp;A <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
+<li><a href="../cleanup/">Cleanup <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
 </ul>
 </div>
 
@@ -737,13 +876,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
           
-          <a href="../cleanup/" class="md-footer__link md-footer__link--next" aria-label="Next: 5. Cleanup">
+          <a href="../stop-bad-builds/" class="md-footer__link md-footer__link--next" aria-label="Next: 5. Stop bad builds">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                5. Cleanup
+                5. Stop bad builds
               </div>
             </div>
             <div class="md-footer__button md-icon">

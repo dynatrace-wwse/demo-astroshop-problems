@@ -1,5 +1,15 @@
 # guardians/ — Site Reliability Guardian (SRG)
 
+> **The workshop's actual SRG lives in monaco**, not here. See
+> [`../../.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/init_configs/labs/srg-staging.json`](../../.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/init_configs/labs/srg-staging.json)
+> for `Astroshop - Staging - Quality gate` with 11 test-step latency
+> objectives (homepage, get products, get currencies, ad service,
+> add product A/B, get recommendations, get cart in B/A, empty cart,
+> checkout). Schema:
+> `app:dynatrace.site.reliability.guardian:guardians`.
+> It is applied by monaco when the `Support/Dynatrace_Monitoring_as_Code`
+> GitLab pipeline runs (see `init_configs/labs/config.yaml`).
+
 `dtctl` (today) does not have a dedicated `kind: guardian` resource.
 SRG is managed through two paths in this repo:
 

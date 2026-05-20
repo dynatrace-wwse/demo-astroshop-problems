@@ -1,4 +1,13 @@
-# dtctl/ — Dynatrace platform as code
+# dtctl/ — Dynatrace platform as code (alternate path)
+
+> **Source of truth is monaco.** Production-grade workshop configuration
+> (SRG, dashboards, workflows, gitlab connector, …) lives under
+> [`.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/`](../.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/)
+> and is applied by the **Dynatrace Monitoring as Code** tool that the
+> seeded `Support/Dynatrace_Monitoring_as_Code` GitLab project drives via
+> its CI pipeline. The `dtctl/` directory below is a *parallel demo* of
+> the same artefacts expressed in `dtctl` YAML, useful for showing the
+> kubectl-style CLI workflow.
 
 This directory holds declarative Dynatrace platform configuration applied
 with [`dtctl`](https://github.com/dynatrace-oss/dtctl). The dev container

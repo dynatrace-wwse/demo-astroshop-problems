@@ -11,16 +11,25 @@ questions in detail.
 
 ---
 
-## The five moving parts
+## The pipeline we showcase: in-cluster GitLab
 
-| # | Part | Where it lives in this repo |
+The workshop drives the **in-cluster GitLab** seeded by `installGitlab`
++ `seedGitlabRepos`. The pipeline that walks the four release variants
+lives in `Support/Astroshop_Automated_Load_test`; the platform
+configuration that gates promotion is owned by
+`Support/Dynatrace_Monitoring_as_Code` via **monaco**. GitHub Actions
+artefacts in `.github/` are a parallel demo of the same loop for teams
+on GitHub.
+
+| # | Part | Where it lives |
 |---|---|---|
-| 1 | Pipeline emits a deployment event (with PR + change metadata) | `.github/actions/dt-deployment-event/action.yml` |
-| 2 | PR lifecycle emits change events for the CI/CD Observability app | `.github/workflows/pr-events.yml` |
-| 3 | Load runs continuously against the candidate | `.devcontainer/migrate/astroshop_repos/loadgenerator/` |
-| 4 | Dynatrace measures SLOs against runtime + load | `dtctl/slos/*.yaml` |
-| 5 | Site Reliability Guardian evaluates the SLOs | `dtctl/workflows/on-deployment-event.yaml` |
-| 6 | Pipeline halts (or rolls back) on a FAIL verdict | `.github/workflows/release.yml`, `rollback.yml` |
+| 1 | Pipeline emits CUSTOM_DEPLOYMENT + SDLC events, `event.provider=gitlab` | bash helpers `sendDeploymentEvent` / `sendPipelineEvent` / `sendTaskEvent` called from GitLab CI |
+| 2 | Locust drives load with `LTN=Astroshop` baggage | `.devcontainer/migrate/astroshop_repos/loadgenerator/` |
+| 3 | SRG `Astroshop - Staging - Quality gate` (11 test-step latency objectives) | **monaco** — `init_configs/labs/srg-staging.json` |
+| 4 | Workflow runs the guardian per deployment, opens GitLab issue on FAIL | **monaco** — `init_configs/labs/srg-workflow.json` + `gitlab-connection.json` |
+| 5 | Verdict bizevent (`event.category="guardian"`) — `pass` for 1.12.0, `fail` for 1.12.1/2/3 | `runDeploymentValidation` (or the SRG workflow on a live tenant) |
+| 6 | Pipeline halts staging→prod when verdict ≠ pass | `Otel-App/<svc>/.gitlab-ci.yml` orchestrated by `Support/Astroshop_Release` |
+| 7 | (Optional) PR lifecycle events for the CI/CD Observability app | `.github/workflows/pr-events.yml` (GitHub) — equivalent GitLab hook calls `sendPipelineEvent` |
 
 ---
 
@@ -78,13 +87,24 @@ statistically meaningful sample size, so the SRG verdict isn't noise.
 
 ### Step 4 — SRG verifies the SLOs
 
-In the real demo the `validate` job calls `dtctl` to trigger the
-`release-readiness` guardian over the load-test window. The guardian
-references the three SLOs in `dtctl/slos/`:
+The `validate` stage of the GitLab pipeline triggers the
+`Astroshop - Staging - Quality gate` guardian (defined in monaco at
+`init_configs/labs/srg-staging.json`) over the load-test window. The
+guardian has **11 DQL-based test-step latency objectives** — one per
+load test step:
 
-- `astroshop-availability` (≥ 99% success rate)
-- `astroshop-latency` (p95 ≤ 250ms on ad-service)
-- `astroshop-error-rate` (overall failure rate ≤ 2%)
+```
+01 - homepage              06 - get recommendations
+02 - get products          07 - get cart in B
+03 - get currencies        08 - empty cart
+04 - ad service            09 - add product B
+05 - add product A         10 - get cart in A
+                           11 - checkout
+```
+
+Each objective: `LESS_THAN_OR_EQUAL` 1000 ms target, 900 ms warning,
+median over the load-test window. The bad-build variants (cpu, memory,
+n+1) deliberately push the relevant test step over the target.
 
 For the *public* workflow (this repo, no tenant attached), the gate is
 deterministic — it fails on every non-`none` `problem` input so the

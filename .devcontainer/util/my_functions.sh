@@ -390,10 +390,17 @@ undeployLoadgenerator(){
 #   DT_TENANT_URL    e.g. https://abc12345.live.dynatrace.com
 #   DT_API_TOKEN     token with scope: openpipeline.events.ingest
 # Optional:
-#   DT_CICD_PROVIDER (default: astroshop) — the path segment after events.sdlc/
+#   DT_CICD_PROVIDER (default: gitlab) — the path segment after events.sdlc/
+#                                          The repo runs a self-hosted GitLab
+#                                          in-cluster, so 'gitlab' is the
+#                                          natural value. Override to
+#                                          'github' if you wire from there.
+#                                          'github' matches the OpenPipeline
+#                                          rules installed by the community
+#                                          CI/CD Observability app wizard.
 
 _dtSdlcEndpoint(){
-  local provider="${DT_CICD_PROVIDER:-astroshop}"
+  local provider="${DT_CICD_PROVIDER:-gitlab}"
   echo "${DT_TENANT_URL%/}/platform/ingest/custom/events.sdlc/${provider}"
 }
 
@@ -442,7 +449,7 @@ sendPipelineEvent(){
   "event.category": "pipeline",
   "event.status": "finished",
   "event.type": "deploy",
-  "event.provider": "${DT_CICD_PROVIDER:-astroshop}",
+  "event.provider": "${DT_CICD_PROVIDER:-gitlab}",
   "duration": ${dur},
   "start_time": "${start_ts}",
   "end_time": "${end_ts}"
@@ -475,7 +482,7 @@ sendTaskEvent(){
   "event.category": "task",
   "event.status": "finished",
   "event.type": "deploy",
-  "event.provider": "${DT_CICD_PROVIDER:-astroshop}",
+  "event.provider": "${DT_CICD_PROVIDER:-gitlab}",
   "duration": ${dur},
   "start_time": "${start_ts}",
   "end_time": "${end_ts}"
@@ -545,7 +552,7 @@ sendDeploymentEvent(){
 {
   "eventType": "CUSTOM_DEPLOYMENT",
   "title": "astroshop release ${version} (${problem})",
-  "entitySelector": "type(SERVICE),toRelationships.partOf(type(NAMESPACE),entityName.equals(astroshop))",
+  "entitySelector": "type(SERVICE),entityName.startsWith(astroshop-)",
   "timeout": 5,
   "properties": {
     "deploymentName": "astroshop release ${version}",
@@ -570,6 +577,124 @@ JSON
   else
     printWarn "Deployment event HTTP $code: $(cat /tmp/.event-resp | head -c 200)"
   fi
+}
+
+# ----------------------------------------------------------------------
+# runDeploymentValidation — emit the verdict bizevent that an SRG would
+# normally write. Deterministic: problem=none -> pass, anything else -> fail.
+# Use until a real SRG document is in place; the verdict shape is identical.
+# ----------------------------------------------------------------------
+runDeploymentValidation(){
+  local version="$1" stage="${2:-staging}" problem="${3:-none}"
+  local verdict="pass"
+  [ "$problem" != "none" ] && verdict="fail"
+
+  if [ -z "$DT_TENANT_URL" ] || [ -z "$DT_API_TOKEN" ]; then
+    printWarn "DT_TENANT_URL and DT_API_TOKEN not set — skipping"
+    return 0
+  fi
+
+  local body
+  body=$(cat <<JSON
+{
+  "event.provider":         "${DT_CICD_PROVIDER:-gitlab}",
+  "event.type":             "guardian.evaluation",
+  "event.category":         "guardian",
+  "event.status":           "finished",
+  "srg.guardian.id":        "release-readiness",
+  "srg.guardian.name":      "Release readiness — astroshop",
+  "srg.verdict":            "${verdict}",
+  "deploymentProject":      "astroshop",
+  "deploymentVersion":      "${version}",
+  "Release_Stage":          "${stage}",
+  "PROBLEM":                "${problem}"
+}
+JSON
+)
+  # Reuse the SDLC events endpoint we already have a scope for — the
+  # event.category=guardian discriminator keeps it separate from pipeline data.
+  local url code
+  url=$(_dtSdlcEndpoint)
+  code=$(curl -sk -o /tmp/.verdict-resp -w '%{http_code}' \
+    -X POST "$url" \
+    -H "Authorization: Api-Token $DT_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "$body")
+  if [[ "$code" =~ ^2 ]]; then
+    printInfo "Guardian verdict for $version ($problem) = $verdict → HTTP $code"
+  else
+    printWarn "Verdict HTTP $code: $(cat /tmp/.verdict-resp | head -c 200)"
+  fi
+}
+
+# ----------------------------------------------------------------------
+# seedWorkshopReleases — end-to-end demo data: for each of the four
+# release variants, fire the deployment event + pipeline-run SDLC event
+# + per-deployment SRG verdict bizevent. Matches the "good build vs bad
+# build" story: 1.12.0 passes, 1.12.1/2/3 fail.
+# ----------------------------------------------------------------------
+seedWorkshopReleases(){
+  printInfoSection "Seeding workshop releases (gitlab provider, 4 variants)"
+  local i version problem outcome verdict
+  for i in 0 1 2 3; do
+    case $i in
+      0) version="1.12.0"; problem="none"     ;;
+      1) version="1.12.1"; problem="cpu"      ;;
+      2) version="1.12.2"; problem="memory"   ;;
+      3) version="1.12.3"; problem="nplusone" ;;
+    esac
+    if [ "$problem" = "none" ]; then
+      outcome="success"; verdict="pass"
+    else
+      outcome="failed";  verdict="fail"
+    fi
+    printInfo "── ${version} (${problem}) → outcome=${outcome} verdict=${verdict}"
+
+    # 1. Deployment marker — also emit as SDLC event so it's queryable in
+    #    the events table even when there's no live astroshop entity to bind
+    #    to in this tenant (the COE tenant doesn't monitor the k3d cluster).
+    sendDeploymentEvent "$version" staging "$problem"
+    local now start
+    now=$(date -u +"%Y-%m-%dT%H:%M:%S.000000000Z")
+    start=$(date -u -d "30 seconds ago" +"%Y-%m-%dT%H:%M:%S.000000000Z")
+    _dtSdlcPost "$(cat <<JSON
+{
+  "event.provider":      "${DT_CICD_PROVIDER:-gitlab}",
+  "event.category":      "deployment",
+  "event.type":          "deploy",
+  "event.status":        "finished",
+  "deploymentProject":   "astroshop",
+  "deploymentVersion":   "${version}",
+  "Release_Stage":       "staging",
+  "PROBLEM":             "${problem}",
+  "vcs.repository.name": "Otel-App/astroshop",
+  "vcs.ref.head.name":   "usecase/${problem}",
+  "duration":            30,
+  "start_time":          "${start}",
+  "end_time":            "${now}"
+}
+JSON
+)"
+
+    # 2. Pipeline run + 6 tasks (matches CI/CD Observability app schema)
+    local rid=$(( 20000 + i ))
+    local pid="astroshop-release"
+    local pname="Astroshop release pipeline"
+    sendPipelineEvent "$pid" "$rid" "$pname" "$outcome" main Otel-App/astroshop demo-runner 240
+    sendTaskEvent "${rid}-build"     "build"          "success"   "$pid" "$rid" "$pname" main  45
+    sendTaskEvent "${rid}-deploy"    "deploy-staging" "success"   "$pid" "$rid" "$pname" main  60
+    sendTaskEvent "${rid}-loadtest"  "loadtest"       "success"   "$pid" "$rid" "$pname" main 120
+    sendTaskEvent "${rid}-guardian"  "srg-evaluate"   "$outcome"  "$pid" "$rid" "$pname" main  15
+    if [ "$verdict" = "pass" ]; then
+      sendTaskEvent "${rid}-promote"  "promote-prod"  "success"  "$pid" "$rid" "$pname" main 30
+    else
+      sendTaskEvent "${rid}-rollback" "rollback"      "success"  "$pid" "$rid" "$pname" main 20
+    fi
+
+    # 3. SRG verdict bizevent (what the guardian writes)
+    runDeploymentValidation "$version" staging "$problem"
+  done
+  printInfo "Done. Verify in Dynatrace: 1 pass (1.12.0) + 3 fail (1.12.1/2/3)"
 }
 
 # ----------------------------------------------------------------------

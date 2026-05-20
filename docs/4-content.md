@@ -82,16 +82,24 @@ Grail (events table, kind=SDLC_EVENT)
 CI/CD Observability app dashboards / flamegraph
 ```
 
-The bash helper `seedCicdPipelineData` (see
-`.devcontainer/util/my_functions.sh`) generates a four-release demo run
-with all task events shaped exactly per the
-[app's documented schema](https://github.com/Dynatrace/community-examples/tree/main/dynatrace%20apps/CI-CD%20Pipeline#-custom-events-format).
+Two bash helpers in `.devcontainer/util/my_functions.sh`:
+
+* **`seedWorkshopReleases`** — full end-to-end demo for the GitLab
+  pipeline: each of the 4 release variants fires
+  `CUSTOM_DEPLOYMENT` + pipeline-run SDLC + 6 task events +
+  guardian-verdict bizevent. `1.12.0` passes; `1.12.1/2/3` fail.
+* **`seedCicdPipelineData`** — pipeline + task events only (no
+  deployment + no verdict). Use when only the CI/CD Observability app
+  matters.
 
 ```bash
-export DT_TENANT_URL=https://<tenant>.live.dynatrace.com
-export DT_API_TOKEN=<token with openpipeline.events.ingest>
-seedCicdPipelineData
+# tokens + URL are in .devcontainer/.env (gitignored, 0600)
+set -a; source .devcontainer/.env; set +a
+seedWorkshopReleases
 ```
+
+Required scopes on `DT_API_TOKEN`: `events.ingest` and
+`openpipeline.events_sdlc.custom`.
 
 ## Resources cap & cleanup
 

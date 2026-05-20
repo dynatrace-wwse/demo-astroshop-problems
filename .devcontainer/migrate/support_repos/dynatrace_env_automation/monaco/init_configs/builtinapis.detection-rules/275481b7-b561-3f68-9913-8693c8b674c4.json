@@ -1,0 +1,28 @@
+{
+  "apiName": "Built-In Java Cassandra",
+  "apiColor": "#debbf3",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.apache.cassandra."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.datastax."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.netflix.astyanax."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "me.prettyprint.cassandra."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In Go Database",
+  "apiColor": "#fff29a",
+  "technology": "Go",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "PACKAGE",
+      "matcher": "BEGINS_WITH",
+      "pattern": "database"
+    }
+  ]
+}

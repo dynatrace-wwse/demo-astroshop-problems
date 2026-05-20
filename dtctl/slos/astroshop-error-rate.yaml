@@ -1,0 +1,17 @@
+name: Astroshop error rate (all services)
+description: Less than 2% of astroshop service requests fail over the last 1h
+criteria:
+  - timeframeFrom: -1h
+    target: 98.0           # % of successful requests
+    warning: 99.0
+customSli:
+  indicator: |
+    timeseries {
+        total    = sum(dt.service.request.count),
+        failures = sum(dt.service.request.failure_count)
+      },
+      filter: { k8s.namespace.name == "astroshop" }
+    | fieldsAdd sli = ((total[] - failures[]) / total[]) * 100
+tags:
+  - slo-type:error-rate
+  - app:astroshop

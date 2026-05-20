@@ -10,4 +10,7 @@ source .devcontainer/util/source_framework.sh
 # we want to monitor all interactions of the users in the live github pages.
 #exposeMkdocs
 
+# Load generator is part of the opt-in workshop bootstrap — run
+# `bootstrapWorkshop` or `deployLoadgenerator` directly to start it.
+
 printInfoSection "Your dev.container finished starting up"

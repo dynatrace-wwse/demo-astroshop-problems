@@ -1,0 +1,20 @@
+{
+  "spanCaptureRule": {
+    "ruleName": "Exclude ASP.NET span",
+    "ruleAction": "IGNORE",
+    "matchers": [
+      {
+        "source": "SPAN_NAME",
+        "type": "EQUALS",
+        "value": "Span name Equals Microsoft.AspNetCore.Hosting.HttpRequestIn",
+        "caseSensitive": false
+      },
+      {
+        "source": "SPAN_NAME",
+        "type": "EQUALS",
+        "value": "",
+        "caseSensitive": false
+      }
+    ]
+  }
+}

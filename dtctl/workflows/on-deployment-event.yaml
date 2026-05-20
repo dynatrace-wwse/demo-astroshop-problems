@@ -1,0 +1,106 @@
+title: astroshop-on-deployment-event
+description: |
+  Triggered by every CUSTOM_DEPLOYMENT event for the astroshop project.
+  Waits a configurable soak window, runs the release-readiness guardian,
+  writes the verdict back as a bizevent, and (on FAIL) dispatches a
+  rollback workflow in GitHub.
+owner: platform-observability
+
+trigger:
+  event:
+    types:
+      - events
+    filterQuery: |
+      event.kind == "DEPLOYMENT_EVENT"
+      and deploymentProject == "astroshop"
+    isActive: true
+
+tasks:
+
+  read_payload:
+    name: read_payload
+    action: dynatrace.automations:run-javascript
+    description: Pull deployment fields off the trigger event
+    input:
+      script: |
+        export default async function ({ execution_id, event }) {
+          return {
+            release_version: event.deploymentVersion,
+            stage: event.Release_Stage,
+            from_ts: event.timestamp,
+            ci_url: event.ciBackLink,
+            git_sha: event["git.commit.id"]
+          };
+        }
+    position: { x: 0, y: 1 }
+
+  soak_window:
+    name: soak_window
+    action: dynatrace.automations:run-javascript
+    description: Wait for the soak window before evaluating
+    input:
+      script: |
+        export default async function () {
+          const minutes = parseInt(process.env.SOAK_MINUTES || "10", 10);
+          await new Promise(r => setTimeout(r, minutes * 60 * 1000));
+          return { soaked_at: new Date().toISOString() };
+        }
+    conditions:
+      states:
+        read_payload: SUCCESS
+    position: { x: 0, y: 2 }
+
+  evaluate_guardian:
+    name: evaluate_guardian
+    action: dynatrace.site.reliability.guardian:validate-guardian-action
+    description: Run the release-readiness guardian
+    input:
+      guardianIdentifier: release-readiness
+      executionId: "{{ execution().id }}"
+      timeframe:
+        from: "{{ result('read_payload').from_ts }}"
+        to: "now"
+    conditions:
+      states:
+        soak_window: SUCCESS
+    position: { x: 0, y: 3 }
+
+  emit_verdict:
+    name: emit_verdict
+    action: dynatrace.automations:http-function
+    description: Write the verdict back as a bizevent for downstream dashboards
+    input:
+      url: "{{ environment().url }}/api/v2/bizevents/ingest"
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: cicd.release.verdict
+        attributes:
+          deploymentProject: astroshop
+          deploymentVersion: "{{ result('read_payload').release_version }}"
+          Release_Stage: "{{ result('read_payload').stage }}"
+          srg_verdict: "{{ result('evaluate_guardian').validation_status }}"
+          ciBackLink: "{{ result('read_payload').ci_url }}"
+    conditions:
+      states:
+        evaluate_guardian: COMPLETED
+    position: { x: 0, y: 4 }
+
+  rollback_on_fail:
+    name: rollback_on_fail
+    action: dynatrace.github.connector:dispatch-workflow
+    description: On FAIL verdict, dispatch the rollback workflow in GitHub
+    input:
+      repository: my-org/astroshop
+      workflow: rollback.yml
+      ref: main
+      inputs:
+        release_version: "{{ result('read_payload').release_version }}"
+        rolled_back_by: "dt-workflow-{{ execution().id }}"
+    conditions:
+      states:
+        evaluate_guardian: COMPLETED
+      custom: "{{ result('evaluate_guardian').validation_status == 'fail' }}"
+    position: { x: 0, y: 5 }

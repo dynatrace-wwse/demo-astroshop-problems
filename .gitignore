@@ -214,3 +214,12 @@ Dockerfile.framework
 
 
 docs/stylesheets/extra.css
+
+# --- workshop-specific local scratch (never committed) ---
+# Source PDFs / scratch dir with customer-confidential email content
+tmp/
+# Snapshots of source repos pulled locally for the migration
+ace-box/
+perform-2025-hot-dynatrace-for-developers/
+# Inner .git dirs are re-created on demand by seedGitlabRepos at runtime
+.devcontainer/migrate/**/.git/

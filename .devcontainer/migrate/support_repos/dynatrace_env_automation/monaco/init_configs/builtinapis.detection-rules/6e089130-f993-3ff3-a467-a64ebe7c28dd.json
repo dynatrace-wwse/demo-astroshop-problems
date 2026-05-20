@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In .NET MongoDB",
+  "apiColor": "#fff29a",
+  "technology": "dotNet",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "MongoDB."
+    }
+  ]
+}

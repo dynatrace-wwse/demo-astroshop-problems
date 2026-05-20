@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In .NET Azure Service Fabric",
+  "apiColor": "#fff29a",
+  "technology": "dotNet",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "Microsoft.ServiceFabric."
+    }
+  ]
+}

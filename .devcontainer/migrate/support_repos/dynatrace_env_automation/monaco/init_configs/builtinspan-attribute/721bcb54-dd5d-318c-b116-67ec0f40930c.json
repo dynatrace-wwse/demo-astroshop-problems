@@ -1,0 +1,4 @@
+{
+  "key": "messaging.kafka.client_id",
+  "masking": "NOT_MASKED"
+}

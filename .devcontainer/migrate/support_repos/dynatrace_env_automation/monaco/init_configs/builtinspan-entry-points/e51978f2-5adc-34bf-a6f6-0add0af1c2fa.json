@@ -1,0 +1,34 @@
+{
+  "entryPointRule": {
+    "ruleName": "Astroshop (NextJS)",
+    "ruleAction": "CREATE_ENTRYPOINT",
+    "matchers": [
+      {
+        "source": "ATTRIBUTE",
+        "sourceKey": "service.namespace",
+        "type": "EQUALS",
+        "value": "opentelemetry-demo",
+        "caseSensitive": false
+      },
+      {
+        "source": "ATTRIBUTE",
+        "sourceKey": "next.span_type",
+        "type": "EQUALS",
+        "value": "Node.runHandler",
+        "caseSensitive": false
+      },
+      {
+        "source": "ATTRIBUTE",
+        "sourceKey": "service.namespace",
+        "type": "CONTAINS",
+        "value": "astroshop",
+        "caseSensitive": false
+      },
+      {
+        "source": "SPAN_KIND",
+        "type": "EQUALS",
+        "spanKindValue": "INTERNAL"
+      }
+    ]
+  }
+}

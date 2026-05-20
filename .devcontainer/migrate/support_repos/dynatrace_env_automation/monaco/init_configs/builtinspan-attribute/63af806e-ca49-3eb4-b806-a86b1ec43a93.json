@@ -1,0 +1,4 @@
+{
+  "key": "db.memcached.operation",
+  "masking": "NOT_MASKED"
+}

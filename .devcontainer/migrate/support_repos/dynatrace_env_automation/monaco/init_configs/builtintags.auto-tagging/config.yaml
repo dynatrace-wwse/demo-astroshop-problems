@@ -1,0 +1,10 @@
+configs:
+- id: 5b46b0c9-ed46-36f3-a43d-f35b828426e4
+  config:
+    template: 5b46b0c9-ed46-36f3-a43d-f35b828426e4.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABlidWlsdGluOnRhZ3MuYXV0by10YWdnaW5nAAZ0ZW5hbnQABnRlbmFudAAkYTliNTIyNTQtOWY5ZC0zNGE4LWEyOWMtNGNkMWU2ZDFhNTBmvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:tags.auto-tagging
+      scope: environment

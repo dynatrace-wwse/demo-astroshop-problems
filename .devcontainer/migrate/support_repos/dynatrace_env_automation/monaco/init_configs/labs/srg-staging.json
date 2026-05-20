@@ -1,0 +1,186 @@
+{
+  "name": "Astroshop - Staging - Quality gate ",
+  "tags": [],
+  "variables": [],
+  "objectives": [
+    {
+      "name": "01 - homepage - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"01 - homepage\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "02 - get products - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"02 - get products\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "03 -get currencies - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"03 - get currencies\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "04 - ad service - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"04 - ad service \"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "05 - add product A - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"05 - add product A\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "06 - get recommendations - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"06 - get recommendations\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "07 - get cart in B - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"07 - get cart in B\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "08 - empty cart - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"08 - empty cart\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "09 - add product B - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"09 - add product B\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "10 - get cart in A - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"10 - get cart in A\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "11 - checkout - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"11 - checkout\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "12 - get empty cart - RT",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter request_attribute.TSN == \"12 - get empty cart\"\n| fieldsAdd duration = toDouble(duration) / 1000000 // NS to MS conversion\n| summarize { median=round(median(duration), decimals:0)}",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 1000.0,
+      "warning": 900.0
+    },
+    {
+      "name": "Failed requests",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"staging-astroshop\"\n| filter request.is_failed == true\n| summarize totalErrorRequests = count()\n| fields totalErrorRequests",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 700.0,
+      "warning": 500.0
+    },
+    {
+      "name": "Total Traces and Spans ",
+      "description": "This query calculates the sum of all traces and spans",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"staging-astroshop\"\n| summarize totalTraces = countDistinct(trace.id), totalSpans = count(), totalTracesAndSpans = countDistinct(trace.id) + count()\n| fields totalTracesAndSpans",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 300000.0,
+      "warning": 200000.0
+    },
+    {
+      "name": "CPU throttling time",
+      "objectiveType": "DQL",
+      "dqlQuery": "timeseries {\n  cpu_throttled_time=avg(dt.containers.cpu.throttled_time)\n}, by: {k8s.namespace.name}, filter: {k8s.namespace.name == \"staging-astroshop\"}\n| fields `average throttling/min`=arrayAvg(cpu_throttled_time)/1000000",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 100.0,
+      "warning": 50.0
+    },
+    {
+      "name": "Max Memory usage in MB",
+      "objectiveType": "DQL",
+      "dqlQuery": "timeseries {working_mem=avg(dt.kubernetes.container.memory_working_set)}, by:{k8s.container.name}\n| filter k8s.container.name == \"adservice\"\n| fields totalMemoryInMb=arrayMax(working_mem)/1000/1000",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 205.0,
+      "warning": 200.0
+    },
+    {
+      "name": "CPU Max",
+      "objectiveType": "DQL",
+      "dqlQuery": "timeseries {\n  cpu_usage=avg(dt.kubernetes.container.cpu_usage)\n}, by:{k8s.namespace.name}\n| filter contains(k8s.namespace.name,\"staging-astroshop\")\n| fields totalCpuInCores=arraySum(cpu_usage)",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 600.0,
+      "warning": 500.0
+    },
+    {
+      "name": "Total amount Load Test Requests",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) \n| filter contains(request_attribute.LTN, \"Astroshop\")\n| filter k8s.namespace.name == \"staging-astroshop\"\n| summarize spans = count() | fields spans\n",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "GREATER_THAN_OR_EQUAL"
+    },
+    {
+      "name": "Sum of 5XX requests",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"staging-astroshop\"\n| filter http.response.status_code \u003e= 500 and http.response.status_code \u003c 600\n| summarize totalErrorRequests = count()\n| fields totalErrorRequests",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 20.0,
+      "warning": 10.0
+    },
+    {
+      "name": "Logs with errors",
+      "objectiveType": "DQL",
+      "dqlQuery": "fetch logs\n| filter k8s.namespace.name == \"staging-astroshop\"\n| filter loglevel == \"ERROR\"\n| summarize totalErrorLogs = count()\n| fields totalErrorLogs",
+      "autoAdaptiveThresholdEnabled": false,
+      "comparisonOperator": "LESS_THAN_OR_EQUAL",
+      "target": 150000.0,
+      "warning": 100000.0
+    }
+  ]
+}

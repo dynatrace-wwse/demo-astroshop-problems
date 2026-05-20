@@ -1,0 +1,36 @@
+configs:
+- id: 8e519dc0-aa18-464c-bc7f-9276aae208ce
+  config:
+    name: sessionID
+    template: 8e519dc0-aa18-464c-bc7f-9276aae208ce.json
+    skip: false
+  type:
+    api: request-attributes
+- id: e7694e2b-13ba-40c3-b3f9-eccf2b66c89f
+  config:
+    name: x-developer
+    template: e7694e2b-13ba-40c3-b3f9-eccf2b66c89f.json
+    skip: false
+  type:
+    api: request-attributes
+- id: 4565f8c7-ff60-4ea8-a393-3f9a324d06cc
+  config:
+    name: LSN
+    template: 4565f8c7-ff60-4ea8-a393-3f9a324d06cc.json
+    skip: false
+  type:
+    api: request-attributes
+- id: c6214de6-5b35-4546-8c5f-bd7d309cd26d
+  config:
+    name: LTN
+    template: c6214de6-5b35-4546-8c5f-bd7d309cd26d.json
+    skip: false
+  type:
+    api: request-attributes
+- id: d309c1ba-4a2f-495b-a199-da0f41dfcd32
+  config:
+    name: TSN
+    template: d309c1ba-4a2f-495b-a199-da0f41dfcd32.json
+    skip: false
+  type:
+    api: request-attributes

@@ -1,0 +1,13 @@
+{
+  "apiName": "Bank TransactionHistory",
+  "apiColor": "#b64915",
+  "technology": "Java",
+  "thirdPartyApi": false,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "anthos.samples.bankofanthos.transactionhistory"
+    }
+  ]
+}

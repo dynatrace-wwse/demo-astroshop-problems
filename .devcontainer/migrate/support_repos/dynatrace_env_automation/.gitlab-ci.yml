@@ -1,0 +1,235 @@
+variables:
+  LAB:
+    value: "0"
+  MONACO_IMAGE_VERSION: "2.23.1"
+stages:
+  - wait
+  - initialize
+  - gitlab_configs
+  - conditional_naming_service
+
+wait:
+  stage: wait
+  resource_group: dynatrace_staging
+  script:
+    - sleep 60s
+initialize:
+  image: dynatrace/dynatrace-configuration-as-code:$MONACO_IMAGE_VERSION
+  stage: initialize
+  resource_group: dynatrace_staging
+  needs: ["wait"]
+  variables:
+    GITLAB_HOST: "$CI_SERVER_HOST"
+    WORKFLOW_ACTOR_ID: "$WF_ACTOR_ID"
+    GITLAB_EXTERNAL_ENDPOINT: "$GITLAB_EXTERNAL_ENDPOINT"
+    GITLAB_PASSWORD: "$GITLAB_PASSWORD"
+    OTELDEMO_URL: "$OTELDEMO_URL"
+    ACTIVE_GATE_NODE_ID: "$ACTIVE_GATE_NODE_ID"
+    DT_API_TOKEN: "$DT_API_TOKEN"
+    DT_TENANT_URL: "$DT_TENANT_URL"
+  script:
+    - export GITLAB_HTTPS_URL=$(echo $GITLAB_EXTERNAL_ENDPOINT |sed 's|http://gitlab|https://gitlab|g')
+    - export DT_TENANT_URL_NO_HTTP=$(echo $DT_TENANT_URL |sed 's|https://||g')
+    - monaco deploy monaco/manifest.yml -g core --dry-run
+    - monaco deploy monaco/manifest.yml -g core
+  rules:
+    - if: $LAB == "0"
+
+gitlab_configs:
+  stage: gitlab_configs
+  needs: ["initialize"]
+  resource_group: dynatrace_staging
+  allow_failure: true
+  image:
+    name: alpine/curl:8.11.1
+  script: |
+    sleep 30s
+    apk update
+    apk add jq
+    list=$(curl -g -X GET "${DT_TENANT_URL}/api/v1/synthetic/monitors?type=BROWSER&enabled=true" \
+    -H "accept: application/json; charset=utf-8" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json; charset=utf-8" )
+    echo $list
+    synthetic=$(echo $list | jq -c '.monitors[] | select(.name | contains("gitlab"))')
+    syntheticId=$(echo $synthetic | jq '.entityId')
+    echo $syntheticId
+    curl -g -X POST "${DT_TENANT_URL}/api/v2/synthetic/executions/batch" \
+    -H "accept: application/json; charset=utf-8" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json; charset=utf-8" \
+    -d '{ "monitors": [{ "executionCount": 3, "monitorId": '$syntheticId', "repeatMode": "SEQUENTIAL" } ] }'
+
+conditional_naming_service:
+  stage: conditional_naming_service
+  needs: ["initialize"]
+  resource_group: dynatrace_staging
+  allow_failure: false
+  image:
+    name: alpine/curl:8.11.1
+  script: |
+    set -e 
+    sleep 30s
+    apk update
+    apk add jq
+    curl -X POST "${DT_TENANT_URL}/api/config/v1/conditionalNaming/service" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "displayName": "1-astroshop-demo-naming",
+          "enabled": true,
+          "nameFormat": "{ProcessGroup:KubernetesNamespace}-{ProcessGroup:KubernetesContainerName}",
+          "rules": [
+            {
+              "comparisonInfo": {
+                "caseSensitive": true,
+                "negate": false,
+                "operator": "CONTAINS",
+                "type": "STRING",
+                "value": "astroshop"
+              },
+              "key": {
+                "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+                "dynamicKey": "KUBERNETES_NAMESPACE",
+                "type": "PROCESS_PREDEFINED_METADATA_KEY"
+              }
+            }
+          ],
+          "type": "SERVICE"
+        }'
+    curl -X POST "${DT_TENANT_URL}/api/config/v1/conditionalNaming/service" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "displayName": "2-nginx-naming",
+          "enabled": true,
+          "nameFormat": "{ProcessGroup:ExeName}",
+          "rules": [
+            {
+              "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "SIMPLE_TECH",
+                "value": {
+                  "type": "NGINX"
+                }
+              },
+              "key": {
+                "attribute": "SERVICE_TECHNOLOGY",
+                "type": "STATIC"
+              }
+            }
+          ],
+          "type": "SERVICE"
+        }'
+    curl -X POST "${DT_TENANT_URL}/api/config/v1/conditionalNaming/service" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "displayName": "3-app-environment-web-request",
+          "enabled": true,
+          "nameFormat": "{ProcessGroup:KubernetesContainerName}.{ProcessGroup:KubernetesNamespace}",
+          "rules": [
+            {
+              "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "SERVICE_TYPE",
+                "value": "WEB_REQUEST_SERVICE"
+              },
+              "key": {
+                "attribute": "SERVICE_TYPE",
+                "type": "STATIC"
+              }
+            },
+            {
+              "comparisonInfo": {
+                "caseSensitive": null,
+                "negate": false,
+                "operator": "EXISTS",
+                "type": "STRING",
+                "value": null
+              },
+              "key": {
+                "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+                "dynamicKey": "KUBERNETES_NAMESPACE",
+                "type": "PROCESS_PREDEFINED_METADATA_KEY"
+              }
+            }
+          ],
+          "type": "SERVICE"
+        }'
+    curl -X POST "${DT_TENANT_URL}/api/config/v1/conditionalNaming/service" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "displayName": "4-app-environment-background activity",
+          "enabled": true,
+          "nameFormat": "{ProcessGroup:KubernetesContainerName}.{ProcessGroup:KubernetesNamespace} - background activity",
+          "rules": [
+            {
+              "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "SERVICE_TYPE",
+                "value": "BACKGROUND_ACTIVITY"
+              },
+              "key": {
+                "attribute": "SERVICE_TYPE",
+                "type": "STATIC"
+              }
+            },
+            {
+              "comparisonInfo": {
+                "caseSensitive": null,
+                "negate": false,
+                "operator": "EXISTS",
+                "type": "STRING",
+                "value": null
+              },
+              "key": {
+                "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+                "dynamicKey": "KUBERNETES_NAMESPACE",
+                "type": "PROCESS_PREDEFINED_METADATA_KEY"
+              }
+            }
+          ],
+          "type": "SERVICE"
+        }'
+    curl -X POST "${DT_TENANT_URL}/api/config/v1/conditionalNaming/service" \
+    -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "displayName": "5-k8s-background-svcs",
+          "enabled": true,
+          "nameFormat": "{ProcessGroup:KubernetesContainerName}.background.{ProcessGroup:KubernetesNamespace}",
+          "rules": [
+            {
+              "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "SERVICE_TYPE",
+                "value": "BACKGROUND_ACTIVITY"
+              },
+              "key": {
+                "attribute": "SERVICE_TYPE",
+                "type": "STATIC"
+              }
+            },
+            {
+              "comparisonInfo": {
+                "caseSensitive": null,
+                "negate": false,
+                "operator": "EXISTS",
+                "type": "STRING",
+                "value": null
+              },
+              "key": {
+                "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+                "dynamicKey": "KUBERNETES_NAMESPACE",
+                "type": "PROCESS_PREDEFINED_METADATA_KEY"
+              }
+            }
+          ],
+          "type": "SERVICE"
+        }'

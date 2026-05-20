@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "forcible": false,
+  "key": "OPENTRACINGNATIVE_ENVOY_ISTIO_SIDECAR_MONITORING_FORCIBLE"
+}

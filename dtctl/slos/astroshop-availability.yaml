@@ -1,0 +1,18 @@
+name: Astroshop availability
+description: 99% of astroshop frontend requests succeed over the last 1h
+criteria:
+  - timeframeFrom: -1h
+    target: 99.0
+    warning: 99.5
+customSli:
+  indicator: |
+    timeseries {
+        total    = sum(dt.service.request.count),
+        failures = sum(dt.service.request.failure_count)
+      },
+      filter: { k8s.namespace.name == "astroshop"
+                and dt.entity.service == "astroshop-frontend" }
+    | fieldsAdd sli = ((total[] - failures[]) / total[]) * 100
+tags:
+  - slo-type:availability
+  - app:astroshop

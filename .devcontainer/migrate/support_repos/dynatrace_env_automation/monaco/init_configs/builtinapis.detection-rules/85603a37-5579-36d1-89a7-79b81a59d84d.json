@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In Hibernate",
+  "apiColor": "#522273",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.hibernate."
+    }
+  ]
+}

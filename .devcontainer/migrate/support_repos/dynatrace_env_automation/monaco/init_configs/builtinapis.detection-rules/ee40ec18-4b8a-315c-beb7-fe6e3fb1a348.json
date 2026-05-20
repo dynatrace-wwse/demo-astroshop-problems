@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In Apache",
+  "apiColor": "#2ab6f4",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.apache."
+    }
+  ]
+}

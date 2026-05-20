@@ -1,0 +1,37 @@
+# Rollback workflow — dispatched by the Dynatrace Workflow (GitHub Connector)
+# when a post-deploy guardian on production FAILS. Demonstrates the
+# auto-rollback half of the bad-build-blocking story.
+
+name: Rollback astroshop
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Version to roll back from (the version that just failed)"
+        required: true
+      rolled_back_by:
+        description: "Origin of the rollback (dt-workflow-<id> | manual:<user>)"
+        required: false
+        default: "manual"
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: (Demo) Rollback step
+        run: |
+          echo "Rolling back from ${{ inputs.release_version }} (initiated by ${{ inputs.rolled_back_by }})"
+          echo "kubectl rollout undo deployment/astroshop-frontend -n production"
+
+      - name: Notify Dynatrace — rollback event
+        uses: ./.github/actions/dt-deployment-event
+        with:
+          dt_tenant_url:   ${{ secrets.DT_TENANT_URL }}
+          dt_api_token:    ${{ secrets.DT_API_TOKEN }}
+          application:     astroshop
+          release_version: rollback-from-${{ inputs.release_version }}
+          release_stage:   production
+          problem:         none

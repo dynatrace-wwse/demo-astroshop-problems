@@ -8,9 +8,11 @@ nav:
   - "2. Getting started": 2-getting-started.md
   - "3. Codespaces": 3-codespaces.md
   - "4. Content": 4-content.md
-  - "5. Cleanup": cleanup.md
-  - "6. Resources": resources.md
-  - "7. What's next?": whats-next.md
+  - "5. Stop bad builds": stop-bad-builds.md
+  - "6. Open questions Q&A": cicd-observability.md
+  - "7. Cleanup": cleanup.md
+  - "8. Resources": resources.md
+  - "9. What's next?": whats-next.md
 
 extra:
   rum_snippet: "https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"

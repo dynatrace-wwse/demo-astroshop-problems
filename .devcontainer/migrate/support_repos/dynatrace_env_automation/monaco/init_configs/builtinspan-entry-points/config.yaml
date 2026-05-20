@@ -1,0 +1,11 @@
+configs:
+- id: e51978f2-5adc-34bf-a6f6-0add0af1c2fa
+  config:
+    template: e51978f2-5adc-34bf-a6f6-0add0af1c2fa.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABlidWlsdGluOnNwYW4tZW50cnktcG9pbnRzAAZ0ZW5hbnQABnRlbmFudAAkN2RiYzRmM2ItMzc5Yi0zMTlmLWE3ZjQtYjhmODc2NGRkMjQyvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:span-entry-points
+      schemaVersion: 0.1.16
+      scope: environment

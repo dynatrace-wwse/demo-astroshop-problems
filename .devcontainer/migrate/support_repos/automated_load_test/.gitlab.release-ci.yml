@@ -1,0 +1,100 @@
+
+variables:
+  RELEASE_STAGE_STAGING: "staging"
+  RELEASE_VERSION: $VERSION
+  DTA_IMAGE_VERSION: "alpha2"
+  RELEASE_PRODUCT: "astroshop"
+  PROBLEM: "none"
+  WAIT_HOUR: "true"
+stages:
+  - deploy
+  - wait_end_of_hour
+  - send_event
+  - load_test
+  - validate
+
+deploy:
+  stage: deploy
+  variables:
+    VERSION: $VERSION
+    ENVIRONMENT: $RELEASE_STAGE_STAGING
+  trigger:
+    project: Support/Astroshop_Release
+    strategy: depend
+
+wait_end_of_hour:
+  stage: wait_end_of_hour
+  needs: ["deploy"]
+  image: bash:devel-alpine3.21
+  rules:
+    - if: '$WAIT_HOUR == "true"'
+  script: |
+    echo "Waiting for the end of the hour"
+    echo "The current time is: $(date)"
+    current_minute=$(date +%M)
+    minutes_until_next_hour=$((60 - 10#$current_minute))
+    echo "Waiting for ${minutes_until_next_hour} minutes until the next hour to run the next test"
+    sleep "${minutes_until_next_hour}m"
+    
+#TODO: Replace with DTA CLI
+send_event:
+  stage: send_event
+  needs: ["wait_end_of_hour"]
+  image: bash:devel-alpine3.21
+  variables:
+    dt_tenant_url: $DT_PLATFORM_TENANT_URL
+    dt_clientid: $DT_OAUTH_CLIENT_ID
+    dt_clientsecret: $DT_OAUTH_CLIENT_SECRET
+    PROBLEM: "$PROBLEM" #TODO: This needs to change to be trigger based on biz event
+  script: 
+   - apk update
+   - apk add curl
+   - apk add jq
+   - chmod +rx ./scripts/event.sh
+   - export ENVIRONMENT=staging
+   - ./scripts/event.sh
+
+load_test: 
+  stage: load_test
+  needs: ["send_event"]
+  image: alpine/jmeter:5.6.3
+  before_script:
+    - echo $(date -u +"%Y-%m-%dT%H:%M:%SZ") > srg.test.starttime
+  variables:
+    SERVER_URL: $OTELDEMO_URL
+    VU: 10
+    LOOPS: 50
+  script: 
+   - chmod +rx ./jmeter/agent_start_loadtest.sh
+   - ./jmeter/agent_start_loadtest.sh
+  after_script:
+    - echo $(date -u +"%Y-%m-%dT%H:%M:%SZ") > srg.test.endtime
+  artifacts:
+    paths:
+      - srg.test.starttime
+      - srg.test.endtime
+
+validate:
+  image: dynatraceace/dt-automation-cli:$DTA_IMAGE_VERSION
+  stage: validate
+  needs: ["load_test"]
+  allow_failure: true
+  variables:
+    DYNATRACE_URL_GEN3: $DT_PLATFORM_TENANT_URL
+    ACCOUNT_URN: $DT_OAUTH_ACCOUNT_URN
+    DYNATRACE_CLIENT_ID: $DT_OAUTH_CLIENT_ID
+    DYNATRACE_SECRET: $DT_OAUTH_CLIENT_SECRET
+    DYNATRACE_SSO_URL: $DT_OAUTH_SSO_ENDPOINT
+    SRG_EVALUATION_STOP_ON_FAILURE: "false"
+    SRG_EVALUATION_SERVICE: $RELEASE_PRODUCT
+    SRG_EVALUATION_STAGE: $RELEASE_STAGE_STAGING
+    SRG_EVALUATION_VERSION: $RELEASE_VERSION
+    SRG_EVALUATION_BUILD_ID: $CI_COMMIT_SHA
+  script: |
+    echo "RELEASE_BUILD_VERSION $RELEASE_VERSION is being evaluated via Site Reliability Guardian"
+    eval_start=$(cat srg.test.starttime)
+    eval_end=$(cat srg.test.endtime)
+    export LOG_LEVEL=verbose
+    dta srg evaluate --start-time=$eval_start --end-time=$eval_end \
+    --extra_vars release_version=Release-$RELEASE_VERSION problem=$PROBLEM pipeline_url=$CI_JOB_URL \
+    dt_url=$DT_PLATFORM_TENANT_URL

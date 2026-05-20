@@ -1,0 +1,15 @@
+{
+    "enabled": true,
+    "config-item-title": "kubernetes_log_ingest_rule",
+    "send-to-storage": true,
+    "matchers": [
+        {
+            "attribute": "k8s.namespace.name",
+            "operator": "MATCHES",
+            "values": [
+                "astroshop",
+                "gitlab"
+            ]
+        }
+    ]
+}

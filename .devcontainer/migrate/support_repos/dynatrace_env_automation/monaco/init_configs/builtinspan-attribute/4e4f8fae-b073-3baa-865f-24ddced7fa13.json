@@ -1,0 +1,4 @@
+{
+  "key": "http.response.headers",
+  "masking": "MASK_ENTIRE_VALUE"
+}

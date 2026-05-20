@@ -1,0 +1,339 @@
+{
+    "actor": "{{ .wfActorId }}",
+    "description": "",
+    "isPrivate": false,
+    "owner": "{{ .wfActorId }}",
+    "ownerType": "USER",
+    "schemaVersion": 3,
+    "taskDefaults": {},
+    "tasks": {
+        "create_ticket": {
+            "action": "dynatrace.gitlab.connector:gitlab-issue-create",
+            "conditions": {
+                "states": {
+                    "get_application": "OK",
+                    "get_frontend_svc": "OK",
+                    "get_k8s_cluster": "OK",
+                    "previous_succesful_evaluation": "OK"
+                }
+            },
+            "description": "Creates a new issue in GitLab",
+            "input": {
+                "assignees": "1",
+                "connection": "{{.gitlab_connection_id}}",
+                "description": "Release Validation for {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}} has started!\n\n The Issue will be updated once the Release validation has completed!\n----\n\nLinks\n---\n\n- Release Pipeline {{`{{`}} event()[\"extra_vars.pipeline_url\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
+                "issue_type": "task",
+                "labels": "",
+                "projectId": "{{`{{`}} 3 {{`}}`}}",
+                "title": "Validation for Astroshop {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}}"
+            },
+            "name": "create_ticket",
+            "position": {
+                "x": 0,
+                "y": 2
+            },
+            "predecessors": [
+                "get_k8s_cluster",
+                "get_application",
+                "get_frontend_svc",
+                "previous_succesful_evaluation"
+            ]
+        },
+        "get_application": {
+            "action": "dynatrace.automations:execute-dql-query",
+            "description": "Executes DQL query",
+            "input": {
+                "query": "fetch dt.entity.application\n| filter entity.name == \"Astronomy Shop\""
+            },
+            "name": "get_application",
+            "position": {
+                "x": -1,
+                "y": 1
+            },
+            "predecessors": []
+        },
+        "get_frontend_svc": {
+            "action": "dynatrace.automations:execute-dql-query",
+            "description": "Executes DQL query",
+            "input": {
+                "query": "fetch dt.entity.service\n| filter contains( entity.name,\"frontend\")"
+            },
+            "name": "get_frontend_svc",
+            "position": {
+                "x": 1,
+                "y": 1
+            },
+            "predecessors": []
+        },
+        "get_k8s_cluster": {
+            "action": "dynatrace.automations:execute-dql-query",
+            "description": "Executes DQL query",
+            "input": {
+                "query": "fetch dt.entity.kubernetes_cluster \n| filter entity.name==\"oteldemo\""
+            },
+            "name": "get_k8s_cluster",
+            "position": {
+                "x": 0,
+                "y": 1
+            },
+            "predecessors": []
+        },
+        "previous_succesful_evaluation": {
+            "action": "dynatrace.automations:execute-dql-query",
+            "customSampleResult": {
+                "metadata": {
+                    "grail": {
+                        "analysisTimeframe": {
+                            "end": "2023-01-01T01:01:01.002Z",
+                            "start": "2023-01-01T01:01:01.001Z"
+                        },
+                        "canonicalQuery": "fetch logs\n| limit 2",
+                        "dqlVersion": "V1_0",
+                        "executionTimeMilliseconds": 1,
+                        "locale": "",
+                        "notifications": [],
+                        "query": "fetch logs\n| limit 2",
+                        "sampled": false,
+                        "scannedBytes": 123,
+                        "scannedRecords": 123,
+                        "timezone": "Z"
+                    }
+                },
+                "records": [
+                    {
+                        "ctfstart": "1737067035000",
+                        "dt.openpipeline.pipelines": [
+                            "bizevents:default"
+                        ],
+                        "dt.openpipeline.source": "/api/v2/bizevents/ingest",
+                        "event.id": "s",
+                        "event.kind": "BIZ_EVENT",
+                        "event.provider": "dynatrace.site.reliability.guardian",
+                        "event.type": "guardian.validation.finished",
+                        "execution_context": "{}",
+                        "guardian.id": "{{.guardian_id}}",
+                        "guardian.name": "astroshop staging quality gate ",
+                        "guardian.variables": "[]",
+                        "timestamp": "2025-01-16T22:39:17.928000000Z",
+                        "validation.errors": "[]",
+                        "validation.from": "2025-01-16T22:37:15.000Z",
+                        "validation.id": "1",
+                        "validation.status": "pass",
+                        "validation.summary": "{\"pass\":19,\"warning\":0,\"fail\":0,\"error\":0,\"info\":1}",
+                        "validation.to": "2025-01-16T22:37:21.000Z",
+                        "validation.triggered_by.user.id": "1",
+                        "validation.workflow.execution.id": "1",
+                        "validation.workflow.id": "1",
+                        "validation.workflow.trigger_type": "Event"
+                    }
+                ],
+                "types": [
+                    {
+                        "indexRange": [
+                            0,
+                            1
+                        ],
+                        "mappings": {
+                            "content": {
+                                "type": "string"
+                            },
+                            "content2": {
+                                "type": "string"
+                            },
+                            "dt.entity.host": {
+                                "type": "string"
+                            },
+                            "dt.entity.process_group": {
+                                "type": "string"
+                            },
+                            "dt.entity.process_group_instance": {
+                                "type": "string"
+                            },
+                            "dt.security_context": {
+                                "type": "string"
+                            },
+                            "dt.source_entity": {
+                                "type": "string"
+                            },
+                            "event.type": {
+                                "type": "string"
+                            },
+                            "host.name": {
+                                "type": "string"
+                            },
+                            "log.source": {
+                                "type": "string"
+                            },
+                            "loglevel": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "timestamp": {
+                                "type": "timestamp"
+                            }
+                        }
+                    }
+                ]
+            },
+            "description": "Executes DQL query",
+            "input": {
+                "query": "fetch bizevents, from:now()-7d, to:now()\n| filter event.provider == \"dynatrace.site.reliability.guardian\" AND event.type == \"guardian.validation.finished\" and validation.status == \"pass\"\n| filter contains(guardian.name,\"astroshop staging\")\n| fieldsAdd ctfstart = unixMillisFromTimestamp(toTimestamp(validation.from))\n| append [\n  data record(\n    timestamp=now(),\n    event.id=uuid(toLong(now()),toLong(now())),\n    event.provider=\"dt.workflow\",\n    event.type=\"initial.event.nothingtocompare\",\n    guardian.name=\"astroshop staging quality gate \",\n    validation.from=now(),\n    ctfstart=unixMillisFromTimestamp(toTimestamp(now()))\n    )]\n| sort timestamp desc | sort event.provider desc\n| limit 1"
+            },
+            "name": "previous_succesful_evaluation",
+            "position": {
+                "x": -2,
+                "y": 1
+            },
+            "predecessors": []
+        },
+        "run_validation": {
+            "action": "dynatrace.site.reliability.guardian:validate-guardian-action",
+            "conditions": {
+                "states": {
+                    "create_ticket": "OK"
+                }
+            },
+            "description": "Automation action to start a Site Reliability Guardian validation",
+            "input": {
+                "executionId": "{{`{{`}} execution().id {{`}}`}}",
+                "expressionFrom": "{{`{{`}} event()['timeframe.from'] {{`}}`}}",
+                "expressionTo": "{{`{{`}} event()['timeframe.to'] {{`}}`}}",
+                "objectId": "{{.guardian_id}}",
+                "timeframeInputType": "expression",
+                "variables": [
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.release_version'] {{`}}`}}",
+                        "name": "release_version"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.pipeline_url'] {{`}}`}}",
+                        "name": "pipeline_url"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.problem'] {{`}}`}}",
+                        "name": "problem"
+                    },
+                    {
+                        "definition": "{{`{{`}}  result(\"create_ticket\")[\"issue\"][\"web_url\"]{{`}}`}}",
+                        "name": "issue_url"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.kubernetes/ui/entity/{{`{{`}} result(\"get_k8s_cluster\").records[0].id {{`}}`}}?gtf={{`{{`}} event()['timeframe.to'] {{`}}`}}+to+{{`{{`}} event()['timeframe.from'] {{`}}`}}\u0026gf=all\u0026filter=app%3AAstronomy+Shop",
+                        "name": "k8s"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.services/explorer?sort=healthIndicators%3Adescending\u0026filtering=Name+%3D+astro*",
+                        "name": "backend"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.session.segmentation/ui/user-sessions?gtf={{`{{`}} event()['timeframe.to'] {{`}}`}}+to+{{`{{`}} event()['timeframe.from'] {{`}}`}}\u0026gf=all\u0026filter=app%3AAstronomy+Shop",
+                        "name": "user_sessions"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.distributed.traces/ui/diagnostictools/purepaths?gtf={{`{{`}} event()['timeframe.to'] {{`}}`}}+to+{{`{{`}} event()['timeframe.from'] {{`}}`}}\u0026gf=all\u0026datasource=ALL",
+                        "name": "distributed_traces"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.classic.services/#serviceComparison;serviceId={{`{{`}} result(\"get_frontend_svc\").records[0].id {{`}}`}};timeframe=custom{{`{{`}} event()['timeframe.from'] {{`}}`}}to{{`{{`}} event()['timeframe.to'] {{`}}`}};gtf=today;gf=all;tfshift=CustomTimeframe;ctfstart={{`{{`}}result(\"previous_succesful_evaluation\").records[0].ctfstart{{`}}`}}",
+                        "name": "compare"
+                    },
+                    {
+                        "definition": "{{`{{`}} event()['extra_vars.dt_url'] {{`}}`}}/ui/apps/dynatrace.distributedtracing/explorer?cv=a%2Ctrue\u0026sidebar=a%2Ctrue\u0026tableMode=grouping\u0026groupedByColumns=http.request.header.x-dynatrace-test\u0026filter=http.request.header.x-dynatrace-test+%3D+*\u0026tf={{`{{`}} event()['timeframe.from'] {{`}}`}}%3B{{`{{`}} event()['timeframe.to'] {{`}}`}}",
+                        "name": "tracing"
+                    }
+                ]
+            },
+            "name": "run_validation",
+            "position": {
+                "x": 0,
+                "y": 3
+            },
+            "predecessors": [
+                "create_ticket"
+            ]
+        },
+        "validation_failure": {
+            "action": "dynatrace.gitlab.connector:gitlab-issue-edit",
+            "conditions": {
+                "custom": " {{`{{`}} result(\"run_validation\").validation_status != \"pass\" and result(\"run_validation\").validation_status != \"info\"{{`}}`}}",
+                "states": {
+                    "run_validation": "OK"
+                }
+            },
+            "description": "Edit an existing issue in GitLab",
+            "input": {
+                "assignees": "root",
+                "connection": "{{.gitlab_connection_id}}",
+                "description": "Release Validation for Release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}} has finished!\n\nThe validation failed! Check the links for more info\n----\n\nLinks\n---\n\n- Release Validation Overview {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.site.reliability.guardian/analysis/{{`{{`}} result(\"run_validation\")[\"guardian_id\"] {{`}}`}}?validationId=1\n- Release Pipline {{`{{`}} event()[\"extra_vars.pipeline_url\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
+                "iid": "{{`{{`}} result(\"create_ticket\")[\"issue\"][\"iid\"] {{`}}`}}",
+                "issue_type": "task",
+                "labels": "validation_failed",
+                "projectId": "{{`{{`}} 3 {{`}}`}}",
+                "state": "reopen",
+                "title": "Validation for Astroshop release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}}"
+            },
+            "name": "validation_failure",
+            "position": {
+                "x": 1,
+                "y": 4
+            },
+            "predecessors": [
+                "run_validation"
+            ]
+        },
+        "validation_success": {
+            "action": "dynatrace.gitlab.connector:gitlab-issue-edit",
+            "conditions": {
+                "custom": " {{`{{`}} result(\"run_validation\").validation_status == \"pass\" or result(\"run_validation\").validation_status == \"info\"{{`}}`}}",
+                "states": {
+                    "run_validation": "OK"
+                }
+            },
+            "description": "Edit an existing issue in GitLab",
+            "input": {
+                "assignees": "root",
+                "connection": "{{.gitlab_connection_id}}",
+                "description": "Release Validation for Release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}} has finished!\n\nThe validation was successful! Check the links for more info\n----\n\nLinks\n---\n\n- Release Validation Overview {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.site.reliability.guardian/analysis/{{`{{`}} result(\"run_validation\")[\"guardian_id\"] {{`}}`}}?validationId=1\n- Release Pipline {{`{{`}} event()[\"extra_vars.pipeline_url\"] {{`}}`}} \n- Test Step Analysis {{`{{`}} event()[\"extra_vars.dt_url\"] {{`}}`}}/ui/apps/dynatrace.classic.mda/ui/diagnostictools/mda?gtf={{`{{`}} event()['timeframe.from'] {{`}}`}}+to+{{`{{`}} event()['timeframe.to'] {{`}}`}}\u0026gf=all\u0026mdaId=topweb\u0026metric=RESPONSE_TIME\u0026dimension={Request%3AName}\u0026mergeServices=false\u0026aggregation=AVERAGE\u0026percentile=80\u0026chart=COLUMN",
+                "iid": "{{`{{`}} result(\"create_ticket\")[\"issue\"][\"iid\"] {{`}}`}}",
+                "issue_type": "task",
+                "labels": "success",
+                "projectId": "{{`{{`}} 3 {{`}}`}}",
+                "state": "close",
+                "title": "Validation for Astroshop release {{`{{`}}event()[\"extra_vars.release_version\"]{{`}}`}}"
+            },
+            "name": "validation_success",
+            "position": {
+                "x": 0,
+                "y": 4
+            },
+            "predecessors": [
+                "run_validation"
+            ]
+        }
+    },
+    "throttle": {
+        "isLimitHit": false,
+        "limitEvents": []
+    },
+    "title": "{{.name}}",
+    "trigger": {
+        "eventTrigger": {
+            "filterQuery": "service == \"astroshop\" AND stage == \"staging\"",
+            "isActive": true,
+            "triggerConfiguration": {
+                "type": "event",
+                "value": {
+                    "eventType": "bizevents",
+                    "query": "service == \"astroshop\" AND stage == \"staging\""
+                }
+            },
+            "uniqueExpression": null
+        }
+    },
+    "triggerType": "Event",
+    "type": "STANDARD",
+    "usages": [],
+    "version": 63
+}

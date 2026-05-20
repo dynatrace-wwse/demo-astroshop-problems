@@ -1,0 +1,4 @@
+{
+  "key": "http.response_content_length",
+  "masking": "NOT_MASKED"
+}

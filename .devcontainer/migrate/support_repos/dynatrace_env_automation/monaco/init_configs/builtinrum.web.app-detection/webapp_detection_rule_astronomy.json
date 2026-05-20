@@ -1,0 +1,5 @@
+{
+  "matcher": "DOMAIN_CONTAINS",
+  "pattern": "astroshop",
+  "applicationId": "{{.applicationweb__APPLICATION8C870F9811FC5AA4__id}}"
+}

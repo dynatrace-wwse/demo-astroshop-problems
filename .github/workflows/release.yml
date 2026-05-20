@@ -1,0 +1,98 @@
+# Sample release pipeline — demonstrates the full bad-build-blocking flow.
+# Manual dispatch only (no automatic triggers) so it's safe in a public fork.
+#
+# Inputs let you choose which "problem" variant to deploy; the SRG verdict
+# determines whether the pipeline halts before production.
+
+name: Release astroshop
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Version being released (e.g. 1.12.1)"
+        required: true
+        default: "1.12.0"
+      problem:
+        description: "Deliberate issue flag (none|cpu|memory|nplusone|error)"
+        required: true
+        default: "none"
+        type: choice
+        options: [none, cpu, memory, nplusone, error]
+
+jobs:
+
+  deploy-staging:
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: (Demo) Deploy step would run here
+        run: echo "kubectl set image deployment/astroshop-* image=astroshop:${{ inputs.release_version }}"
+
+      - name: Notify Dynatrace — deployment event (staging)
+        uses: ./.github/actions/dt-deployment-event
+        with:
+          dt_tenant_url:   ${{ secrets.DT_TENANT_URL }}
+          dt_api_token:    ${{ secrets.DT_API_TOKEN }}
+          application:     astroshop
+          release_version: ${{ inputs.release_version }}
+          release_stage:   staging
+          problem:         ${{ inputs.problem }}
+
+  validate:
+    name: SRG gate (release readiness)
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    outputs:
+      verdict: ${{ steps.guardian.outputs.verdict }}
+    steps:
+      - name: Soak window
+        run: |
+          echo "Waiting for load test to fill the SLO window..."
+          sleep 30
+
+      - name: Run guardian
+        id: guardian
+        env:
+          DT: ${{ secrets.DT_TENANT_URL }}
+          TOKEN: ${{ secrets.DT_API_TOKEN }}
+          VER: ${{ inputs.release_version }}
+          PROBLEM: ${{ inputs.problem }}
+        run: |
+          # In the real demo this calls dtctl to trigger SRG. For the public
+          # workflow we deterministically fail on known bad variants so the
+          # blocking behaviour is reproducible without a tenant.
+          case "$PROBLEM" in
+            none) echo "verdict=pass" >> "$GITHUB_OUTPUT" ;;
+            *)    echo "verdict=fail" >> "$GITHUB_OUTPUT" ;;
+          esac
+          echo "Release $VER ($PROBLEM) verdict: $(grep verdict= "$GITHUB_OUTPUT" | tail -1)"
+
+      - name: Stop bad build
+        if: steps.guardian.outputs.verdict != 'pass'
+        run: |
+          echo "::error::SRG verdict=fail — refusing to promote $VER to production"
+          exit 1
+
+  promote-production:
+    name: Promote to production
+    needs: validate
+    if: needs.validate.outputs.verdict == 'pass'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: (Demo) Promotion step
+        run: echo "kubectl set image deployment/astroshop-* image=astroshop:${{ inputs.release_version }} -n production"
+
+      - name: Notify Dynatrace — deployment event (production)
+        uses: ./.github/actions/dt-deployment-event
+        with:
+          dt_tenant_url:   ${{ secrets.DT_TENANT_URL }}
+          dt_api_token:    ${{ secrets.DT_API_TOKEN }}
+          application:     astroshop
+          release_version: ${{ inputs.release_version }}
+          release_stage:   production
+          problem:         ${{ inputs.problem }}

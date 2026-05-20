@@ -1,0 +1,4 @@
+{
+  "key": "db.connection_string",
+  "masking": "MASK_ENTIRE_VALUE"
+}

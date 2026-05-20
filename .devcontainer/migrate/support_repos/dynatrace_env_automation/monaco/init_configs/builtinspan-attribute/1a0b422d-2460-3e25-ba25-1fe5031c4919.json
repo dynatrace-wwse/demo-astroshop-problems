@@ -1,0 +1,4 @@
+{
+  "key": "db.cassandra.page_size",
+  "masking": "NOT_MASKED"
+}

@@ -1,0 +1,4 @@
+{
+  "key": "http.response.reason_phrase",
+  "masking": "NOT_MASKED"
+}

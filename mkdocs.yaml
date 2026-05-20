@@ -1,21 +1,22 @@
 INHERIT: mkdocs-base.yaml
 
-site_name: "Dynatrace Enablement Lab: Astroshop Problem Scenarios"
+site_name: "Astroshop CI/CD Observability — Workshop"
 repo_name: "View Code on GitHub"
 repo_url: "https://github.com/dynatrace-wwse/demo-astroshop-problems"
 nav:
   - "1. About": index.md
   - "2. Getting started": 2-getting-started.md
-  - "3. Codespaces": 3-codespaces.md
-  - "4. Content": 4-content.md
-  - "5. How it all connects": architecture.md
-  - "6. Stop bad builds": stop-bad-builds.md
+  - "3. Codespace setup": codespace-setup.md
+  - "4. How it all connects": architecture.md
+  - "5. Stop bad builds": stop-bad-builds.md
+  - "6. Workshop labs (ace-box order)": 4-content.md
   - "7. Apply to your app": apply-to-your-app.md
   - "8. Open questions Q&A": cicd-observability.md
   - "9. Monaco config": monaco-config.md
-  - "10. Cleanup": cleanup.md
-  - "11. Resources": resources.md
-  - "12. What's next?": whats-next.md
+  - "10. Codespaces (local)": 3-codespaces.md
+  - "11. Cleanup": cleanup.md
+  - "12. Resources": resources.md
+  - "13. What's next?": whats-next.md
 
 extra:
   rum_snippet: "https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"

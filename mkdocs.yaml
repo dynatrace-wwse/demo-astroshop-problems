@@ -8,12 +8,14 @@ nav:
   - "2. Getting started": 2-getting-started.md
   - "3. Codespaces": 3-codespaces.md
   - "4. Content": 4-content.md
-  - "5. Stop bad builds": stop-bad-builds.md
-  - "6. Open questions Q&A": cicd-observability.md
-  - "7. Monaco config": monaco-config.md
-  - "8. Cleanup": cleanup.md
-  - "9. Resources": resources.md
-  - "10. What's next?": whats-next.md
+  - "5. How it all connects": architecture.md
+  - "6. Stop bad builds": stop-bad-builds.md
+  - "7. Apply to your app": apply-to-your-app.md
+  - "8. Open questions Q&A": cicd-observability.md
+  - "9. Monaco config": monaco-config.md
+  - "10. Cleanup": cleanup.md
+  - "11. Resources": resources.md
+  - "12. What's next?": whats-next.md
 
 extra:
   rum_snippet: "https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"

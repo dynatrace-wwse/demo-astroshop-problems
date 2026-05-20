@@ -30,13 +30,15 @@ issue via the **Dynatrace GitLab Connector**.
 Equivalent **GitHub Actions** artefacts live under `.github/` so teams
 on GitHub get the same loop with one file change.
 
-## Why this exists
+## Reading order
 
-Teams ask the same handful of questions every time. The
-[Q&A](cicd-observability.md) answers all eleven with runnable examples
-that point at this repo's artefacts. The [Stop bad builds](stop-bad-builds.md)
-page is the end-to-end narrative. The [Monaco config](monaco-config.md)
-page inventories every platform resource the workshop ships.
+| If you want… | Start here |
+|---|---|
+| The mental model — what speaks to what, which token, which endpoint | [How it all connects](architecture.md) |
+| The narrative — pipeline run, SRG fails, build blocked | [Stop bad builds](stop-bad-builds.md) |
+| To rebuild this for your own app + CI | [Apply to your app](apply-to-your-app.md) |
+| Answers to the 11 questions customers always ask | [Open questions Q&A](cicd-observability.md) |
+| Every Dynatrace resource the workshop deploys | [Monaco config](monaco-config.md) |
 
 ## Bad releases shipped in this repo
 

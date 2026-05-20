@@ -114,7 +114,7 @@
     {
       "name": "Failed requests",
       "objectiveType": "DQL",
-      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"staging-astroshop\"\n| filter request.is_failed == true\n| summarize totalErrorRequests = count()\n| fields totalErrorRequests",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"astroshop\"\n| filter request.is_failed == true\n| summarize totalErrorRequests = count()\n| fields totalErrorRequests",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 700.0,
@@ -124,7 +124,7 @@
       "name": "Total Traces and Spans ",
       "description": "This query calculates the sum of all traces and spans",
       "objectiveType": "DQL",
-      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"staging-astroshop\"\n| summarize totalTraces = countDistinct(trace.id), totalSpans = count(), totalTracesAndSpans = countDistinct(trace.id) + count()\n| fields totalTracesAndSpans",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"astroshop\"\n| summarize totalTraces = countDistinct(trace.id), totalSpans = count(), totalTracesAndSpans = countDistinct(trace.id) + count()\n| fields totalTracesAndSpans",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 300000.0,
@@ -133,7 +133,7 @@
     {
       "name": "CPU throttling time",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries {\n  cpu_throttled_time=avg(dt.containers.cpu.throttled_time)\n}, by: {k8s.namespace.name}, filter: {k8s.namespace.name == \"staging-astroshop\"}\n| fields `average throttling/min`=arrayAvg(cpu_throttled_time)/1000000",
+      "dqlQuery": "timeseries {\n  cpu_throttled_time=avg(dt.containers.cpu.throttled_time)\n}, by: {k8s.namespace.name}, filter: {k8s.namespace.name == \"astroshop\"}\n| fields `average throttling/min`=arrayAvg(cpu_throttled_time)/1000000",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 100.0,
@@ -142,7 +142,7 @@
     {
       "name": "Max Memory usage in MB",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries {working_mem=avg(dt.kubernetes.container.memory_working_set)}, by:{k8s.container.name}\n| filter k8s.container.name == \"adservice\"\n| fields totalMemoryInMb=arrayMax(working_mem)/1000/1000",
+      "dqlQuery": "timeseries {working_mem=avg(dt.kubernetes.container.memory_working_set)}, by:{k8s.container.name}\n| filter k8s.container.name == \"ad\"\n| fields totalMemoryInMb=arrayMax(working_mem)/1000/1000",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 205.0,
@@ -151,7 +151,7 @@
     {
       "name": "CPU Max",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries {\n  cpu_usage=avg(dt.kubernetes.container.cpu_usage)\n}, by:{k8s.namespace.name}\n| filter contains(k8s.namespace.name,\"staging-astroshop\")\n| fields totalCpuInCores=arraySum(cpu_usage)",
+      "dqlQuery": "timeseries {\n  cpu_usage=avg(dt.kubernetes.container.cpu_usage)\n}, by:{k8s.namespace.name}\n| filter contains(k8s.namespace.name,\"astroshop\")\n| fields totalCpuInCores=arraySum(cpu_usage)",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 600.0,
@@ -160,14 +160,14 @@
     {
       "name": "Total amount Load Test Requests",
       "objectiveType": "DQL",
-      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) \n| filter contains(request_attribute.LTN, \"Astroshop\")\n| filter k8s.namespace.name == \"staging-astroshop\"\n| summarize spans = count() | fields spans\n",
+      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) \n| filter contains(request_attribute.LTN, \"Astroshop\")\n| filter k8s.namespace.name == \"astroshop\"\n| summarize spans = count() | fields spans\n",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "GREATER_THAN_OR_EQUAL"
     },
     {
       "name": "Sum of 5XX requests",
       "objectiveType": "DQL",
-      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"staging-astroshop\"\n| filter http.response.status_code \u003e= 500 and http.response.status_code \u003c 600\n| summarize totalErrorRequests = count()\n| fields totalErrorRequests",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"astroshop\"\n| filter http.response.status_code >= 500 and http.response.status_code < 600\n| summarize totalErrorRequests = count()\n| fields totalErrorRequests",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 20.0,
@@ -176,7 +176,7 @@
     {
       "name": "Logs with errors",
       "objectiveType": "DQL",
-      "dqlQuery": "fetch logs\n| filter k8s.namespace.name == \"staging-astroshop\"\n| filter loglevel == \"ERROR\"\n| summarize totalErrorLogs = count()\n| fields totalErrorLogs",
+      "dqlQuery": "fetch logs\n| filter k8s.namespace.name == \"astroshop\"\n| filter loglevel == \"ERROR\"\n| summarize totalErrorLogs = count()\n| fields totalErrorLogs",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 150000.0,

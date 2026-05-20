@@ -328,7 +328,7 @@
                 "color": {
                   "Default": "var(--dt-colors-charts-status-ideal-default, #2f6863)"
                 },
-                "comparator": "≥",
+                "comparator": "\u2265",
                 "id": 0,
                 "label": ""
               },
@@ -336,7 +336,7 @@
                 "color": {
                   "Default": "var(--dt-colors-charts-status-warning-default, #eca440)"
                 },
-                "comparator": "≥",
+                "comparator": "\u2265",
                 "id": 1,
                 "label": ""
               },
@@ -344,7 +344,7 @@
                 "color": {
                   "Default": "var(--dt-colors-charts-status-critical-default, #c4233b)"
                 },
-                "comparator": "≥",
+                "comparator": "\u2265",
                 "id": 2,
                 "label": "",
                 "value": 400000000
@@ -610,7 +610,7 @@
       "davis": {
         "enabled": false
       },
-      "query": "fetch logs\n| filter in(k8s.namespace.name, $Environment)\n| filter k8s.namespace.name == \"astroshop\"\n| filter status == \"NONE\"\n| parse content, \"\"\"(IPADDR:'http.client_ip' | [! \\n]+):host\n' ' ('-' | NSPACE:ident)\n' ' ('-' | (DATA{1,8096}:auth \u003e\u003e(' [' HTTPDATE)))\n' ' '[' HTTPDATE:event_time ']'\n' ' (('\\\"' [A-Z-_]+:'http.method' ' ' LD{0,8096}:uri ' ' LD{3,10}:'http.flavor' '\\\"') | DQS:invalid_request)\n' ' LONG:'http.status_code'\n' ' (LONG:'http.response.content_length' | '-')\n(' ' DQS:referer (' ' DQS:user_agent)?)?\"\"\"\n| fields http.status_code, timestamp\n| makeTimeseries count(), by:{coalesce(toString(http.status_code), \"unknown\")}",
+      "query": "fetch logs\n| filter in(k8s.namespace.name, $Environment)\n| filter k8s.namespace.name == \"astroshop\"\n| filter status == \"NONE\"\n| parse content, \"\"\"(IPADDR:'http.client_ip' | [! \\n]+):host\n' ' ('-' | NSPACE:ident)\n' ' ('-' | (DATA{1,8096}:auth >>(' [' HTTPDATE)))\n' ' '[' HTTPDATE:event_time ']'\n' ' (('\\\"' [A-Z-_]+:'http.method' ' ' LD{0,8096}:uri ' ' LD{3,10}:'http.flavor' '\\\"') | DQS:invalid_request)\n' ' LONG:'http.status_code'\n' ' (LONG:'http.response.content_length' | '-')\n(' ' DQS:referer (' ' DQS:user_agent)?)?\"\"\"\n| fields http.status_code, timestamp\n| makeTimeseries count(), by:{coalesce(toString(http.status_code), \"unknown\")}",
       "querySettings": {
         "defaultSamplingRatio": 10,
         "defaultScanLimitGbytes": 500,
@@ -723,7 +723,7 @@
       }
     },
     "21": {
-      "content": "#### Dynatrace Configurations \n\n+ [Loadtest Request Attributes](/ui/apps/dynatrace.classic.settings/#settings/requestattributes;gf=all)\n+ [API Detection Rules](/ui/apps/dynatrace.classic.settings/ui/settings/builtin:apis.detection-rules?gtf=-6h\u0026gf=all)\n+ [Automated Tags](/ui/apps/dynatrace.classic.settings/ui/settings/builtin:tags.auto-tagging?gtf=-2h\u0026gf=all)\n+ [JMX - Loadtest File](https://github.com/dynatrace-wwse/opentelemetry-demo/blob/main/extras/jmeter/Test_Astroshop_Process.jmx)",
+      "content": "#### Dynatrace Configurations \n\n+ [Loadtest Request Attributes](/ui/apps/dynatrace.classic.settings/#settings/requestattributes;gf=all)\n+ [API Detection Rules](/ui/apps/dynatrace.classic.settings/ui/settings/builtin:apis.detection-rules?gtf=-6h&gf=all)\n+ [Automated Tags](/ui/apps/dynatrace.classic.settings/ui/settings/builtin:tags.auto-tagging?gtf=-2h&gf=all)\n+ [JMX - Loadtest File](https://github.com/dynatrace-wwse/opentelemetry-demo/blob/main/extras/jmeter/Test_Astroshop_Process.jmx)",
       "title": "",
       "type": "markdown"
     },
@@ -922,7 +922,7 @@
                 "color": {
                   "Default": "var(--dt-colors-charts-status-ideal-default, #2f6863)"
                 },
-                "comparator": "≥",
+                "comparator": "\u2265",
                 "id": 0,
                 "label": ""
               },
@@ -930,7 +930,7 @@
                 "color": {
                   "Default": "var(--dt-colors-charts-status-warning-default, #eca440)"
                 },
-                "comparator": "≥",
+                "comparator": "\u2265",
                 "id": 1,
                 "label": ""
               },
@@ -938,7 +938,7 @@
                 "color": {
                   "Default": "var(--dt-colors-charts-status-critical-default, #c4233b)"
                 },
-                "comparator": "≥",
+                "comparator": "\u2265",
                 "id": 2,
                 "label": "",
                 "value": 300000000
@@ -2336,7 +2336,7 @@
       "davis": {
         "enabled": false
       },
-      "query": " fetch bizevents\n| filter event.provider == \"dynatrace.site.reliability.guardian\" AND event.type == \"guardian.validation.finished\"\n| filter contains(guardian.name, \"astroshop staging quality gate\")\n| fields timestamp, guardian.name, validation.status, execution_context, validation.summary, validation.errors\n| parse execution_context, \"JSON:execution_context\" | fieldsFlatten execution_context | fieldsRemove execution_context\n| parse validation.summary, \"JSON:validation.summary\" | fieldsFlatten validation.summary | fieldsAdd validation.summary.total = validation.summary.pass+validation.summary.warning+validation.summary.fail+validation.summary.error | fieldsRemove  validation.summary\n\n// Final fields\n| fields timestamp,\n  status=if(validation.status == \"fail\", concat(\"🛑 - \", validation.status), else: if(validation.status == \"warning\", concat(\"🟡 - \",validation.status), else:concat(\"✅ - \", validation.status))),\n  health= if(validation.summary.fail!=toDouble(0), toDouble(0), else: (toDouble(validation.summary.pass)/toDouble(validation.summary.total))*100.0),\n  guardian.name,\n  execution_context.build_version,\n  execution_context.problem  \n  // validation.summary.pass,\n  // validation.summary.warning,\n  // validation.summary.fail,\n  // validation.summary.error",
+      "query": " fetch bizevents\n| filter event.provider == \"dynatrace.site.reliability.guardian\" AND event.type == \"guardian.validation.finished\"\n| filter contains(guardian.name, \"astroshop staging quality gate\")\n| fields timestamp, guardian.name, validation.status, execution_context, validation.summary, validation.errors\n| parse execution_context, \"JSON:execution_context\" | fieldsFlatten execution_context | fieldsRemove execution_context\n| parse validation.summary, \"JSON:validation.summary\" | fieldsFlatten validation.summary | fieldsAdd validation.summary.total = validation.summary.pass+validation.summary.warning+validation.summary.fail+validation.summary.error | fieldsRemove  validation.summary\n\n// Final fields\n| fields timestamp,\n  status=if(validation.status == \"fail\", concat(\"\ud83d\uded1 - \", validation.status), else: if(validation.status == \"warning\", concat(\"\ud83d\udfe1 - \",validation.status), else:concat(\"\u2705 - \", validation.status))),\n  health= if(validation.summary.fail!=toDouble(0), toDouble(0), else: (toDouble(validation.summary.pass)/toDouble(validation.summary.total))*100.0),\n  guardian.name,\n  execution_context.build_version,\n  execution_context.problem  \n  // validation.summary.pass,\n  // validation.summary.warning,\n  // validation.summary.fail,\n  // validation.summary.error",
       "querySettings": {
         "defaultSamplingRatio": 10,
         "defaultScanLimitGbytes": 500,
@@ -3049,22 +3049,22 @@
       }
     },
     "5": {
-      "content": "#### Astroshop Stages and CICD links\n\n[comment]: \u003c\u003e (Removed DEV, but kept the links in.)\n[comment]: \u003c(+ DEV (BROKEN) [🏦](https://development.astroshop.whydevslovedynatrace.com) [🕸️](/ui/apps/dynatrace.classic.kubernetes/ui/entity/)[svc](/) )\u003e\n\n+ STA [🏦](https://staging.astroshop.whydevslovedynatrace.com) [🕸️](/ui/apps/dynatrace.kubernetes/resources/namespace?filtering=Namespace+%3D+*astroshop*\u0026entityId={{ .extractedIDs.id_CLOUD_APPLICATION_NAMESPACE_AB954B1B3500CF65 }})[svc](/ui/apps/dynatrace.services/explorer?perspective=health\u0026filtering=Namespace+%3D+staging-astroshop+)\n+ PRD [🏦](https://astroshop.whydevslovedynatrace.com) [🕸️](/ui/apps/dynatrace.kubernetes/resources/namespace?filtering=Namespace+%3D+*astroshop*\u0026entityId={{ .extractedIDs.id_CLOUD_APPLICATION_NAMESPACE_157357982500C767 }})[svc](/ui/apps/dynatrace.services/explorer?perspective=health\u0026filtering=Namespace+%3D+production-astroshop+)\n\n[Synthetic Availability](/ui/apps/dynatrace.classic.synthetic/ui/browser-monitor/{{ .extractedIDs.id_SYNTHETIC_TEST_7DA248BDCDC7D1BA }}?gtf=-2h\u0026gf=all)",
+      "content": "#### Astroshop Stages and CICD links\n\n[comment]: <> (Removed DEV, but kept the links in.)\n[comment]: <(+ DEV (BROKEN) [\ud83c\udfe6](https://development.astroshop.whydevslovedynatrace.com) [\ud83d\udd78\ufe0f](/ui/apps/dynatrace.classic.kubernetes/ui/entity/)[svc](/) )>\n\n+ STA [\ud83c\udfe6](https://staging.astroshop.whydevslovedynatrace.com) [\ud83d\udd78\ufe0f](/ui/apps/dynatrace.kubernetes/resources/namespace?filtering=Namespace+%3D+*astroshop*&entityId={{ .extractedIDs.id_CLOUD_APPLICATION_NAMESPACE_AB954B1B3500CF65 }})[svc](/ui/apps/dynatrace.services/explorer?perspective=health&filtering=Namespace+%3D+staging-astroshop+)\n+ PRD [\ud83c\udfe6](https://astroshop.whydevslovedynatrace.com) [\ud83d\udd78\ufe0f](/ui/apps/dynatrace.kubernetes/resources/namespace?filtering=Namespace+%3D+*astroshop*&entityId={{ .extractedIDs.id_CLOUD_APPLICATION_NAMESPACE_157357982500C767 }})[svc](/ui/apps/dynatrace.services/explorer?perspective=health&filtering=Namespace+%3D+production-astroshop+)\n\n[Synthetic Availability](/ui/apps/dynatrace.classic.synthetic/ui/browser-monitor/{{ .extractedIDs.id_SYNTHETIC_TEST_7DA248BDCDC7D1BA }}?gtf=-2h&gf=all)",
       "title": "",
       "type": "markdown"
     },
     "6": {
-      "content": "#### Dynatrace Releases\n+ [🚀 AzDo Releases](https://dev.azure.com/dynatracedevops/devlove-alpha/_release?_a=releases\u0026view=mine\u0026definitionId=5)\n+ [🔀 workflows ](/ui/apps/dynatrace.automations/workflows)\n+ [🚦 SRGs](/ui/apps/dynatrace.site.reliability.guardian/) \n+ [🎫 Jira Evaluation tickets](https://wdldt.atlassian.net/jira/software/c/projects/OB/issues)\n+ [🚀 Release Inventory](/ui/apps/dynatrace.classic.releases/ui/releases?gtf=-2h\u0026gf=all\u0026filter=PROCESS_GROUP_INSTANCE-RELEASE_TAG%3D%5BKubernetes%5Dnamespace%3Astaging%E2%95%8Dastroshop) ",
+      "content": "#### Dynatrace Releases\n+ [\ud83d\ude80 AzDo Releases](https://dev.azure.com/dynatracedevops/devlove-alpha/_release?_a=releases&view=mine&definitionId=5)\n+ [\ud83d\udd00 workflows ](/ui/apps/dynatrace.automations/workflows)\n+ [\ud83d\udea6 SRGs](/ui/apps/dynatrace.site.reliability.guardian/) \n+ [\ud83c\udfab Jira Evaluation tickets](https://wdldt.atlassian.net/jira/software/c/projects/OB/issues)\n+ [\ud83d\ude80 Release Inventory](/ui/apps/dynatrace.classic.releases/ui/releases?gtf=-2h&gf=all&filter=PROCESS_GROUP_INSTANCE-RELEASE_TAG%3D%5BKubernetes%5Dnamespace%3Astaging%E2%95%8Dastroshop) ",
       "title": "",
       "type": "markdown"
     },
     "7": {
-      "content": "#### Dynatrace Diagnostics\n+ [ 📊 Performance overview - dashboards](/ui/apps/dynatrace.dashboards/dashboards)\n+ [🔬 Developer Diagnostic Tools](/ui/apps/dynatrace.classic.mda/ui/diagnostictools?gtf=today\u0026gf=all)\n+ [🐢 TX \u003e 10 Sec](/ui/apps/dynatrace.distributedtracing/explorer?filter=duration+%3E%3D+10s+AND+http.request.header.host+%3D+staging.astroshop.whydevslovedynatrace.com+OR+http.request.header.host+%3D+astroshop.whydevslovedynatrace.com\u0026cv=a%2Ctrue\u0026sidebar=a%2Ctrue)\n+ [🐌 \u003e30 Sec ](/ui/apps/dynatrace.distributedtracing/explorer?filter=%28http.request.header.host+%3D+staging.astroshop.whydevslovedynatrace.com+OR+http.request.header.host+%3D+astroshop.whydevslovedynatrace.com%29+AND+duration+%3E%3D+30s\u0026cv=a%2Ctrue\u0026sidebar=a%2Ctrue)\n+ [⚡Exceptions](/ui/apps/dynatrace.distributedtracing/explorer?filter=%28http.request.header.host+%3D+staging.astroshop.whydevslovedynatrace.com+OR+http.request.header.host+%3D+astroshop.whydevslovedynatrace.com%29+AND+request.status_code+%3D+Failure\u0026cv=a%2Ctrue\u0026sidebar=a%2Ctrue\u0026tf=now-24h%3Bnow\u0026columns=start_time%2Cendpoint.name%2Cdt.entity.service.entity.name%2Cduration%2Crequest.status_code%2Chttp.response.status_code%2Cspan.source%2Cdt.entity.process_group.entity.name%2Ck8s.container.name%2Ck8s.namespace.name%2Cspan.events%5B%5D%5Bexception.message%5D%2Cspan.is_exit_by_exception\u0026tableMode=grouping\u0026groupedByColumns=span.is_exit_by_exception%2Cspan.events%5B%5D%5Bexception.message%5D%2Cspan.events%5B%5D%5Bexception.type%5D) ",
+      "content": "#### Dynatrace Diagnostics\n+ [ \ud83d\udcca Performance overview - dashboards](/ui/apps/dynatrace.dashboards/dashboards)\n+ [\ud83d\udd2c Developer Diagnostic Tools](/ui/apps/dynatrace.classic.mda/ui/diagnostictools?gtf=today&gf=all)\n+ [\ud83d\udc22 TX > 10 Sec](/ui/apps/dynatrace.distributedtracing/explorer?filter=duration+%3E%3D+10s+AND+http.request.header.host+%3D+staging.astroshop.whydevslovedynatrace.com+OR+http.request.header.host+%3D+astroshop.whydevslovedynatrace.com&cv=a%2Ctrue&sidebar=a%2Ctrue)\n+ [\ud83d\udc0c >30 Sec ](/ui/apps/dynatrace.distributedtracing/explorer?filter=%28http.request.header.host+%3D+staging.astroshop.whydevslovedynatrace.com+OR+http.request.header.host+%3D+astroshop.whydevslovedynatrace.com%29+AND+duration+%3E%3D+30s&cv=a%2Ctrue&sidebar=a%2Ctrue)\n+ [\u26a1Exceptions](/ui/apps/dynatrace.distributedtracing/explorer?filter=%28http.request.header.host+%3D+staging.astroshop.whydevslovedynatrace.com+OR+http.request.header.host+%3D+astroshop.whydevslovedynatrace.com%29+AND+request.status_code+%3D+Failure&cv=a%2Ctrue&sidebar=a%2Ctrue&tf=now-24h%3Bnow&columns=start_time%2Cendpoint.name%2Cdt.entity.service.entity.name%2Cduration%2Crequest.status_code%2Chttp.response.status_code%2Cspan.source%2Cdt.entity.process_group.entity.name%2Ck8s.container.name%2Ck8s.namespace.name%2Cspan.events%5B%5D%5Bexception.message%5D%2Cspan.is_exit_by_exception&tableMode=grouping&groupedByColumns=span.is_exit_by_exception%2Cspan.events%5B%5D%5Bexception.message%5D%2Cspan.events%5B%5D%5Bexception.type%5D) ",
       "title": "",
       "type": "markdown"
     },
     "8": {
-      "content": "#### Dynatrace Analysis\n\n\n+ 💾[Memory Allocation analysis](/ui/apps/dynatrace.classic.profiling/ui/diagnostictools/memorydumps?gtf=-2h\u0026gf=all)\n+ 💻[CPU analysis](/ui/apps/dynatrace.classic.profiling/ui/diagnostictools/profiling/cpu?gtf=-2h\u0026gf=all)",
+      "content": "#### Dynatrace Analysis\n\n\n+ \ud83d\udcbe[Memory Allocation analysis](/ui/apps/dynatrace.classic.profiling/ui/diagnostictools/memorydumps?gtf=-2h&gf=all)\n+ \ud83d\udcbb[CPU analysis](/ui/apps/dynatrace.classic.profiling/ui/diagnostictools/profiling/cpu?gtf=-2h&gf=all)",
       "title": "",
       "type": "markdown"
     }
@@ -3078,14 +3078,14 @@
       "visible": true
     },
     {
-      "input": "fetch spans\n| filter isNotNull(request_attribute.Developer)\n| summarize count = count(), by:{request_attribute.Developer}\n|fieldsRemove count",
+      "input": "fetch spans\n| filter isNotNull(request_attribute.x-developer)\n| summarize count = count(), by:{request_attribute.x-developer}\n| fieldsRemove count",
       "key": "DeveloperName",
       "multiple": true,
       "type": "query",
       "visible": true
     },
     {
-      "input": "fetch events\n| filter event.type == \"CUSTOM_DEPLOYMENT\"\n| summarize count = count(), by:{deployment.release_build_version}\n| fields deployment.release_build_version\n| filter startsWith(deployment.release_build_version, \"Release\")",
+      "input": "fetch events\n| filter event.category == \"deployment\" and event.provider == \"gitlab\"\n| filter isNotNull(deploymentVersion)\n| summarize count = count(), by:{deploymentVersion}\n| fields deploymentVersion",
       "key": "ReleaseVersion",
       "multiple": false,
       "type": "query",

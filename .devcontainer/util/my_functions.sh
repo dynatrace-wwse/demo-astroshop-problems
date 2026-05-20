@@ -897,22 +897,77 @@ JSON
 # ----------------------------------------------------------------------
 bootstrapWorkshop(){
   printInfoSection "Bootstrapping the CI/CD Observability workshop"
-  printInfo "Phases: astroshop -> gitlab -> seed repos -> dtctl + monaco -> loadgen"
-  printInfo "Total time: ~15-20 minutes"
+  printInfo "Phases: dynatrace operator + apponly → astroshop → gitlab → seed repos"
+  printInfo "        → dtctl + monaco → vault credentials → loadgen → 4 release rolls"
+  printInfo "Total time: ~20-25 minutes"
 
+  # 1. Dynatrace operator + AppOnly monitoring (so OneAgent + traces flow)
+  if [ -n "$DT_OPERATOR_TOKEN" ] && [ -n "$DT_INGEST_TOKEN" ]; then
+    dynatraceDeployOperator   || printWarn "dynatrace operator install failed (non-fatal)"
+    deployApplicationMonitoring || printWarn "apponly monitoring failed (non-fatal)"
+  else
+    printWarn "DT_OPERATOR_TOKEN / DT_INGEST_TOKEN not set — skipping Dynatrace operator"
+  fi
+
+  # 2. Astroshop, GitLab, repos, tooling
   deployApp astroshop          || { printError "astroshop deploy failed"; return 1; }
   installGitlab                || { printError "gitlab install failed"; return 1; }
   seedGitlabRepos              || { printError "gitlab seed failed"; return 1; }
   installDtctl                 || printWarn "dtctl install failed (non-fatal)"
   installMonaco                || printWarn "monaco install failed (non-fatal)"
   applyMonacoConfig            || printWarn "monaco apply failed (non-fatal — likely no DT_PLATFORM_TOKEN)"
+  createWorkshopCredentials    || printWarn "credential vault setup failed (non-fatal)"
   deployLoadgenerator          || printWarn "loadgen deploy failed (non-fatal)"
+
+  # 3. Roll the four releases so the SRG + dashboards have cross-release data
+  if kubectl get ns "$ASTROSHOP_NAMESPACE" >/dev/null 2>&1 && [ -n "$DT_API_TOKEN" ]; then
+    printInfoSection "Rolling the four release variants (1.12.0 / 1 / 2 / 3)"
+    local pair
+    for pair in "1.12.0 none" "1.12.1 cpu" "1.12.2 memory" "1.12.3 nplusone"; do
+      set -- $pair
+      rollAstroshopRelease "$1" "$2" || printWarn "  roll of $1 failed (non-fatal)"
+      sleep 60   # let each release accumulate ~1 minute of traffic
+    done
+  else
+    printWarn "Astroshop ns or DT_API_TOKEN not present — skipping release rolls"
+  fi
 
   printInfoSection "Workshop bootstrap complete"
   printInfo "GitLab:   http://gitlab.$(detectIP).${MAGIC_DOMAIN:-sslip.io}"
   printInfo "Astroshop: $(getAppURL astroshop 2>/dev/null || echo 'see printGreeting')"
   printInfo "Tenant:   ${DT_ENVIRONMENT:-<not configured>}"
   printInfo ""
-  printInfo "Next: source .devcontainer/.env (DT_PLATFORM_TOKEN, DT_API_TOKEN, DT_TENANT_URL)"
-  printInfo "      then run 'seedWorkshopReleases' to populate demo data"
+  printInfo "Try: 'rollAstroshopRelease 1.12.1 cpu' to roll a release manually"
+  printInfo "Or:  'seedWorkshopReleases' to replay all 4 variants"
+}
+
+# createWorkshopCredentials — make sure the credential vault has the
+# 'hot-session-token' entry the monaco smoketest workflow expects.
+# Idempotent: skipped if it already exists.
+createWorkshopCredentials(){
+  if [ -z "$DT_API_TOKEN" ] || [ -z "$DT_TENANT_URL" ]; then
+    printWarn "credentialVault setup requires DT_API_TOKEN + DT_TENANT_URL — skipping"
+    return 0
+  fi
+  printInfoSection "Ensuring 'hot-session-token' credential exists in the vault"
+  local existing
+  existing=$(curl -sk "${DT_TENANT_URL%/}/api/v2/credentials?name=hot-session-token" \
+    -H "Authorization: Api-Token $DT_API_TOKEN" \
+    | jq -r '.credentials[0].id // empty')
+  if [ -n "$existing" ]; then
+    printInfo "Credential already exists: $existing"
+    return 0
+  fi
+  local resp
+  resp=$(curl -sk -X POST "${DT_TENANT_URL%/}/api/v2/credentials" \
+    -H "Authorization: Api-Token $DT_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{\"name\":\"hot-session-token\",\"description\":\"Workshop session token for the SRG smoketest workflow\",\"type\":\"TOKEN\",\"scope\":\"ALL\",\"token\":\"${DT_API_TOKEN}\",\"ownerAccessOnly\":false}")
+  local id
+  id=$(echo "$resp" | jq -r '.id // empty')
+  if [ -n "$id" ]; then
+    printInfo "Credential created: $id"
+  else
+    printWarn "Credential creation failed: $(echo "$resp" | head -c 200)"
+  fi
 }

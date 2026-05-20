@@ -16,11 +16,11 @@
 
   // some base images require a specific user name.
 	"remoteUser": "vscode",
-  
+
   "postCreateCommand": "./.devcontainer/post-create.sh",
 
   "postStartCommand": "./.devcontainer/post-start.sh",
-  
+
   "features": {},
   "customizations": {
     "vscode": {
@@ -42,20 +42,27 @@
   // minimal CPU when running DT components and apps.
 	"hostRequirements": {
 		"cpus": 2
-	}
-  /*
-  ,
-  // Add recommended secrets 
-    "secrets": {
-      "DT_ENVIRONMENT": {
-        "description": "URL to your Dynatrace Platform eg. https://abc123.apps.dynatrace.com or for sprint -> https://abc123.sprint.apps.dynatracelabs.com"
-      },
-      "DT_OPERATOR_TOKEN": {
-        "description": "Dynatrace Operator Token, it will be created automatically when adding a new Cluster over the UI. It contains the following permissions: 'Create ActiveGate tokens' 'Read entities' 'Read settings' 'Write settings' 'Access probrem and event feed, metrics and topology' 'PaaS Integration - installer download'"
-      },
-      "DT_INGEST_TOKEN": {
-        "description": "Dynatrace Ingest Token, it will be created automatically when adding a new Cluster over the UI. It contains the following permissions: 'Ingest logs' 'Ingest metrics' 'Ingest OpenTelemetry traces' "
-      }
+	},
+  // Codespace secrets — the user is prompted for these when creating the
+  // Codespace. With all 5 present the post-create auto-runs the full
+  // workshop bootstrap (cluster + OneAgent + GitLab + monaco + dtctl +
+  // load test + 4 release rolls). With only the first 3 the user gets
+  // a clean dev container and runs `bootstrapWorkshop` manually.
+  "secrets": {
+    "DT_ENVIRONMENT": {
+      "description": "Platform tenant URL — https://<id>.apps.dynatrace.com (sprint: https://<id>.sprint.apps.dynatracelabs.com)"
+    },
+    "DT_OPERATOR_TOKEN": {
+      "description": "Operator token for OneAgent install. Scopes: ActiveGateTokenManagement, entities.read, settings.read, settings.write, DataExport, InstallerDownload."
+    },
+    "DT_INGEST_TOKEN": {
+      "description": "Ingest token for OneAgent telemetry. Scopes: logs.ingest, metrics.ingest, openTelemetryTrace.ingest."
+    },
+    "DT_API_TOKEN": {
+      "description": "Workshop API token. Scopes: events.ingest, openpipeline.events_sdlc.custom, bizevents.ingest, ReadConfig, WriteConfig, CaptureRequestData, credentialVault.read, credentialVault.write, apiTokens.read, apiTokens.write."
+    },
+    "DT_PLATFORM_TOKEN": {
+      "description": "Platform OAuth token (dt0s16…) used by monaco + dtctl. Generate with platform scopes for documents:write, settings:read/write, workflows:run, automation:rules:read/write."
     }
-    */
+  }
 }

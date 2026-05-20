@@ -2,19 +2,32 @@
 
 # Workshop content
 
-## What's running after `post-create`
+## Bringing the workshop up
 
-| Component | Where | Bootstrapped by |
+`post-create` only sets up the dev tooling + k3d cluster. The
+workshop itself is one extra call (opt-in to keep the CI integration
+test fast):
+
+```bash
+bootstrapWorkshop
+```
+
+That runs, in order:
+
+| Phase | What | How long |
 |---|---|---|
-| k3d cluster | dev container | framework `startK3dCluster` |
-| Astroshop | `astroshop` namespace | `deployApp astroshop` |
-| GitLab | `gitlab` namespace, ingress at `gitlab.<ip>.sslip.io` | `installGitlab` |
-| 19 service repos + 3 support repos | inside GitLab | `seedGitlabRepos` |
-| Locust loadgen | `astroshop-load` namespace | `deployLoadgenerator` (post-start) |
-| dtctl CLI | `~/.local/bin/dtctl` | `installDtctl` |
-| Dashboards / SLOs / Workflows | tenant | `applyDtctlConfigs` (manual) |
+| `deployApp astroshop` | 15+ Astroshop pods in the `astroshop` namespace | 3–5 min |
+| `installGitlab` | gitlab/gitlab helm chart in `gitlab` ns, ingress at `gitlab.<ip>.sslip.io` | ~6 min |
+| `seedGitlabRepos` | push 19 `Otel-App/*` + 3 `Support/*` repos to the in-cluster GitLab | ~30 sec |
+| `installDtctl` + `installMonaco` | platform CLIs under `~/.local/bin/` | <10 sec |
+| `applyMonacoConfig` | SRG + workflows + dashboards + 120+ tagging/span/request configs to your Dynatrace tenant | 1–2 min |
+| `deployLoadgenerator` | locust + Playwright in `astroshop-load` ns, hitting the Astroshop frontend continuously | ~30 sec |
 
-`printGreeting` shows the URLs for each.
+`printGreeting` shows the URLs for each component.
+
+Tokens for the monaco / event ingest steps live in
+`.devcontainer/.env` (gitignored, mode 0600) — see
+[the monaco config doc](monaco-config.md#required-env-vars).
 
 ## Accessing the Astroshop
 
@@ -44,23 +57,42 @@ the greeting and append `/feature`. In Codespaces this is something like
 
 ### Hourly auto-flip via the GitLab pipeline
 
-The seeded `Support/Astroshop_Release` repo (`gitlab-ci.yml`) walks the
-four releases on a schedule, emitting Workflow runs and CUSTOM_DEPLOYMENT
-events at each stage — perfect for the unattended "let it run while we
-talk" demo.
+The seeded `Support/Astroshop_Automated_Load_test` repo
+(`.gitlab-ci.yml`) walks the four releases on a schedule, triggering
+the per-service pipelines in `Otel-App/*` and emitting Workflow runs
++ CUSTOM_DEPLOYMENT events at each stage — perfect for the unattended
+"let it run while we talk" demo.
+
+### Full demo data in seconds (no pipeline run needed)
+
+For a meeting where you can't wait for the GitLab pipeline to actually
+walk through, the bash helper `seedWorkshopReleases` posts the
+complete event sequence — 4 deployments + 4 pipeline runs + 24 task
+events + 4 SRG verdicts (1 pass + 3 fail) — directly to your tenant:
+
+```bash
+set -a; source .devcontainer/.env; set +a
+source .devcontainer/util/source_framework.sh
+seedWorkshopReleases
+```
 
 ## Stop bad builds — the integrated demo
 
 This is the meat of the workshop. See [Stop bad builds](stop-bad-builds.md)
 for the full narrative; the short version:
 
-1. Pipeline deploys `1.12.0` to staging → CUSTOM_DEPLOYMENT event fires.
-2. Locust hammers the shop while OneAgent records traces + Golden Signals.
-3. SRG validates the SLOs over the load-test window → PASS.
+1. The GitLab pipeline deploys `1.12.0` to staging → CUSTOM_DEPLOYMENT
+   event fires from `Otel-App/<service>/.gitlab-ci.yml`.
+2. Locust hammers the shop while OneAgent records traces + Golden
+   Signals. The load test step names (`01 - homepage`, `02 - get
+   products`, …) come through as request attributes.
+3. The SRG `Astroshop - Staging - Quality gate` (in monaco at
+   `init_configs/labs/srg-staging.json`) evaluates 11 test-step
+   latency objectives over the load-test window → PASS.
 4. Pipeline promotes to production.
-5. Repeat with `1.12.1`/cpu — SRG returns FAIL → pipeline **halts** before
-   the `promote-production` job. The `Rollback astroshop` workflow can be
-   dispatched from the Dynatrace Workflow via the GitHub Connector.
+5. Repeat with `1.12.1`/cpu — SRG returns FAIL → pipeline **halts**
+   before the `promote-production` job. The SRG workflow opens a
+   GitLab issue via the **Dynatrace GitLab Connector**.
 
 ## CI/CD Observability — the Dynatrace app
 

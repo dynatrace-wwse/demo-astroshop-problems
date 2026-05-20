@@ -1,199 +1,235 @@
 #!/usr/bin/python
-
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
+"""
+Workshop loadgen for Astroshop.
 
+Produces traffic that the Dynatrace Site Reliability Guardian
+("Astroshop - Staging - Quality gate") can measure: each request
+carries a single header
+
+    x-dynatrace-test: LSN=<load-session>;LTN=Astroshop;TSN=<step>;
+
+which the monaco-deployed request-attribute configs
+(`init_configs/request-attributes/{LTN,TSN,LSN}.json`) parse with
+`extract substring BETWEEN '<NAME>=' AND ';'`. The result lands on
+spans as `request_attribute.TSN`, `request_attribute.LTN`,
+`request_attribute.LSN`, which the SRG's DQL queries filter on.
+
+Each @task is one of the 12 named test steps the SRG evaluates. The
+step naming + the trailing space on `"04 - ad service "` are
+load-bearing — they're what the SRG DQL filters look for verbatim.
+"""
 
 import json
 import os
 import random
-import uuid
 import logging
-import sys, traceback
+import sys
 
 from locust import HttpUser, task, between
-from locust_plugins.users.playwright import PlaywrightUser, pw, PageWithRetry
-from locust.exception import RescheduleTask
 
-from opentelemetry import context, baggage, trace
-from opentelemetry.metrics import set_meter_provider
-from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
 from opentelemetry.instrumentation.urllib3 import URLLib3Instrumentor
-from opentelemetry._logs import set_logger_provider
-from opentelemetry.exporter.otlp.proto.grpc._log_exporter import (
-    OTLPLogExporter,
-)
-from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
-from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
-from opentelemetry.sdk.resources import Resource
 
-from openfeature import api
-from openfeature.contrib.provider.flagd import FlagdProvider
-from openfeature.contrib.hook.opentelemetry import TracingHook
-
-from playwright.async_api import Route, Request
-
-logger_provider = LoggerProvider(resource=Resource.create(
-        {
-            "service.name": "loadgenerator",
-        }
-    ),)
-set_logger_provider(logger_provider)
-
-exporter = OTLPLogExporter(insecure=True)
-logger_provider.add_log_record_processor(BatchLogRecordProcessor(exporter))
-handler = LoggingHandler(level=logging.INFO, logger_provider=logger_provider)
-
-# Attach OTLP handler to locust logger
-logging.getLogger().addHandler(handler)
-logging.getLogger().setLevel(logging.INFO)
-
-exporter = OTLPMetricExporter(insecure=True)
-set_meter_provider(MeterProvider([PeriodicExportingMetricReader(exporter)]))
-
+# ---------------------------------------------------------------------------
+# OpenTelemetry wiring (kept light — server-side spans are captured by
+# OneAgent; OTel here only adds client-side spans if a collector is
+# reachable from the loadgen pod).
+# ---------------------------------------------------------------------------
 tracer_provider = TracerProvider()
 trace.set_tracer_provider(tracer_provider)
-tracer_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+try:
+    tracer_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+except Exception:
+    pass  # no collector reachable → drop client spans, keep going
 
-# Instrumenting manually to avoid error with locust gevent monkey
 Jinja2Instrumentor().instrument()
 RequestsInstrumentor().instrument()
 SystemMetricsInstrumentor().instrument()
 URLLib3Instrumentor().instrument()
-logging.info("Instrumentation complete")
 
-# Initialize Flagd provider
-api.set_provider(FlagdProvider(host=os.environ.get('FLAGD_HOST', 'flagd'), port=os.environ.get('FLAGD_PORT', 8013)))
-api.add_hooks([TracingHook()])
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
-def get_flagd_value(FlagName):
-    # Initialize OpenFeature
-    client = api.get_client()
-    return client.get_integer_value(FlagName, 0)
-
-categories = [
-    "binoculars",
-    "telescopes",
-    "accessories",
-    "assembly",
-    "travel",
-    "books",
-    None,
+# ---------------------------------------------------------------------------
+# Static test data
+# ---------------------------------------------------------------------------
+PRODUCT_IDS = [
+    "0PUK6V6EV0", "1YMWWN1N4O", "2ZYFJ3GM2N", "66VCHSJNUP", "6E92ZMYYFZ",
+    "9SIQT8TOJO", "L9ECAV7KIM", "LS4PSXUNUM", "OLJCESPC7Z", "HQTGWGPNH4",
 ]
 
-products = [
-    "0PUK6V6EV0",
-    "1YMWWN1N4O",
-    "2ZYFJ3GM2N",
-    "66VCHSJNUP",
-    "6E92ZMYYFZ",
-    "9SIQT8TOJO",
-    "L9ECAV7KIM",
-    "LS4PSXUNUM",
-    "OLJCESPC7Z",
-    "HQTGWGPNH4",
-]
+try:
+    with open("people.json") as f:
+        PEOPLE = json.load(f)
+except Exception:
+    PEOPLE = []
 
-people_file = open('people.json')
-people = json.load(people_file)
+import datetime
 
-class WebsiteBrowserUser(PlaywrightUser):
-    weight = 2
-    headless = True  # to use a headless browser, without a GUI
+# LTN identifies the *load test run* — frozen at pod start so every
+# request in this run shares a single value and the dashboard
+# aggregates them in one bucket. Restart the pod to start a new run.
+#
+# Shape: "Astroshop Loadtest - CICD Workshop VU(10) Loops(0) - <date>"
+TEST_TOOL  = os.environ.get("LTN_TOOL",  "Astroshop Loadtest")
+TEST_NAME  = os.environ.get("LTN_NAME",  "CICD Workshop")
+TEST_VU    = int(os.environ.get("LOCUST_USERS", "10"))
+TEST_LOOPS = 0  # locust runs continuously; 0 = "no fixed iteration count"
 
-    @task(2)
-    @pw
-    async def open_cart_page_and_change_currency(self, page: PageWithRetry):
-        try:
-            page.on("console", lambda msg: print(msg.text))
-            await page.route('**/*', add_baggage_header)
-            await page.goto("/cart", wait_until="domcontentloaded")
-            
-            # select a random user from the people.json file and checkout
-            checkout_details = random.choice(people)
-            await page.select_option('[name="currency_code"]', value=str(checkout_details['userCurrency']))
+_LAUNCH_TS = datetime.datetime.utcnow().strftime("%d %b %Y %H:%M:%S")
+LOAD_TEST_NAME = (
+    f"{TEST_TOOL} - {TEST_NAME} VU({TEST_VU}) Loops({TEST_LOOPS}) - {_LAUNCH_TS}"
+)
 
-            await page.wait_for_timeout(2000)  # giving the browser time to export the traces
-        except Exception as e:
-            traceback.print_exc(file=sys.stdout)
-            raise RescheduleTask(e)
+LOAD_SESSION_NAME = os.environ.get("LSN", "Astroshop-Staging")
 
-    @task(2)
-    @pw
-    async def add_product_to_cart(self, page: PageWithRetry):
-        try:
-            page.on("console", lambda msg: print(msg.text))
-            await page.route('**/*', add_baggage_header)
-            await page.goto("/", wait_until="domcontentloaded")
-
-            # Get a random product link and click on it
-            product_id = random.choice(products)
-            await page.click(f"a[href='/product/{product_id}']")
-            
-            # Add a random number of products to the cart
-            product_count = random.choice([1, 2, 3, 4, 5, 10])
-            await page.select_option('select[data-cy="product-quantity"]', value=str(product_count))
-
-            await page.click('button:has-text("Add To Cart")')
-            await page.wait_for_timeout(2000)  # giving the browser time to export the traces
-        except Exception as e:
-            traceback.print_exc(file=sys.stdout)
-            raise RescheduleTask(e)
-    
-    @task(4)
-    @pw
-    async def add_product_to_cart_and_checkout(self, page: PageWithRetry):
-        try:
-            page.on("console", lambda msg: print(msg.text))
-            await page.route('**/*', add_baggage_header)
-            await page.goto("/", wait_until="domcontentloaded")
-            
-            # Get a random product link and click on it
-            product_id = random.choice(products)
-            await page.click(f"a[href='/product/{product_id}']")
-            
-            # Add a random number of products to the cart
-            product_count = random.choice([1, 2, 3, 4, 5, 10])
-            await page.select_option('select[data-cy="product-quantity"]', value=str(product_count))
-
-            # add the product to our cart
-            await page.click('button:has-text("Add To Cart")')
-
-            # select a random user from the people.json file and checkout
-            checkout_details = random.choice(people)
-            await page.select_option('select[name="currency_code"]', value=str(checkout_details['userCurrency']))
-
-            await page.locator('input#email').fill(checkout_details['email'])
-            await page.locator('input#street_address').fill(checkout_details['address']['streetAddress'])
-            await page.locator('input#zip_code').fill(str(checkout_details['address']['zipCode']))
-            await page.locator('input#city').fill(checkout_details['address']['city'])
-            await page.locator('input#state').fill(checkout_details['address']['state'])
-            await page.locator('input#country').fill(checkout_details['address']['country'])
-            await page.locator('input#credit_card_number').fill(str(checkout_details['creditCard']['creditCardNumber']))
-            await page.select_option('select#credit_card_expiration_month', value=str(checkout_details['creditCard']['creditCardExpirationMonth']))
-            await page.select_option('select#credit_card_expiration_year', value=str(checkout_details['creditCard']['creditCardExpirationYear']))
-            await page.locator('input#credit_card_cvv').fill(str(checkout_details['creditCard']['creditCardCvv']))
-
-            # Complete the order
-            await page.click('button:has-text("Place Order")')
-            await page.wait_for_timeout(2000)  # giving the browser time to export the traces 
-        except Exception as e:
-            traceback.print_exc(file=sys.stdout)
-            raise RescheduleTask(e)
+PRODUCT_A = "OLJCESPC7Z"   # National Park Foundation Explorascope
+PRODUCT_B = "1YMWWN1N4O"   # any other product
 
 
-async def add_baggage_header(route: Route, request: Request):
-    existing_baggage = request.headers.get('baggage', '')
-    headers = {
-        **request.headers,
-        'baggage': ', '.join(filter(None, (existing_baggage, 'synthetic_request=true')))
+def _ltn_headers(tsn: str) -> dict:
+    """One `x-dynatrace-test` header carrying all the load-test fields.
+
+    The monaco-deployed request-attribute extraction rules read this
+    header and pull each field out by `<NAME>=...;` substring matching.
+    The trailing `;` matters — it's the end-delimiter the extractor
+    expects on the *last* field too.
+
+    LTN is pinned at module load so every request in this pod's run
+    shares a single load-test identifier — the dashboard buckets all
+    of them under one row.
+    """
+    return {
+        "x-dynatrace-test": f"LSN={LOAD_SESSION_NAME};LTN={LOAD_TEST_NAME};TSN={tsn};",
     }
-    await route.continue_(headers=headers)
+
+
+class AstroshopWorkshopUser(HttpUser):
+    """One user runs through the 12 SRG-aligned test steps."""
+
+    wait_time = between(0.5, 1.5)
+
+    # ----------------------------------------------------------------
+    # The 12 named test steps the SRG evaluates
+    # ----------------------------------------------------------------
+
+    @task
+    def t01_homepage(self):
+        self.client.get("/",
+                        headers=_ltn_headers("01 - homepage"),
+                        name="01 - homepage")
+
+    @task
+    def t02_get_products(self):
+        self.client.get("/api/products",
+                        headers=_ltn_headers("02 - get products"),
+                        name="02 - get products")
+
+    @task
+    def t03_get_currencies(self):
+        self.client.get("/api/currency",
+                        headers=_ltn_headers("03 - get currencies"),
+                        name="03 - get currencies")
+
+    @task
+    def t04_ad_service(self):
+        # Trailing space on the TSN value is intentional — matches the SRG
+        # DQL `request_attribute.TSN == "04 - ad service "`.
+        self.client.get("/api/data?contextKeys=binoculars",
+                        headers=_ltn_headers("04 - ad service "),
+                        name="04 - ad service ")
+
+    @task
+    def t05_add_product_a(self):
+        payload = {
+            "item": {"productId": PRODUCT_A, "quantity": 1},
+            "userId": "demo-user-a",
+        }
+        self.client.post("/api/cart",
+                         json=payload,
+                         headers=_ltn_headers("05 - add product A"),
+                         name="05 - add product A")
+
+    @task
+    def t06_get_recommendations(self):
+        self.client.get("/api/recommendations?productIds=" + PRODUCT_A,
+                        headers=_ltn_headers("06 - get recommendations"),
+                        name="06 - get recommendations")
+
+    @task
+    def t07_get_cart_in_b(self):
+        self.client.get("/api/cart?sessionId=cart-B",
+                        headers=_ltn_headers("07 - get cart in B"),
+                        name="07 - get cart in B")
+
+    @task
+    def t08_empty_cart(self):
+        self.client.delete("/api/cart",
+                           headers=_ltn_headers("08 - empty cart"),
+                           name="08 - empty cart")
+
+    @task
+    def t09_add_product_b(self):
+        payload = {
+            "item": {"productId": PRODUCT_B, "quantity": 1},
+            "userId": "demo-user-b",
+        }
+        self.client.post("/api/cart",
+                         json=payload,
+                         headers=_ltn_headers("09 - add product B"),
+                         name="09 - add product B")
+
+    @task
+    def t10_get_cart_in_a(self):
+        self.client.get("/api/cart?sessionId=cart-A",
+                        headers=_ltn_headers("10 - get cart in A"),
+                        name="10 - get cart in A")
+
+    @task
+    def t11_checkout(self):
+        if PEOPLE:
+            person = random.choice(PEOPLE)
+            addr = person.get("address", {})
+            cc = person.get("creditCard", {})
+            email = person.get("email", "demo@example.com")
+            user  = person.get("userId", "demo-user")
+            cur   = person.get("userCurrency", "USD")
+        else:
+            person, addr, cc = {}, {}, {}
+            email, user, cur = "demo@example.com", "demo-user", "USD"
+
+        payload = {
+            "userId":       user,
+            "userCurrency": cur,
+            "email":        email,
+            "address": {
+                "streetAddress": addr.get("streetAddress", "1600 Amphitheatre Pkwy"),
+                "city":          addr.get("city", "Mountain View"),
+                "state":         addr.get("state", "CA"),
+                "country":       addr.get("country", "United States"),
+                "zipCode":       str(addr.get("zipCode", "94043")),
+            },
+            "creditCard": {
+                "creditCardNumber":          str(cc.get("creditCardNumber", "4111111111111111")),
+                "creditCardCvv":             int(cc.get("creditCardCvv", 123)),
+                "creditCardExpirationYear":  int(cc.get("creditCardExpirationYear", 2030)),
+                "creditCardExpirationMonth": int(cc.get("creditCardExpirationMonth", 12)),
+            },
+        }
+        self.client.post("/api/checkout",
+                         json=payload,
+                         headers=_ltn_headers("11 - checkout"),
+                         name="11 - checkout")
+
+    @task
+    def t12_get_empty_cart(self):
+        self.client.get("/api/cart?sessionId=fresh-" + str(random.randint(1, 1_000_000)),
+                        headers=_ltn_headers("12 - get empty cart"),
+                        name="12 - get empty cart")

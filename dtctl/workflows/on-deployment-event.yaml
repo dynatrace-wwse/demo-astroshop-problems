@@ -4,7 +4,7 @@ description: |
   Waits a configurable soak window, runs the release-readiness guardian,
   writes the verdict back as a bizevent, and (on FAIL) dispatches a
   rollback workflow in GitHub.
-owner: platform-observability
+owner: b99b8ae6-6f7c-4050-bebc-75308fa8729d
 
 trigger:
   event:
@@ -47,7 +47,7 @@ tasks:
         }
     conditions:
       states:
-        read_payload: SUCCESS
+        read_payload: OK
     position: { x: 0, y: 2 }
 
   evaluate_guardian:
@@ -62,7 +62,7 @@ tasks:
         to: "now"
     conditions:
       states:
-        soak_window: SUCCESS
+        soak_window: OK
     position: { x: 0, y: 3 }
 
   emit_verdict:
@@ -85,7 +85,7 @@ tasks:
           ciBackLink: "{{ result('read_payload').ci_url }}"
     conditions:
       states:
-        evaluate_guardian: COMPLETED
+        evaluate_guardian: OK
     position: { x: 0, y: 4 }
 
   rollback_on_fail:
@@ -101,6 +101,6 @@ tasks:
         rolled_back_by: "dt-workflow-{{ execution().id }}"
     conditions:
       states:
-        evaluate_guardian: COMPLETED
+        evaluate_guardian: OK
       custom: "{{ result('evaluate_guardian').validation_status == 'fail' }}"
     position: { x: 0, y: 5 }

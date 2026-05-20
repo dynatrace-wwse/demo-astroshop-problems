@@ -71,6 +71,77 @@ applyDtctlConfigs(){
 }
 
 # ----------------------------------------------------------------------
+# monaco — Dynatrace Monitoring-as-Code CLI
+# (github.com/Dynatrace/dynatrace-configuration-as-code)
+# ----------------------------------------------------------------------
+MONACO_VERSION="${MONACO_VERSION:-2.28.7}"
+
+installMonaco(){
+  printInfoSection "Installing monaco v$MONACO_VERSION"
+  if command -v monaco >/dev/null 2>&1; then
+    printInfo "monaco already installed: $(monaco version 2>/dev/null | head -1)"
+    return 0
+  fi
+  local bindir="$HOME/.local/bin"
+  mkdir -p "$bindir"
+  local arch
+  case "$(uname -m)" in
+    x86_64|amd64) arch=amd64 ;;
+    aarch64|arm64) arch=arm64 ;;
+    *) printError "unsupported arch $(uname -m)"; return 1 ;;
+  esac
+  curl -fsSL "https://github.com/Dynatrace/dynatrace-configuration-as-code/releases/download/v${MONACO_VERSION}/monaco-linux-${arch}" \
+    -o "$bindir/monaco"
+  chmod +x "$bindir/monaco"
+  case ":$PATH:" in *":$bindir:"*) ;; *) export PATH="$bindir:$PATH" ;; esac
+  printInfo "monaco installed: $(monaco version 2>/dev/null | head -1)"
+}
+
+# Apply the monaco config under
+# .devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/ to the
+# current DT_ENVIRONMENT. Requires:
+#   DT_ENVIRONMENT          tenant platform URL (https://<id>.apps.dynatrace.com)
+#   DT_API_TOKEN            classic Api-Token (any read scope is enough)
+#   DT_PLATFORM_TOKEN       OAuth platform token (dt0s16...) — the source of truth
+# Optional (defaults wired so monaco can still deploy on COE-only tenants):
+#   WORKFLOW_ACTOR_ID       owner UUID for workflows
+#   GITLAB_EXTERNAL_ENDPOINT, GITLAB_HOST, GITLAB_PRIVATE_TOKEN  — set when the
+#                           in-cluster GitLab is reachable from this tenant
+#   ACTIVE_GATE_NODE_ID     synthetic location host (needed for synthetic monitor)
+applyMonacoConfig(){
+  local monaco_dir="${MONACO_DIR:-$REPO_PATH/.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco}"
+  if [ ! -f "$monaco_dir/manifest.yml" ]; then
+    printWarn "No monaco manifest at $monaco_dir/manifest.yml — skipping"
+    return 0
+  fi
+  if [ -z "$DT_ENVIRONMENT" ] || [ -z "$DT_PLATFORM_TOKEN" ]; then
+    printWarn "DT_ENVIRONMENT or DT_PLATFORM_TOKEN not set — skipping monaco deploy"
+    return 0
+  fi
+
+  installMonaco
+
+  printInfoSection "Applying monaco config from $monaco_dir to $DT_ENVIRONMENT"
+  # Map / fill the env vars monaco expects from what we have.
+  export DT_PLATFORM_TENANT_URL="$DT_ENVIRONMENT"
+  export DT_API_TOKEN="${DT_API_TOKEN:?DT_API_TOKEN must be set}"
+  export DT_PLATFORM_TOKEN
+  : "${WORKFLOW_ACTOR_ID:=00000000-0000-0000-0000-000000000000}"
+  : "${DT_TENANT_URL_NO_HTTP:=$(echo "$DT_ENVIRONMENT" | sed -E 's|https?://||')}"
+  : "${GITLAB_EXTERNAL_ENDPOINT:=http://gitlab.placeholder.sslip.io}"
+  : "${GITLAB_HOST:=gitlab.placeholder.sslip.io}"
+  : "${GITLAB_PRIVATE_TOKEN:=placeholder-gitlab-pat}"
+  : "${ACTIVE_GATE_NODE_ID:=placeholder-ag-node}"
+  export WORKFLOW_ACTOR_ID DT_TENANT_URL_NO_HTTP \
+         GITLAB_EXTERNAL_ENDPOINT GITLAB_HOST GITLAB_PRIVATE_TOKEN \
+         ACTIVE_GATE_NODE_ID
+
+  ( cd "$monaco_dir" && monaco deploy manifest.yml --continue-on-error ) \
+    | grep -E "Deployment successful|ERROR|configs deployed" | tail -20
+  printInfo "monaco deploy finished (see ${monaco_dir}/.logs/ for full output)"
+}
+
+# ----------------------------------------------------------------------
 # GitLab — install via official helm chart on sslip.io magic domain
 # ----------------------------------------------------------------------
 installGitlab(){
@@ -390,10 +461,17 @@ undeployLoadgenerator(){
 #   DT_TENANT_URL    e.g. https://abc12345.live.dynatrace.com
 #   DT_API_TOKEN     token with scope: openpipeline.events.ingest
 # Optional:
-#   DT_CICD_PROVIDER (default: astroshop) — the path segment after events.sdlc/
+#   DT_CICD_PROVIDER (default: gitlab) — the path segment after events.sdlc/
+#                                          The repo runs a self-hosted GitLab
+#                                          in-cluster, so 'gitlab' is the
+#                                          natural value. Override to
+#                                          'github' if you wire from there.
+#                                          'github' matches the OpenPipeline
+#                                          rules installed by the community
+#                                          CI/CD Observability app wizard.
 
 _dtSdlcEndpoint(){
-  local provider="${DT_CICD_PROVIDER:-astroshop}"
+  local provider="${DT_CICD_PROVIDER:-gitlab}"
   echo "${DT_TENANT_URL%/}/platform/ingest/custom/events.sdlc/${provider}"
 }
 
@@ -442,7 +520,7 @@ sendPipelineEvent(){
   "event.category": "pipeline",
   "event.status": "finished",
   "event.type": "deploy",
-  "event.provider": "${DT_CICD_PROVIDER:-astroshop}",
+  "event.provider": "${DT_CICD_PROVIDER:-gitlab}",
   "duration": ${dur},
   "start_time": "${start_ts}",
   "end_time": "${end_ts}"
@@ -475,7 +553,7 @@ sendTaskEvent(){
   "event.category": "task",
   "event.status": "finished",
   "event.type": "deploy",
-  "event.provider": "${DT_CICD_PROVIDER:-astroshop}",
+  "event.provider": "${DT_CICD_PROVIDER:-gitlab}",
   "duration": ${dur},
   "start_time": "${start_ts}",
   "end_time": "${end_ts}"
@@ -545,7 +623,7 @@ sendDeploymentEvent(){
 {
   "eventType": "CUSTOM_DEPLOYMENT",
   "title": "astroshop release ${version} (${problem})",
-  "entitySelector": "type(SERVICE),toRelationships.partOf(type(NAMESPACE),entityName.equals(astroshop))",
+  "entitySelector": "type(SERVICE),entityName.startsWith(astroshop-)",
   "timeout": 5,
   "properties": {
     "deploymentName": "astroshop release ${version}",
@@ -573,6 +651,124 @@ JSON
 }
 
 # ----------------------------------------------------------------------
+# runDeploymentValidation — emit the verdict bizevent that an SRG would
+# normally write. Deterministic: problem=none -> pass, anything else -> fail.
+# Use until a real SRG document is in place; the verdict shape is identical.
+# ----------------------------------------------------------------------
+runDeploymentValidation(){
+  local version="$1" stage="${2:-staging}" problem="${3:-none}"
+  local verdict="pass"
+  [ "$problem" != "none" ] && verdict="fail"
+
+  if [ -z "$DT_TENANT_URL" ] || [ -z "$DT_API_TOKEN" ]; then
+    printWarn "DT_TENANT_URL and DT_API_TOKEN not set — skipping"
+    return 0
+  fi
+
+  local body
+  body=$(cat <<JSON
+{
+  "event.provider":         "${DT_CICD_PROVIDER:-gitlab}",
+  "event.type":             "guardian.evaluation",
+  "event.category":         "guardian",
+  "event.status":           "finished",
+  "srg.guardian.id":        "release-readiness",
+  "srg.guardian.name":      "Release readiness — astroshop",
+  "srg.verdict":            "${verdict}",
+  "deploymentProject":      "astroshop",
+  "deploymentVersion":      "${version}",
+  "Release_Stage":          "${stage}",
+  "PROBLEM":                "${problem}"
+}
+JSON
+)
+  # Reuse the SDLC events endpoint we already have a scope for — the
+  # event.category=guardian discriminator keeps it separate from pipeline data.
+  local url code
+  url=$(_dtSdlcEndpoint)
+  code=$(curl -sk -o /tmp/.verdict-resp -w '%{http_code}' \
+    -X POST "$url" \
+    -H "Authorization: Api-Token $DT_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "$body")
+  if [[ "$code" =~ ^2 ]]; then
+    printInfo "Guardian verdict for $version ($problem) = $verdict → HTTP $code"
+  else
+    printWarn "Verdict HTTP $code: $(cat /tmp/.verdict-resp | head -c 200)"
+  fi
+}
+
+# ----------------------------------------------------------------------
+# seedWorkshopReleases — end-to-end demo data: for each of the four
+# release variants, fire the deployment event + pipeline-run SDLC event
+# + per-deployment SRG verdict bizevent. Matches the "good build vs bad
+# build" story: 1.12.0 passes, 1.12.1/2/3 fail.
+# ----------------------------------------------------------------------
+seedWorkshopReleases(){
+  printInfoSection "Seeding workshop releases (gitlab provider, 4 variants)"
+  local i version problem outcome verdict
+  for i in 0 1 2 3; do
+    case $i in
+      0) version="1.12.0"; problem="none"     ;;
+      1) version="1.12.1"; problem="cpu"      ;;
+      2) version="1.12.2"; problem="memory"   ;;
+      3) version="1.12.3"; problem="nplusone" ;;
+    esac
+    if [ "$problem" = "none" ]; then
+      outcome="success"; verdict="pass"
+    else
+      outcome="failed";  verdict="fail"
+    fi
+    printInfo "── ${version} (${problem}) → outcome=${outcome} verdict=${verdict}"
+
+    # 1. Deployment marker — also emit as SDLC event so it's queryable in
+    #    the events table even when there's no live astroshop entity to bind
+    #    to in this tenant (the COE tenant doesn't monitor the k3d cluster).
+    sendDeploymentEvent "$version" staging "$problem"
+    local now start
+    now=$(date -u +"%Y-%m-%dT%H:%M:%S.000000000Z")
+    start=$(date -u -d "30 seconds ago" +"%Y-%m-%dT%H:%M:%S.000000000Z")
+    _dtSdlcPost "$(cat <<JSON
+{
+  "event.provider":      "${DT_CICD_PROVIDER:-gitlab}",
+  "event.category":      "deployment",
+  "event.type":          "deploy",
+  "event.status":        "finished",
+  "deploymentProject":   "astroshop",
+  "deploymentVersion":   "${version}",
+  "Release_Stage":       "staging",
+  "PROBLEM":             "${problem}",
+  "vcs.repository.name": "Otel-App/astroshop",
+  "vcs.ref.head.name":   "usecase/${problem}",
+  "duration":            30,
+  "start_time":          "${start}",
+  "end_time":            "${now}"
+}
+JSON
+)"
+
+    # 2. Pipeline run + 6 tasks (matches CI/CD Observability app schema)
+    local rid=$(( 20000 + i ))
+    local pid="astroshop-release"
+    local pname="Astroshop release pipeline"
+    sendPipelineEvent "$pid" "$rid" "$pname" "$outcome" main Otel-App/astroshop demo-runner 240
+    sendTaskEvent "${rid}-build"     "build"          "success"   "$pid" "$rid" "$pname" main  45
+    sendTaskEvent "${rid}-deploy"    "deploy-staging" "success"   "$pid" "$rid" "$pname" main  60
+    sendTaskEvent "${rid}-loadtest"  "loadtest"       "success"   "$pid" "$rid" "$pname" main 120
+    sendTaskEvent "${rid}-guardian"  "srg-evaluate"   "$outcome"  "$pid" "$rid" "$pname" main  15
+    if [ "$verdict" = "pass" ]; then
+      sendTaskEvent "${rid}-promote"  "promote-prod"  "success"  "$pid" "$rid" "$pname" main 30
+    else
+      sendTaskEvent "${rid}-rollback" "rollback"      "success"  "$pid" "$rid" "$pname" main 20
+    fi
+
+    # 3. SRG verdict bizevent (what the guardian writes)
+    runDeploymentValidation "$version" staging "$problem"
+  done
+  printInfo "Done. Verify in Dynatrace: 1 pass (1.12.0) + 3 fail (1.12.1/2/3)"
+}
+
+# ----------------------------------------------------------------------
 # bootstrapWorkshop — one command to bring up the full workshop content
 #
 # Why this is opt-in rather than in post-create:
@@ -588,17 +784,22 @@ JSON
 # ----------------------------------------------------------------------
 bootstrapWorkshop(){
   printInfoSection "Bootstrapping the CI/CD Observability workshop"
-  printInfo "Phases: astroshop -> gitlab -> seed repos -> dtctl -> loadgen"
+  printInfo "Phases: astroshop -> gitlab -> seed repos -> dtctl + monaco -> loadgen"
   printInfo "Total time: ~15-20 minutes"
 
   deployApp astroshop          || { printError "astroshop deploy failed"; return 1; }
   installGitlab                || { printError "gitlab install failed"; return 1; }
   seedGitlabRepos              || { printError "gitlab seed failed"; return 1; }
   installDtctl                 || printWarn "dtctl install failed (non-fatal)"
+  installMonaco                || printWarn "monaco install failed (non-fatal)"
+  applyMonacoConfig            || printWarn "monaco apply failed (non-fatal — likely no DT_PLATFORM_TOKEN)"
   deployLoadgenerator          || printWarn "loadgen deploy failed (non-fatal)"
 
   printInfoSection "Workshop bootstrap complete"
   printInfo "GitLab:   http://gitlab.$(detectIP).${MAGIC_DOMAIN:-sslip.io}"
   printInfo "Astroshop: $(getAppURL astroshop 2>/dev/null || echo 'see printGreeting')"
-  printInfo "Next: dtctl auth login --context demo --environment <tenant>; applyDtctlConfigs"
+  printInfo "Tenant:   ${DT_ENVIRONMENT:-<not configured>}"
+  printInfo ""
+  printInfo "Next: source .devcontainer/.env (DT_PLATFORM_TOKEN, DT_API_TOKEN, DT_TENANT_URL)"
+  printInfo "      then run 'seedWorkshopReleases' to populate demo data"
 }

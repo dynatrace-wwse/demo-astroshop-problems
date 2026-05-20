@@ -4,7 +4,6 @@ projects:
   - name: init_configs
     path: init_configs
 
-
 environmentGroups:
   - name: core
     environments:
@@ -15,11 +14,5 @@ environmentGroups:
         auth:
           token:
             name: DT_API_TOKEN
-          oAuth:
-            clientId:
-              name: DT_OAUTH_CLIENT_ID
-            clientSecret:
-              name: DT_OAUTH_CLIENT_SECRET
-            tokenEndpoint:
-              type: environment
-              value: DT_OAUTH_SSO_ENDPOINT
+          platformToken:
+            name: DT_PLATFORM_TOKEN

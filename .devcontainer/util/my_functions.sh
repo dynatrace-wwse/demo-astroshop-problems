@@ -619,6 +619,9 @@ sendDeploymentEvent(){
   fi
 
   local body
+  # extra_vars.* are read by the monaco SRG workflow's task expressions
+  # (init_configs/labs/srg-workflow.json) — keep them on the payload so
+  # the workflow can run end-to-end without modification.
   body=$(cat <<JSON
 {
   "eventType": "CUSTOM_DEPLOYMENT",
@@ -632,7 +635,11 @@ sendDeploymentEvent(){
     "ciBackLink": "${ci_url}",
     "Release_Stage": "${stage}",
     "Application": "astroshop",
-    "PROBLEM": "${problem}"
+    "PROBLEM": "${problem}",
+    "extra_vars.release_version": "${version}",
+    "extra_vars.problem": "${problem}",
+    "extra_vars.pipeline_url": "${ci_url}",
+    "extra_vars.dt_url": "${DT_ENVIRONMENT:-${DT_TENANT_URL}}"
   }
 }
 JSON
@@ -647,6 +654,42 @@ JSON
     printInfo "CUSTOM_DEPLOYMENT $version ($problem) → HTTP $code"
   else
     printWarn "Deployment event HTTP $code: $(cat /tmp/.event-resp | head -c 200)"
+  fi
+
+  # Also fire a bizevent so the monaco-deployed SRG workflow auto-triggers.
+  # The workflow listens with filterQuery: service == "astroshop" AND stage == "staging".
+  if [ -n "$DT_BIZEVENTS_TOKEN" ]; then
+    local biz
+    biz=$(cat <<JSON
+[{
+  "event.type":                "release.staged",
+  "event.provider":            "${DT_CICD_PROVIDER:-gitlab}",
+  "service":                   "astroshop",
+  "stage":                     "${stage}",
+  "deploymentVersion":         "${version}",
+  "PROBLEM":                   "${problem}",
+  "ciBackLink":                "${ci_url}",
+  "extra_vars.release_version":"${version}",
+  "extra_vars.problem":        "${problem}",
+  "extra_vars.pipeline_url":   "${ci_url}",
+  "extra_vars.dt_url":         "${DT_ENVIRONMENT:-${DT_TENANT_URL}}",
+  "timeframe.from":            "now-15m",
+  "timeframe.to":              "now"
+}]
+JSON
+)
+    code=$(curl -sk -o /tmp/.biz-resp -w '%{http_code}' \
+      -X POST "${DT_TENANT_URL%/}/api/v2/bizevents/ingest" \
+      -H "Authorization: Api-Token $DT_BIZEVENTS_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "$biz")
+    if [[ "$code" =~ ^2 ]]; then
+      printInfo "  bizevent (trigger for SRG workflow) → HTTP $code"
+    else
+      printWarn "  bizevent HTTP $code: $(cat /tmp/.biz-resp | head -c 200)"
+    fi
+  else
+    printWarn "  DT_BIZEVENTS_TOKEN not set — SRG workflow will not auto-trigger"
   fi
 }
 

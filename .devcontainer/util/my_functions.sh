@@ -437,19 +437,54 @@ deployLoadgenerator(){
 
   kubectl create namespace "$LOADGEN_NAMESPACE" 2>/dev/null || true
 
-  # Substitute image + host placeholders from deploy.yaml and apply
+  # Substitute image + host placeholders from deploy.yaml and apply.
+  # We then scale the deployment to 0 so the loadgen DOES NOT run
+  # continuously — TSN/LTN/LSN headers must only be emitted around
+  # an explicit load-test window. Use startLoadtest / stopLoadtest
+  # (or let rollAstroshopRelease handle it for you).
   sed -e "s|IMAGE_PLACEHOLDER|${LOADGEN_IMAGE}|g" \
       -e "s|https://PLACEHOLDER_DOMAIN|${target}|g" \
       -e "s|imagePullPolicy: Always|imagePullPolicy: IfNotPresent|g" \
       "$src/deploy.yaml" \
     | kubectl apply -n "$LOADGEN_NAMESPACE" -f -
 
-  printInfo "Loadgenerator deployed — check status with: kubectl -n $LOADGEN_NAMESPACE get pods"
+  # Scale to 0 — IMPORTANT: the workshop loadgen must be opt-in.
+  # Continuous traffic with x-dynatrace-test headers pollutes the
+  # SRG signal and makes "no test step data" impossible to verify.
+  kubectl -n "$LOADGEN_NAMESPACE" scale deployment astroshop-loadgenerator --replicas=0 \
+    >/dev/null 2>&1 || true
+
+  printInfo "Loadgenerator deployed (scaled to 0 — start with 'startLoadtest')"
 }
 
 undeployLoadgenerator(){
   printInfoSection "Removing loadgenerator"
   kubectl delete deployment astroshop-loadgenerator -n "$LOADGEN_NAMESPACE" 2>/dev/null || true
+}
+
+# startLoadtest — scale the workshop loadgen up for a controlled load
+# window. Each request carries the x-dynatrace-test header that the
+# monaco request-attribute rules unpack into TSN/LTN/LSN on spans.
+# Usage: startLoadtest [replicas]
+startLoadtest(){
+  local n="${1:-1}"
+  if ! kubectl -n "$LOADGEN_NAMESPACE" get deployment astroshop-loadgenerator >/dev/null 2>&1; then
+    printWarn "Loadgen not deployed — running deployLoadgenerator first"
+    deployLoadgenerator || return 1
+  fi
+  printInfoSection "Starting workshop loadtest (replicas=$n)"
+  kubectl -n "$LOADGEN_NAMESPACE" scale deployment astroshop-loadgenerator --replicas="$n"
+  kubectl -n "$LOADGEN_NAMESPACE" rollout status deployment astroshop-loadgenerator --timeout=60s 2>&1 | tail -1
+  printInfo "Loadtest running. Stop with 'stopLoadtest'."
+}
+
+# stopLoadtest — scale workshop loadgen back to 0. TSN/LTN/LSN
+# traffic stops at the next request.
+stopLoadtest(){
+  printInfoSection "Stopping workshop loadtest"
+  kubectl -n "$LOADGEN_NAMESPACE" scale deployment astroshop-loadgenerator --replicas=0 \
+    2>&1 | tail -1
+  printInfo "Loadtest stopped — x-dynatrace-test headers cease at next request."
 }
 
 # ----------------------------------------------------------------------
@@ -804,6 +839,17 @@ rollAstroshopRelease(){
 
   # Fire the deployment event + bizevent (Davis correlation + workflow trigger)
   sendDeploymentEvent "$version" staging "$problem"
+
+  # Run the controlled load test against the new release. The
+  # x-dynatrace-test header (LSN/LTN/TSN) ONLY appears in spans during
+  # this window — outside the window the always-on OTel-demo
+  # load-generator drives traffic without those headers.
+  local soak="${LOADTEST_SOAK_SECONDS:-180}"
+  printInfo "Starting load test window of ${soak}s for ${version}"
+  startLoadtest >/dev/null 2>&1
+  sleep "$soak"
+  stopLoadtest  >/dev/null 2>&1
+  printInfo "Load test window ended — TSN/LTN/LSN traffic stops"
 }
 
 # seedWorkshopReleases — end-to-end demo data: for each of the four

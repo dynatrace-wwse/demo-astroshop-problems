@@ -874,11 +874,26 @@ rollAstroshopRelease(){
       printInfo "  ${svc} ← image ${image}"
     fi
 
+    # Pod template labels + annotations.
+    # Dynatrace picks up the release version from (in order of strength):
+    #   1. DT_RELEASE_VERSION / DT_RELEASE_STAGE / DT_RELEASE_PRODUCT /
+    #      DT_RELEASE_BUILD_VERSION env vars on the container (set below).
+    #   2. metadata.dynatrace.com/release-version pod annotation (Kubernetes
+    #      release monitoring uses this on the pod template, so each rollout
+    #      bumps the version Dynatrace shows for that workload).
+    #   3. app.kubernetes.io/version label (Kubernetes-recommended label).
+    # See: https://docs.dynatrace.com/docs/deliver/release-monitoring/version-detection-strategies
     kubectl -n "$ASTROSHOP_NAMESPACE" patch deployment "$svc" --type=strategic --patch \
-      "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"app.kubernetes.io/version\":\"${version}\",\"release\":\"${version}\",\"problem\":\"${problem}\"},\"annotations\":{\"metadata.dynatrace.com/release.version\":\"${version}\",\"metadata.dynatrace.com/release.problem\":\"${problem}\"}}}}}" \
+      "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"app.kubernetes.io/version\":\"${version}\",\"release\":\"${version}\",\"problem\":\"${problem}\"},\"annotations\":{\"metadata.dynatrace.com/release-version\":\"${version}\",\"metadata.dynatrace.com/release-stage\":\"staging\",\"metadata.dynatrace.com/release-product\":\"astroshop\",\"metadata.dynatrace.com/release-build-version\":\"${version}\",\"metadata.dynatrace.com/release-problem\":\"${problem}\"}}}}}" \
       >/dev/null
 
+    # Container env: both DT_RELEASE_* (k8s release monitoring) and
+    # OTEL_RESOURCE_ATTRIBUTES (OTel spans carry service.version).
     kubectl -n "$ASTROSHOP_NAMESPACE" set env deployment/"$svc" \
+      "DT_RELEASE_VERSION=${version}" \
+      "DT_RELEASE_BUILD_VERSION=${version}" \
+      "DT_RELEASE_STAGE=staging" \
+      "DT_RELEASE_PRODUCT=astroshop" \
       "OTEL_RESOURCE_ATTRIBUTES=service.name=\$(OTEL_SERVICE_NAME),service.namespace=astroshop,service.version=${version},release=${version},problem=${problem}" \
       >/dev/null 2>&1 || true
   done

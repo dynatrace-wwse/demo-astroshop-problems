@@ -97,6 +97,34 @@ installMonaco(){
   printInfo "monaco installed: $(monaco version 2>/dev/null | head -1)"
 }
 
+# Recover the platform token's user UUID by running a no-op workflow and
+# reading the `user` field of the execution. No introspection endpoint
+# exposes this directly. Echoes the UUID on stdout; empty string on
+# failure. Used by applyMonacoConfig to fill WORKFLOW_ACTOR_ID so the
+# guardian-validation workflow can actually impersonate someone.
+_discoverWorkflowActorId(){
+  [ -z "$DT_PLATFORM_TOKEN" ] || [ -z "$DT_ENVIRONMENT" ] && return 1
+  local probe_body='{"title":"actor-discovery-probe","tasks":{"noop":{"name":"noop","action":"dynatrace.automations:run-javascript","input":{"script":"export default async () => ({ ok: true });"}}}}'
+  local create
+  create=$(curl -sk -X POST "${DT_ENVIRONMENT%/}/platform/automation/v1/workflows" \
+    -H "Authorization: Bearer $DT_PLATFORM_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "$probe_body")
+  local wid
+  wid=$(echo "$create" | jq -r '.id // empty' 2>/dev/null)
+  [ -z "$wid" ] && return 1
+  # Run + parse the user UUID
+  local exec
+  exec=$(curl -sk -X POST "${DT_ENVIRONMENT%/}/platform/automation/v1/workflows/${wid}/run" \
+    -H "Authorization: Bearer $DT_PLATFORM_TOKEN" \
+    -H "Content-Type: application/json" -d '{"params":{}}')
+  local uid
+  uid=$(echo "$exec" | jq -r '.user // empty' 2>/dev/null)
+  curl -sk -X DELETE "${DT_ENVIRONMENT%/}/platform/automation/v1/workflows/${wid}" \
+    -H "Authorization: Bearer $DT_PLATFORM_TOKEN" >/dev/null 2>&1 || true
+  [ -n "$uid" ] && [ "$uid" != "null" ] && echo "$uid"
+}
+
 # Apply the monaco config under
 # .devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/ to the
 # current DT_ENVIRONMENT. Requires:
@@ -126,8 +154,34 @@ applyMonacoConfig(){
   export DT_PLATFORM_TENANT_URL="$DT_ENVIRONMENT"
   export DT_API_TOKEN="${DT_API_TOKEN:?DT_API_TOKEN must be set}"
   export DT_PLATFORM_TOKEN
+  # Auto-discover WORKFLOW_ACTOR_ID if unset or placeholder. Workflows
+  # deployed with a null UUID actor can't impersonate any real user and
+  # all their DQL tasks fail with "invalid subject token". The user UUID
+  # isn't exposed by any introspection endpoint we have access to, but we
+  # can recover it from a workflow execution's `user` field — so we deploy
+  # a tiny throwaway workflow, run it, parse the user, then delete it.
+  if [ -z "${WORKFLOW_ACTOR_ID:-}" ] || [ "$WORKFLOW_ACTOR_ID" = "00000000-0000-0000-0000-000000000000" ]; then
+    WORKFLOW_ACTOR_ID=$(_discoverWorkflowActorId)
+    [ -n "$WORKFLOW_ACTOR_ID" ] && printInfo "  discovered WORKFLOW_ACTOR_ID=$WORKFLOW_ACTOR_ID"
+  fi
   : "${WORKFLOW_ACTOR_ID:=00000000-0000-0000-0000-000000000000}"
   : "${DT_TENANT_URL_NO_HTTP:=$(echo "$DT_ENVIRONMENT" | sed -E 's|https?://||')}"
+
+  # Auto-discover the live GitLab endpoint + PAT so the SRG workflow's
+  # create_ticket task can reach the in-cluster GitLab (it was previously
+  # baked with a placeholder URL and failed every workflow run with a
+  # DNS lookup error). If GitLab isn't installed yet, leave the
+  # placeholders — they keep monaco from blowing up but mean the
+  # ticket-creation task will fail until installGitlab runs.
+  if [ -z "${GITLAB_EXTERNAL_ENDPOINT:-}" ] || [ -z "${GITLAB_PRIVATE_TOKEN:-}" ]; then
+    if kubectl -n "${GITLAB_NAMESPACE:-gitlab}" get secret ace-gitlab-root-pat &>/dev/null; then
+      GITLAB_EXTERNAL_ENDPOINT=$(_gitlabInternalEndpoint)
+      GITLAB_HOST="${GITLAB_EXTERNAL_ENDPOINT#http://}"
+      GITLAB_PRIVATE_TOKEN=$(kubectl -n "${GITLAB_NAMESPACE:-gitlab}" get secret ace-gitlab-root-pat \
+        -o jsonpath='{.data.personalAccessToken}' 2>/dev/null | base64 -d)
+      printInfo "  discovered GITLAB_EXTERNAL_ENDPOINT=$GITLAB_EXTERNAL_ENDPOINT"
+    fi
+  fi
   : "${GITLAB_EXTERNAL_ENDPOINT:=http://gitlab.placeholder.sslip.io}"
   : "${GITLAB_HOST:=gitlab.placeholder.sslip.io}"
   : "${GITLAB_PRIVATE_TOKEN:=placeholder-gitlab-pat}"

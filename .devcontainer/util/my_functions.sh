@@ -166,6 +166,22 @@ applyMonacoConfig(){
   fi
   : "${WORKFLOW_ACTOR_ID:=00000000-0000-0000-0000-000000000000}"
   : "${DT_TENANT_URL_NO_HTTP:=$(echo "$DT_ENVIRONMENT" | sed -E 's|https?://||')}"
+
+  # Auto-discover the live GitLab endpoint + PAT so the SRG workflow's
+  # create_ticket task can reach the in-cluster GitLab (it was previously
+  # baked with a placeholder URL and failed every workflow run with a
+  # DNS lookup error). If GitLab isn't installed yet, leave the
+  # placeholders — they keep monaco from blowing up but mean the
+  # ticket-creation task will fail until installGitlab runs.
+  if [ -z "${GITLAB_EXTERNAL_ENDPOINT:-}" ] || [ -z "${GITLAB_PRIVATE_TOKEN:-}" ]; then
+    if kubectl -n "${GITLAB_NAMESPACE:-gitlab}" get secret ace-gitlab-root-pat &>/dev/null; then
+      GITLAB_EXTERNAL_ENDPOINT=$(_gitlabInternalEndpoint)
+      GITLAB_HOST="${GITLAB_EXTERNAL_ENDPOINT#http://}"
+      GITLAB_PRIVATE_TOKEN=$(kubectl -n "${GITLAB_NAMESPACE:-gitlab}" get secret ace-gitlab-root-pat \
+        -o jsonpath='{.data.personalAccessToken}' 2>/dev/null | base64 -d)
+      printInfo "  discovered GITLAB_EXTERNAL_ENDPOINT=$GITLAB_EXTERNAL_ENDPOINT"
+    fi
+  fi
   : "${GITLAB_EXTERNAL_ENDPOINT:=http://gitlab.placeholder.sslip.io}"
   : "${GITLAB_HOST:=gitlab.placeholder.sslip.io}"
   : "${GITLAB_PRIVATE_TOKEN:=placeholder-gitlab-pat}"

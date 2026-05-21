@@ -77,15 +77,19 @@ import datetime
 # request in this run shares a single value and the dashboard
 # aggregates them in one bucket. Restart the pod to start a new run.
 #
-# Shape: "Astroshop Loadtest - CICD Workshop VU(10) Loops(0) - <date>"
+# Shape MUST match the dashlet's DQL parse pattern:
+#   `DATA:TestTool "-" DATA:TestName"- VU("INT:VU") Loops("INT:Loops") - "
+#    TIMESTAMP('d MMM yyyy HH:mm:ss'):formattedTimeStamp`
+# i.e.: "Astroshop Loadtest-CICD Workshop- VU(10) Loops(0) - 21 May 2026 07:30:00"
 TEST_TOOL  = os.environ.get("LTN_TOOL",  "Astroshop Loadtest")
 TEST_NAME  = os.environ.get("LTN_NAME",  "CICD Workshop")
 TEST_VU    = int(os.environ.get("LOCUST_USERS", "10"))
 TEST_LOOPS = 0  # locust runs continuously; 0 = "no fixed iteration count"
 
-_LAUNCH_TS = datetime.datetime.utcnow().strftime("%d %b %Y %H:%M:%S")
+# `%-d` gives un-padded day-of-month (5 not 05) — required by `d MMM yyyy`.
+_LAUNCH_TS = datetime.datetime.utcnow().strftime("%-d %b %Y %H:%M:%S")
 LOAD_TEST_NAME = (
-    f"{TEST_TOOL} - {TEST_NAME} VU({TEST_VU}) Loops({TEST_LOOPS}) - {_LAUNCH_TS}"
+    f"{TEST_TOOL}-{TEST_NAME}- VU({TEST_VU}) Loops({TEST_LOOPS}) - {_LAUNCH_TS}"
 )
 
 LOAD_SESSION_NAME = os.environ.get("LSN", "Astroshop-Staging")

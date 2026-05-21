@@ -807,12 +807,39 @@ JSON
 # start — and it's where 1.12.1 (cpu), 1.12.2 (memory) inject their
 # bugs. 1.12.3 (n+1) also fans out from ad's downstream calls.
 #
-# Override on the command line if you want to swap more services:
-#   rollAstroshopRelease 1.12.3 nplusone ad cart   # after patching cart's env
-ASTROSHOP_RELEASE_TARGETS=(ad)
+# Bug-variant images discovered on Docker Hub (shinojosa/astroshop tags):
+#   1.12.0-adservice          baseline ad
+#   1.12.0-CPU-adservice      cpu-leaking ad variant
+#   1.12.0-GC-adservice       memory-leaking ad variant (long GC cycles)
+#   1.12.0-cartservice        baseline cart
+#   1.12.0-cartserviceNP1     N+1-query cart variant
+#
+# The "release version" the workshop demos (1.12.0/1/2/3) is the abstract
+# label seen in deployment events / SRG context / dashboards. The actual
+# container image always comes from the 1.12.0 set, picked by problem type.
+# This mirrors a real release flow: the team ships "1.12.1" but the
+# underlying artifact is just one rebuild on top of the 1.12.0 baseline.
+#
+# (version, problem) → (target deployment, image suffix)
+#   1.12.0 none      → ad   on 1.12.0-adservice         (baseline)
+#   1.12.1 cpu       → ad   on 1.12.0-CPU-adservice     (cpu spike on ad)
+#   1.12.2 memory    → ad   on 1.12.0-GC-adservice      (memory growth on ad)
+#   1.12.3 nplusone  → cart on 1.12.0-cartserviceNP1    (n+1 db calls in cart)
+_astroshopBugImage(){
+  local problem="$1"
+  case "$problem" in
+    cpu)       echo "ad|1.12.0-CPU-adservice"      ;;
+    memory)    echo "ad|1.12.0-GC-adservice"       ;;
+    nplusone)  echo "cart|1.12.0-cartserviceNP1"   ;;
+    *)         echo ""                              ;;  # baseline / unknown
+  esac
+}
 
-# k8s deployment name → docker hub image suffix (different naming styles).
-# Used to construct shinojosa/astroshop:<version>-<suffix> per service.
+# Services we reset to baseline at the start of every roll so a previous
+# release's bug doesn't linger when we move on to the next variant.
+ASTROSHOP_BUG_TARGETS=(ad cart)
+
+# k8s deployment name → docker hub baseline image suffix.
 _astroshopImageSuffix(){
   case "$1" in
     accounting)      echo "accountingservice" ;;
@@ -835,82 +862,90 @@ _astroshopImageSuffix(){
   esac
 }
 
+_astroshopApplyReleaseMetadata(){
+  # Stamp the abstract release version (1.12.0/1/2/3) onto a deployment's
+  # pod template — labels + Dynatrace k8s-release-monitoring annotations +
+  # DT_RELEASE_* env vars + OTEL_RESOURCE_ATTRIBUTES — so every span and
+  # k8s release feature shows the release the team is shipping, regardless
+  # of which underlying 1.12.0-* artifact actually got swapped in.
+  local svc="$1" version="$2" problem="$3"
+  kubectl -n "$ASTROSHOP_NAMESPACE" patch deployment "$svc" --type=strategic --patch \
+    "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"app.kubernetes.io/version\":\"${version}\",\"release\":\"${version}\",\"problem\":\"${problem}\"},\"annotations\":{\"metadata.dynatrace.com/release-version\":\"${version}\",\"metadata.dynatrace.com/release-stage\":\"staging\",\"metadata.dynatrace.com/release-product\":\"astroshop\",\"metadata.dynatrace.com/release-build-version\":\"${version}\",\"metadata.dynatrace.com/release-problem\":\"${problem}\"}}}}}" \
+    >/dev/null 2>&1 || true
+  kubectl -n "$ASTROSHOP_NAMESPACE" set env deployment/"$svc" \
+    "DT_RELEASE_VERSION=${version}" \
+    "DT_RELEASE_BUILD_VERSION=${version}" \
+    "DT_RELEASE_STAGE=staging" \
+    "DT_RELEASE_PRODUCT=astroshop" \
+    "OTEL_RESOURCE_ATTRIBUTES=service.name=\$(OTEL_SERVICE_NAME),service.namespace=astroshop,service.version=${version},release=${version},problem=${problem}" \
+    >/dev/null 2>&1 || true
+}
+
+_astroshopSetImage(){
+  local svc="$1" image="$2"
+  if ! kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" >/dev/null 2>&1; then
+    printWarn "  no deployment '$svc' — skipping"; return 1
+  fi
+  local container
+  container=$(kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" \
+    -o jsonpath='{.spec.template.spec.containers[0].name}')
+  kubectl -n "$ASTROSHOP_NAMESPACE" set image deployment/"$svc" "${container}=${image}" \
+    >/dev/null 2>&1 || true
+  printInfo "  ${svc} ← image ${image}"
+}
+
 rollAstroshopRelease(){
-  local version="${1:?usage: rollAstroshopRelease <version> [problem] [services...]}"
+  # Apply a single release to the Astroshop cluster:
+  #   1. Reset ad+cart to their 1.12.0 baseline images (clear any
+  #      previous release's bug variant so it doesn't linger).
+  #   2. Layer the bug-variant image on the target service for this
+  #      (version, problem) pair (none = baseline only).
+  #   3. Stamp the abstract release version (1.12.0/1/2/3) on both
+  #      ad+cart pod templates so the dashboards / k8s release monitor
+  #      see a consistent release identity across the swap.
+  #   4. Wait for rollout, fire deployment events, run the loadtest.
+  local version="${1:?usage: rollAstroshopRelease <version> [problem]}"
   local problem="${2:-none}"
-  shift 2 2>/dev/null || shift $(( $# > 0 ? 1 : 0 )) 2>/dev/null
-  local targets=("$@")
-  [ ${#targets[@]} -eq 0 ] && targets=("${ASTROSHOP_RELEASE_TARGETS[@]}")
 
-  printInfoSection "Rolling Astroshop release ${version} (${problem}) on ${#targets[@]} services"
+  printInfoSection "Rolling Astroshop release ${version} (${problem})"
 
-  # Patch each deployment with:
-  #   * the actual release IMAGE (shinojosa/astroshop:<version>-<suffix>)
-  #     so the bugs baked into 1.12.1/2/3 actually run; 1.12.0 is the
-  #     baseline. This is the ace-box workshop's mechanism — different
-  #     pre-built images per release, not feature flags.
-  #   * pod-template labels + annotations so dashboards can filter by
-  #     release and Davis recognises the deployment boundary.
-  #   * OTEL_RESOURCE_ATTRIBUTES so OTel-instrumented services emit
-  #     service.version=<release> on every span.
-  local svc
-  for svc in "${targets[@]}"; do
-    if ! kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" >/dev/null 2>&1; then
-      printWarn "  no deployment '$svc' — skipping"
-      continue
-    fi
-
-    # Swap the container image to the per-release variant.
-    local suffix
+  # 1. Reset both potential bug targets to baseline.
+  local svc suffix
+  for svc in "${ASTROSHOP_BUG_TARGETS[@]}"; do
     suffix=$(_astroshopImageSuffix "$svc")
-    if [ -n "$suffix" ]; then
-      local image="docker.io/shinojosa/astroshop:${version}-${suffix}"
-      # Get the first container's name (varies — kafka has "kafka", flagd has "flagd-ui" + flagd, etc.)
-      local container
-      container=$(kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" \
-        -o jsonpath='{.spec.template.spec.containers[0].name}')
-      kubectl -n "$ASTROSHOP_NAMESPACE" set image deployment/"$svc" "${container}=${image}" \
-        >/dev/null 2>&1 || true
-      printInfo "  ${svc} ← image ${image}"
-    fi
-
-    # Pod template labels + annotations.
-    # Dynatrace picks up the release version from (in order of strength):
-    #   1. DT_RELEASE_VERSION / DT_RELEASE_STAGE / DT_RELEASE_PRODUCT /
-    #      DT_RELEASE_BUILD_VERSION env vars on the container (set below).
-    #   2. metadata.dynatrace.com/release-version pod annotation (Kubernetes
-    #      release monitoring uses this on the pod template, so each rollout
-    #      bumps the version Dynatrace shows for that workload).
-    #   3. app.kubernetes.io/version label (Kubernetes-recommended label).
-    # See: https://docs.dynatrace.com/docs/deliver/release-monitoring/version-detection-strategies
-    kubectl -n "$ASTROSHOP_NAMESPACE" patch deployment "$svc" --type=strategic --patch \
-      "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"app.kubernetes.io/version\":\"${version}\",\"release\":\"${version}\",\"problem\":\"${problem}\"},\"annotations\":{\"metadata.dynatrace.com/release-version\":\"${version}\",\"metadata.dynatrace.com/release-stage\":\"staging\",\"metadata.dynatrace.com/release-product\":\"astroshop\",\"metadata.dynatrace.com/release-build-version\":\"${version}\",\"metadata.dynatrace.com/release-problem\":\"${problem}\"}}}}}" \
-      >/dev/null
-
-    # Container env: both DT_RELEASE_* (k8s release monitoring) and
-    # OTEL_RESOURCE_ATTRIBUTES (OTel spans carry service.version).
-    kubectl -n "$ASTROSHOP_NAMESPACE" set env deployment/"$svc" \
-      "DT_RELEASE_VERSION=${version}" \
-      "DT_RELEASE_BUILD_VERSION=${version}" \
-      "DT_RELEASE_STAGE=staging" \
-      "DT_RELEASE_PRODUCT=astroshop" \
-      "OTEL_RESOURCE_ATTRIBUTES=service.name=\$(OTEL_SERVICE_NAME),service.namespace=astroshop,service.version=${version},release=${version},problem=${problem}" \
-      >/dev/null 2>&1 || true
+    [ -n "$suffix" ] && _astroshopSetImage "$svc" "docker.io/shinojosa/astroshop:1.12.0-${suffix}"
   done
 
-  # Wait for the rolling restart to finish on each
-  for svc in "${targets[@]}"; do
-    kubectl -n "$ASTROSHOP_NAMESPACE" rollout status deployment/"$svc" --timeout=60s 2>&1 \
-      | tail -1 | sed "s/^/  /"
+  # 2. Layer the bug variant (if any) on its specific target service.
+  local mapping target_svc bug_image
+  mapping=$(_astroshopBugImage "$problem")
+  if [ -n "$mapping" ]; then
+    target_svc="${mapping%%|*}"
+    bug_image="docker.io/shinojosa/astroshop:${mapping##*|}"
+    _astroshopSetImage "$target_svc" "$bug_image"
+  fi
+
+  # 3. Stamp release metadata on every potential bug target so the
+  #    release identity propagates regardless of which one carries the bug.
+  for svc in "${ASTROSHOP_BUG_TARGETS[@]}"; do
+    kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" >/dev/null 2>&1 \
+      && _astroshopApplyReleaseMetadata "$svc" "$version" "$problem"
   done
 
-  # Fire the deployment event + bizevent (Davis correlation + workflow trigger)
+  # 4. Wait for rolling restarts to finish on whichever deployments we touched.
+  for svc in "${ASTROSHOP_BUG_TARGETS[@]}"; do
+    kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" >/dev/null 2>&1 \
+      && kubectl -n "$ASTROSHOP_NAMESPACE" rollout status deployment/"$svc" --timeout=90s 2>&1 \
+         | tail -1 | sed "s/^/  /"
+  done
+
+  # 5. Fire CUSTOM_DEPLOYMENT (Davis) + bizevent (SRG workflow trigger).
   sendDeploymentEvent "$version" staging "$problem"
 
-  # Run the controlled load test against the new release. The
-  # x-dynatrace-test header (LSN/LTN/TSN) ONLY appears in spans during
-  # this window — outside the window the always-on OTel-demo
-  # load-generator drives traffic without those headers.
+  # 6. Run the controlled load test. The x-dynatrace-test header
+  #    (LSN/LTN/TSN) only appears in spans during this window — outside
+  #    of it the always-on OTel-demo load generator drives traffic
+  #    without those headers.
   local soak="${LOADTEST_SOAK_SECONDS:-180}"
   printInfo "Starting load test window of ${soak}s for ${version}"
   startLoadtest >/dev/null 2>&1

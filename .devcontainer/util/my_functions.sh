@@ -437,19 +437,54 @@ deployLoadgenerator(){
 
   kubectl create namespace "$LOADGEN_NAMESPACE" 2>/dev/null || true
 
-  # Substitute image + host placeholders from deploy.yaml and apply
+  # Substitute image + host placeholders from deploy.yaml and apply.
+  # We then scale the deployment to 0 so the loadgen DOES NOT run
+  # continuously — TSN/LTN/LSN headers must only be emitted around
+  # an explicit load-test window. Use startLoadtest / stopLoadtest
+  # (or let rollAstroshopRelease handle it for you).
   sed -e "s|IMAGE_PLACEHOLDER|${LOADGEN_IMAGE}|g" \
       -e "s|https://PLACEHOLDER_DOMAIN|${target}|g" \
       -e "s|imagePullPolicy: Always|imagePullPolicy: IfNotPresent|g" \
       "$src/deploy.yaml" \
     | kubectl apply -n "$LOADGEN_NAMESPACE" -f -
 
-  printInfo "Loadgenerator deployed — check status with: kubectl -n $LOADGEN_NAMESPACE get pods"
+  # Scale to 0 — IMPORTANT: the workshop loadgen must be opt-in.
+  # Continuous traffic with x-dynatrace-test headers pollutes the
+  # SRG signal and makes "no test step data" impossible to verify.
+  kubectl -n "$LOADGEN_NAMESPACE" scale deployment astroshop-loadgenerator --replicas=0 \
+    >/dev/null 2>&1 || true
+
+  printInfo "Loadgenerator deployed (scaled to 0 — start with 'startLoadtest')"
 }
 
 undeployLoadgenerator(){
   printInfoSection "Removing loadgenerator"
   kubectl delete deployment astroshop-loadgenerator -n "$LOADGEN_NAMESPACE" 2>/dev/null || true
+}
+
+# startLoadtest — scale the workshop loadgen up for a controlled load
+# window. Each request carries the x-dynatrace-test header that the
+# monaco request-attribute rules unpack into TSN/LTN/LSN on spans.
+# Usage: startLoadtest [replicas]
+startLoadtest(){
+  local n="${1:-1}"
+  if ! kubectl -n "$LOADGEN_NAMESPACE" get deployment astroshop-loadgenerator >/dev/null 2>&1; then
+    printWarn "Loadgen not deployed — running deployLoadgenerator first"
+    deployLoadgenerator || return 1
+  fi
+  printInfoSection "Starting workshop loadtest (replicas=$n)"
+  kubectl -n "$LOADGEN_NAMESPACE" scale deployment astroshop-loadgenerator --replicas="$n"
+  kubectl -n "$LOADGEN_NAMESPACE" rollout status deployment astroshop-loadgenerator --timeout=60s 2>&1 | tail -1
+  printInfo "Loadtest running. Stop with 'stopLoadtest'."
+}
+
+# stopLoadtest — scale workshop loadgen back to 0. TSN/LTN/LSN
+# traffic stops at the next request.
+stopLoadtest(){
+  printInfoSection "Stopping workshop loadtest"
+  kubectl -n "$LOADGEN_NAMESPACE" scale deployment astroshop-loadgenerator --replicas=0 \
+    2>&1 | tail -1
+  printInfo "Loadtest stopped — x-dynatrace-test headers cease at next request."
 }
 
 # ----------------------------------------------------------------------
@@ -761,7 +796,31 @@ JSON
 #   - annot. metadata.dynatrace.com/release.version: <version>
 #   - annot. metadata.dynatrace.com/release.problem: <problem>
 # Davis treats the label change + pod restart as a deployment boundary.
-ASTROSHOP_RELEASE_TARGETS=(frontend frontend-proxy cart ad product-catalog checkout)
+ASTROSHOP_RELEASE_TARGETS=(frontend frontend-proxy cart ad product-catalog checkout recommendation payment accounting fraud-detection)
+
+# k8s deployment name → docker hub image suffix (different naming styles).
+# Used to construct shinojosa/astroshop:<version>-<suffix> per service.
+_astroshopImageSuffix(){
+  case "$1" in
+    accounting)      echo "accountingservice" ;;
+    ad)              echo "adservice" ;;
+    cart)            echo "cartservice" ;;
+    checkout)        echo "checkoutservice" ;;
+    currency)        echo "currencyservice" ;;
+    email)           echo "emailservice" ;;
+    fraud-detection) echo "frauddetectionservice" ;;
+    frontend)        echo "frontend" ;;
+    frontend-proxy)  echo "frontendproxy" ;;
+    image-provider)  echo "imageprovider" ;;
+    load-generator)  echo "loadgenerator" ;;
+    payment)         echo "paymentservice" ;;
+    product-catalog) echo "productcatalogservice" ;;
+    quote)           echo "quoteservice" ;;
+    recommendation)  echo "recommendationservice" ;;
+    shipping)        echo "shippingservice" ;;
+    *) echo "" ;;
+  esac
+}
 
 rollAstroshopRelease(){
   local version="${1:?usage: rollAstroshopRelease <version> [problem] [services...]}"
@@ -772,28 +831,43 @@ rollAstroshopRelease(){
 
   printInfoSection "Rolling Astroshop release ${version} (${problem}) on ${#targets[@]} services"
 
-  # Patch each deployment's pod template with the new labels + annotations
-  # AND override OTEL_RESOURCE_ATTRIBUTES so spans carry service.version
-  # = <version>. OneAgent surfaces that as service.version on every span,
-  # which is what dashboards / DQL filter on (k8s labels aren't auto-
-  # captured into spans by default).
+  # Patch each deployment with:
+  #   * the actual release IMAGE (shinojosa/astroshop:<version>-<suffix>)
+  #     so the bugs baked into 1.12.1/2/3 actually run; 1.12.0 is the
+  #     baseline. This is the ace-box workshop's mechanism — different
+  #     pre-built images per release, not feature flags.
+  #   * pod-template labels + annotations so dashboards can filter by
+  #     release and Davis recognises the deployment boundary.
+  #   * OTEL_RESOURCE_ATTRIBUTES so OTel-instrumented services emit
+  #     service.version=<release> on every span.
   local svc
   for svc in "${targets[@]}"; do
     if ! kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" >/dev/null 2>&1; then
       printWarn "  no deployment '$svc' — skipping"
       continue
     fi
+
+    # Swap the container image to the per-release variant.
+    local suffix
+    suffix=$(_astroshopImageSuffix "$svc")
+    if [ -n "$suffix" ]; then
+      local image="docker.io/shinojosa/astroshop:${version}-${suffix}"
+      # Get the first container's name (varies — kafka has "kafka", flagd has "flagd-ui" + flagd, etc.)
+      local container
+      container=$(kubectl -n "$ASTROSHOP_NAMESPACE" get deployment "$svc" \
+        -o jsonpath='{.spec.template.spec.containers[0].name}')
+      kubectl -n "$ASTROSHOP_NAMESPACE" set image deployment/"$svc" "${container}=${image}" \
+        >/dev/null 2>&1 || true
+      printInfo "  ${svc} ← image ${image}"
+    fi
+
     kubectl -n "$ASTROSHOP_NAMESPACE" patch deployment "$svc" --type=strategic --patch \
       "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"app.kubernetes.io/version\":\"${version}\",\"release\":\"${version}\",\"problem\":\"${problem}\"},\"annotations\":{\"metadata.dynatrace.com/release.version\":\"${version}\",\"metadata.dynatrace.com/release.problem\":\"${problem}\"}}}}}" \
       >/dev/null
 
-    # Patch OTEL_RESOURCE_ATTRIBUTES on the first container — use a
-    # strategic-merge env update (key matched on name).
     kubectl -n "$ASTROSHOP_NAMESPACE" set env deployment/"$svc" \
       "OTEL_RESOURCE_ATTRIBUTES=service.name=\$(OTEL_SERVICE_NAME),service.namespace=astroshop,service.version=${version},release=${version},problem=${problem}" \
       >/dev/null 2>&1 || true
-
-    printInfo "  patched ${svc} → release=${version} problem=${problem}"
   done
 
   # Wait for the rolling restart to finish on each
@@ -804,6 +878,17 @@ rollAstroshopRelease(){
 
   # Fire the deployment event + bizevent (Davis correlation + workflow trigger)
   sendDeploymentEvent "$version" staging "$problem"
+
+  # Run the controlled load test against the new release. The
+  # x-dynatrace-test header (LSN/LTN/TSN) ONLY appears in spans during
+  # this window — outside the window the always-on OTel-demo
+  # load-generator drives traffic without those headers.
+  local soak="${LOADTEST_SOAK_SECONDS:-180}"
+  printInfo "Starting load test window of ${soak}s for ${version}"
+  startLoadtest >/dev/null 2>&1
+  sleep "$soak"
+  stopLoadtest  >/dev/null 2>&1
+  printInfo "Load test window ended — TSN/LTN/LSN traffic stops"
 }
 
 # seedWorkshopReleases — end-to-end demo data: for each of the four
@@ -909,8 +994,17 @@ bootstrapWorkshop(){
     printWarn "DT_OPERATOR_TOKEN / DT_INGEST_TOKEN not set — skipping Dynatrace operator"
   fi
 
-  # 2. Astroshop, GitLab, repos, tooling
+  # 2. Astroshop, GitLab, repos, tooling.
+  # `deployApp astroshop` ships static yaml with the framework's
+  # `dynatrace-demoability/docker/astroshop:af0271f-*` images. The
+  # workshop story relies on the `shinojosa/astroshop:1.12.X-*`
+  # variants — same base code but with deliberately-broken builds for
+  # 1.12.1/2/3. We re-roll to 1.12.0 right after the framework
+  # deploys so the cluster ALWAYS starts from the workshop's
+  # baseline.
   deployApp astroshop          || { printError "astroshop deploy failed"; return 1; }
+  printInfoSection "Re-rolling Astroshop to workshop baseline 1.12.0"
+  rollAstroshopRelease 1.12.0 none || printWarn "baseline roll failed (non-fatal)"
   installGitlab                || { printError "gitlab install failed"; return 1; }
   seedGitlabRepos              || { printError "gitlab seed failed"; return 1; }
   installDtctl                 || printWarn "dtctl install failed (non-fatal)"

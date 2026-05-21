@@ -10,7 +10,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "02 - get products - RT",
@@ -19,7 +19,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "03 -get currencies - RT",
@@ -28,7 +28,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "04 - ad service - RT",
@@ -37,7 +37,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "05 - add product A - RT",
@@ -46,7 +46,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "06 - get recommendations - RT",
@@ -55,7 +55,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "07 - get cart in B - RT",
@@ -64,7 +64,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "08 - empty cart - RT",
@@ -73,7 +73,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "09 - add product B - RT",
@@ -82,7 +82,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "10 - get cart in A - RT",
@@ -91,7 +91,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "11 - checkout - RT",
@@ -100,7 +100,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "12 - get empty cart - RT",
@@ -109,7 +109,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 1000.0,
-      "warning": 900.0
+      "warning": 800.0
     },
     {
       "name": "Failed requests",
@@ -118,7 +118,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 700.0,
-      "warning": 500.0
+      "warning": 560.0
     },
     {
       "name": "Total Traces and Spans ",
@@ -128,7 +128,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 100000.0,
-      "warning": 200000.0
+      "warning": 80000.0
     },
     {
       "name": "CPU throttling time",
@@ -137,7 +137,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 100.0,
-      "warning": 50.0
+      "warning": 80.0
     },
     {
       "name": "Max Memory usage in MB",
@@ -146,7 +146,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 4400.0,
-      "warning": 200.0
+      "warning": 3520.0
     },
     {
       "name": "CPU Max",
@@ -155,7 +155,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 2700.0,
-      "warning": 500.0
+      "warning": 2160.0
     },
     {
       "name": "Total amount Load Test Requests",
@@ -171,7 +171,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 20.0,
-      "warning": 10.0
+      "warning": 16.0
     },
     {
       "name": "Logs with errors",
@@ -180,7 +180,7 @@
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 150000.0,
-      "warning": 100000.0
+      "warning": 120000.0
     }
   ]
 }

@@ -796,7 +796,20 @@ JSON
 #   - annot. metadata.dynatrace.com/release.version: <version>
 #   - annot. metadata.dynatrace.com/release.problem: <problem>
 # Davis treats the label change + pod restart as a deployment boundary.
-ASTROSHOP_RELEASE_TARGETS=(frontend frontend-proxy cart ad product-catalog checkout recommendation payment accounting fraud-detection)
+# Default = just the ad service. The shinojosa/astroshop:1.12.X
+# images target the OLDER OTel-demo (v1.x) env-var scheme
+# (SHIPPING_SERVICE_ADDR, PRODUCT_CATALOG_SERVICE_ADDR, …) but the
+# framework's static yaml uses the NEW scheme (SHIPPING_ADDR,
+# PRODUCT_CATALOG_ADDR, …). Other services crashloop on env-var
+# panics if we swap them.
+#
+# Ad service is self-contained — no inter-service env-var deps to
+# start — and it's where 1.12.1 (cpu), 1.12.2 (memory) inject their
+# bugs. 1.12.3 (n+1) also fans out from ad's downstream calls.
+#
+# Override on the command line if you want to swap more services:
+#   rollAstroshopRelease 1.12.3 nplusone ad cart   # after patching cart's env
+ASTROSHOP_RELEASE_TARGETS=(ad)
 
 # k8s deployment name → docker hub image suffix (different naming styles).
 # Used to construct shinojosa/astroshop:<version>-<suffix> per service.

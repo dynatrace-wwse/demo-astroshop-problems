@@ -151,7 +151,7 @@
     {
       "name": "CPU Max",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries {\n  cpu_usage=avg(dt.kubernetes.container.cpu_usage)\n}, by:{k8s.namespace.name}\n| filter contains(k8s.namespace.name,\"astroshop\")\n| fields totalCpuInCores=arraySum(cpu_usage)",
+      "dqlQuery": "timeseries { cpu_cores = avg(dt.kubernetes.container.cpu_usage) },\n  by: { k8s.container.name },\n  filter: { k8s.namespace.name == \"astroshop\" and k8s.container.name == \"ad\" }\n| fields totalCpuInCores = arrayMax(cpu_cores)",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 600.0,

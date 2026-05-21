@@ -124,16 +124,16 @@
       "name": "Total Traces and Spans ",
       "description": "This query calculates the sum of all traces and spans",
       "objectiveType": "DQL",
-      "dqlQuery": "fetch spans\n| filter isNotNull(request_attribute.TSN) AND contains(request_attribute.LTN, \"Astroshop\")\n| filter k8s.namespace.name == \"astroshop\"\n| summarize totalTraces = countDistinct(trace.id), totalSpans = count(), totalTracesAndSpans = countDistinct(trace.id) + count()\n| fields totalTracesAndSpans",
+      "dqlQuery": "fetch spans\n| filter k8s.namespace.name == \"astroshop\"\n| summarize totalTraces = countDistinct(trace.id), totalSpans = count(),\n            totalTracesAndSpans = countDistinct(trace.id) + count()\n| fields totalTracesAndSpans",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
-      "target": 300000.0,
+      "target": 100000.0,
       "warning": 200000.0
     },
     {
       "name": "CPU throttling time",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries {\n  cpu_throttled_time=avg(dt.containers.cpu.throttled_time)\n},\n  by: {k8s.container.name},\n  filter: {k8s.namespace.name == \"astroshop\" and k8s.container.name == \"ad\"}\n| fields `average throttling/min`=arrayAvg(cpu_throttled_time)/1000000",
+      "dqlQuery": "timeseries {\n  cpu_throttled_time=avg(dt.containers.cpu.throttled_time)\n},\n  by: {k8s.namespace.name},\n  filter: {k8s.namespace.name == \"astroshop\"}\n| fields `average throttling/min`=arrayAvg(cpu_throttled_time)/1000000",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
       "target": 100.0,
@@ -142,19 +142,19 @@
     {
       "name": "Max Memory usage in MB",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries {working_mem=avg(dt.kubernetes.container.memory_working_set)},\n  by:{k8s.container.name},\n  filter: {k8s.namespace.name == \"astroshop\" and k8s.container.name == \"ad\"}\n| fields totalMemoryInMb=arrayMax(working_mem)/1000/1000",
+      "dqlQuery": "timeseries {\n  totalMem = sum(dt.kubernetes.container.memory_working_set)\n}, filter: { k8s.namespace.name == \"astroshop\" }\n| fields totalMemoryInMb = arrayMax(totalMem) / 1000 / 1000",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
-      "target": 205.0,
+      "target": 4400.0,
       "warning": 200.0
     },
     {
       "name": "CPU Max",
       "objectiveType": "DQL",
-      "dqlQuery": "timeseries { cpu_cores = avg(dt.kubernetes.container.cpu_usage) },\n  by: { k8s.container.name },\n  filter: { k8s.namespace.name == \"astroshop\" and k8s.container.name == \"ad\" }\n| fields totalCpuInCores = arrayMax(cpu_cores)",
+      "dqlQuery": "timeseries {\n  totalCpu = sum(dt.kubernetes.container.cpu_usage)\n}, filter: { k8s.namespace.name == \"astroshop\" }\n| fields totalCpuInMillicores = arrayMax(totalCpu)",
       "autoAdaptiveThresholdEnabled": false,
       "comparisonOperator": "LESS_THAN_OR_EQUAL",
-      "target": 600.0,
+      "target": 2700.0,
       "warning": 500.0
     },
     {

@@ -1,0 +1,1837 @@
+{
+  "importedWithCode": false,
+  "layouts": {
+    "0": {
+      "h": 4,
+      "w": 5,
+      "x": 9,
+      "y": 0
+    },
+    "1": {
+      "h": 4,
+      "w": 5,
+      "x": 0,
+      "y": 0
+    },
+    "10": {
+      "h": 4,
+      "w": 4,
+      "x": 5,
+      "y": 0
+    },
+    "11": {
+      "h": 2,
+      "w": 24,
+      "x": 0,
+      "y": 41
+    },
+    "2": {
+      "h": 4,
+      "w": 5,
+      "x": 14,
+      "y": 0
+    },
+    "3": {
+      "h": 9,
+      "w": 24,
+      "x": 0,
+      "y": 23
+    },
+    "4": {
+      "h": 4,
+      "w": 5,
+      "x": 19,
+      "y": 0
+    },
+    "5": {
+      "h": 9,
+      "w": 12,
+      "x": 12,
+      "y": 14
+    },
+    "6": {
+      "h": 10,
+      "w": 12,
+      "x": 0,
+      "y": 4
+    },
+    "7": {
+      "h": 10,
+      "w": 12,
+      "x": 12,
+      "y": 4
+    },
+    "8": {
+      "h": 9,
+      "w": 12,
+      "x": 0,
+      "y": 14
+    },
+    "9": {
+      "h": 9,
+      "w": 24,
+      "x": 0,
+      "y": 32
+    }
+  },
+  "settings": {
+    "gridLayout": {
+      "mode": "responsive"
+    }
+  },
+  "tiles": {
+    "0": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service)\nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| summarize avg(duration)",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "AVG Response Time",
+      "type": "data",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "avg(duration)"
+            ],
+            "categoryAxisLabel": "avg(duration)",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "avg(duration)"
+            ],
+            "valueAxisLabel": "avg(duration)"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "avg(duration)"
+            }
+          ],
+          "displayedFields": [],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {},
+          "displayedFields": [],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "avg(duration)",
+          "prefixIcon": "",
+          "recordField": "avg(duration)",
+          "showLabel": false,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "added": 1734447546580,
+            "baseUnit": "nanosecond",
+            "decimals": 2,
+            "delimiter": false,
+            "displayUnit": null,
+            "identifier": "avg(duration)",
+            "suffix": "",
+            "unitCategory": "time"
+          }
+        ]
+      }
+    },
+    "1": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) \nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| summarize count()",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Total Spans",
+      "type": "data",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "count()"
+            ],
+            "categoryAxisLabel": "count()",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "count()"
+            ],
+            "valueAxisLabel": "count()"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "count()"
+            }
+          ],
+          "displayedFields": [],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {},
+          "displayedFields": [],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "count()",
+          "prefixIcon": "",
+          "recordField": "count()",
+          "showLabel": false,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      }
+    },
+    "10": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch logs\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter isNotNull(trace_id)\n| filter in(dt.entity.service.name, $Service) \n| fieldsAdd trace_id = toString(trace_id)\n//| parse content, \"\"\"(\"[!dt\" LD \"]\")? LD:content\"\"\" // fixes ugly logs\n| join [\n  fetch spans\n  | fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n  | filter in(dt.entity.service.name, $Service) \n    AND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \n    AND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n  | fieldsKeep trace.id | dedup trace.id | fieldsAdd trace.id = toString(trace.id)\n], kind:inner, on:right[trace.id]==left[trace_id]\n| fieldsKeep timestamp, log.level, k8s.namespace.name, service.version, content, dt.entity.service.name, trace_id\n| summarize `Logs found`=count()",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Logs generated",
+      "type": "data",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "Logs found"
+            ],
+            "categoryAxisLabel": "Logs found",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "Logs found"
+            ],
+            "valueAxisLabel": "Logs found"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "dt.entity.service",
+            "request",
+            "host",
+            "nodejs.app",
+            "nodejs.script",
+            "endpoint",
+            "k8s.pod",
+            "process.executable",
+            "span",
+            "service",
+            "k8sspace.name",
+            "k8s.container",
+            "otel.scope"
+          ],
+          "leftYAxisSettings": {},
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "start_time",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "Logs found"
+            }
+          ],
+          "displayedFields": [],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {},
+          "displayedFields": [],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "Logs found",
+          "prefixIcon": "",
+          "recordField": "Logs found",
+          "showLabel": false,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": [
+                "content"
+              ],
+              "id": 1736198733607,
+              "value": "log-content"
+            }
+          ],
+          "columnWidths": {
+            "[\"content\"]": 2029,
+            "[\"http.route\"]": 330.265625
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      }
+    },
+    "11": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) \nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| summarize countDistinct(trace.id), countDistinct(request.id), count()",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Total Spans",
+      "type": "data",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "countDistinct(trace.id)",
+              "countDistinct(request.id)",
+              "count()"
+            ],
+            "categoryAxisLabel": "countDistinct(trace.id),countDistinct(request.id),count()",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "countDistinct(trace.id)",
+              "countDistinct(request.id)",
+              "count()"
+            ],
+            "valueAxisLabel": "countDistinct(trace.id),countDistinct(request.id),count()"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "countDistinct(trace.id)"
+            },
+            {
+              "rangeAxis": "",
+              "valueAxis": "countDistinct(request.id)"
+            },
+            {
+              "rangeAxis": "",
+              "valueAxis": "count()"
+            }
+          ],
+          "displayedFields": [],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {},
+          "displayedFields": [],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "count()",
+          "prefixIcon": "",
+          "recordField": "count()",
+          "showLabel": false,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      }
+    },
+    "2": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) \nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| summarize avg(span.timing.cpu)",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "AVG CPU Time",
+      "type": "data",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "avg(span.timing.cpu)"
+            ],
+            "categoryAxisLabel": "avg(span.timing.cpu)",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "avg(span.timing.cpu)"
+            ],
+            "valueAxisLabel": "avg(span.timing.cpu)"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "avg(span.timing.cpu)"
+            }
+          ],
+          "displayedFields": [],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {},
+          "displayedFields": [],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "avg(span.timing.cpu)",
+          "prefixIcon": "",
+          "recordField": "avg(span.timing.cpu)",
+          "showLabel": false,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": []
+      }
+    },
+    "3": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) \nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| fieldsAdd http.request.method = coalesce(http.request.method, http.method, rpc.protocol)\n| fieldsAdd request.name = coalesce(http.route, span.name)\n| fieldsAdd request.name = if(request.name == \"POST\" OR request.name == \"GET\", endpoint.name)\n| filterOut isNull(request.name)\n| summarize { `count`=count(), avg=avg(duration), p50=median(duration), p99=percentile(duration, 99) }\n  , by: { request.name, http.request.method }\n| sort count desc",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Top Slow Requests",
+      "type": "data",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "request.name",
+              "http.request.method"
+            ],
+            "categoryAxisLabel": "request.name,http.request.method",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "count",
+              "avg",
+              "p50",
+              "p99"
+            ],
+            "valueAxisLabel": "count,avg,p50,p99"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "dt.entity.service",
+            "request",
+            "host",
+            "nodejs.app",
+            "nodejs.script",
+            "endpoint",
+            "k8s.pod",
+            "process.executable",
+            "span",
+            "service",
+            "k8sspace.name",
+            "k8s.container",
+            "otel.scope"
+          ],
+          "leftYAxisSettings": {},
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "start_time",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "count"
+            },
+            {
+              "rangeAxis": "",
+              "valueAxis": "avg"
+            },
+            {
+              "rangeAxis": "",
+              "valueAxis": "p50"
+            },
+            {
+              "rangeAxis": "",
+              "valueAxis": "p99"
+            }
+          ],
+          "displayedFields": [
+            "request.name",
+            "http.request.method"
+          ],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "blue",
+          "dataMappings": {
+            "value": "count"
+          },
+          "displayedFields": [
+            "request.name",
+            "http.request.method"
+          ],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "http.request.method",
+          "prefixIcon": "",
+          "recordField": "http.request.method",
+          "showLabel": true,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [],
+          "columnWidths": {
+            "[\"http.route\"]": 330.265625
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      }
+    },
+    "4": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) AND  request.is_failed == true\nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n// // only spans which contain a span event of type \"exception\"\n// | filter iAny(span.events[][span_event.name] == \"exception\")\n// // exclude specific exception\n// | filter iAny(not contains(span.events[][exception.message], \"404\"))\n| summarize count()",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Failed Requests",
+      "type": "data",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "count()"
+            ],
+            "categoryAxisLabel": "count()",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "count()"
+            ],
+            "valueAxisLabel": "count()"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "host",
+            "nodejs.app",
+            "nodejs.script",
+            "endpoint",
+            "k8s.pod",
+            "process.executable",
+            "span",
+            "service",
+            "k8sspace.name",
+            "k8s.container",
+            "k8s.workload",
+            "dt.kubernetes.workload",
+            "thread",
+            "k8s.node",
+            "k8s.cluster",
+            "otel.scope"
+          ],
+          "leftYAxisSettings": {},
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "start_time",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "count()"
+            }
+          ],
+          "displayedFields": [],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "blue",
+          "dataMappings": {},
+          "displayedFields": [],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "trace.id",
+          "prefixIcon": "",
+          "recordField": "count()",
+          "showLabel": false,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      }
+    },
+    "5": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service)\nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| fieldsAdd request.name = coalesce(http.route, span.name)\n| fieldsAdd request.name = if(request.name == \"POST\" OR request.name == \"GET\", endpoint.name)\n| filterOut isNull(request.name)\n| makeTimeseries  {p99=percentile(duration, 95)}\n  , by: {dt.entity.service.name }, bins:100",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Response Time Pp99",
+      "type": "data",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "dt.entity.service.name"
+            ],
+            "categoryAxisLabel": "dt.entity.service.name",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "interval"
+            ],
+            "valueAxisLabel": "interval"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "fieldMapping": {
+            "leftAxisValues": [
+              "p99"
+            ],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "host",
+            "endpoint",
+            "net.peer",
+            "otel.scope",
+            "span",
+            "telemetry.sdk",
+            "service",
+            "upstream_cluster",
+            "dt.kubernetes.workload",
+            "k8s.pod",
+            "process.executable",
+            "k8sspace.name",
+            "thread",
+            "k8s.container",
+            "network.protocol",
+            "nodejs.app",
+            "net.host",
+            "nodejs.script",
+            "interval"
+          ],
+          "leftYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "legend": {
+            "hidden": false,
+            "position": "bottom"
+          },
+          "pointsDisplay": "auto",
+          "rightYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "tooltip": {
+            "seriesDisplayMode": "single-line",
+            "variant": "single"
+          },
+          "truncationMode": "end",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "timeframe",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "interval"
+            }
+          ],
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {
+            "value": "dt.entity.service.name"
+          },
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "trace.id",
+          "prefixIcon": "",
+          "recordField": "trace.id",
+          "showLabel": true,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": [
+                "p99"
+              ],
+              "id": 1737514120277,
+              "value": "sparkline"
+            }
+          ],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "added": 1734446036862,
+            "baseUnit": "nanosecond",
+            "decimals": 2,
+            "delimiter": false,
+            "displayUnit": null,
+            "identifier": "p99",
+            "suffix": "",
+            "unitCategory": "time"
+          }
+        ]
+      }
+    },
+    "6": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) \nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| fieldsAdd request.name = coalesce(http.route, span.name)\n| fieldsAdd request.name = if(request.name == \"POST\" OR request.name == \"GET\", endpoint.name)\n| filterOut isNull(request.name)\n| makeTimeseries  {count=count()}\n  , by: {dt.entity.service.name}, bins:250",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Request Count Over Time",
+      "type": "data",
+      "visualization": "barChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "dt.entity.service.name"
+            ],
+            "categoryAxisLabel": "dt.entity.service.name",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "interval"
+            ],
+            "valueAxisLabel": "interval"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "fieldMapping": {
+            "leftAxisValues": [
+              "count"
+            ],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "host",
+            "endpoint",
+            "net.peer",
+            "otel.scope",
+            "span",
+            "telemetry.sdk",
+            "service",
+            "upstream_cluster",
+            "dt.kubernetes.workload",
+            "k8s.pod",
+            "process.executable",
+            "k8sspace.name",
+            "thread",
+            "k8s.container",
+            "network.protocol",
+            "nodejs.app",
+            "net.host",
+            "nodejs.script",
+            "interval"
+          ],
+          "leftYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "legend": {
+            "hidden": false,
+            "position": "right"
+          },
+          "pointsDisplay": "auto",
+          "rightYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "tooltip": {
+            "seriesDisplayMode": "single-line",
+            "variant": "single"
+          },
+          "truncationMode": "end",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "timeframe",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "interval"
+            }
+          ],
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {
+            "value": "dt.entity.service.name"
+          },
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "trace.id",
+          "prefixIcon": "",
+          "recordField": "trace.id",
+          "showLabel": true,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": [
+                "count"
+              ],
+              "id": 1738090645736,
+              "value": "sparkline"
+            }
+          ],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "added": 1734446036862,
+            "baseUnit": "nanosecond",
+            "decimals": 2,
+            "delimiter": false,
+            "displayUnit": null,
+            "identifier": "p99",
+            "suffix": "",
+            "unitCategory": "time"
+          }
+        ]
+      }
+    },
+    "7": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service)\nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| fieldsAdd request.name = coalesce(http.route, span.name)\n| fieldsAdd request.name = if(request.name == \"POST\" OR request.name == \"GET\", endpoint.name)\n| filterOut isNull(request.name)\n| makeTimeseries  {ResponseTime=avg(duration)}\n  , by: {dt.entity.service.name}, bins:100",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "AVG Response Time Over Time ",
+      "type": "data",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "dt.entity.service.name"
+            ],
+            "categoryAxisLabel": "dt.entity.service.name",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "interval"
+            ],
+            "valueAxisLabel": "interval"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "fieldMapping": {
+            "leftAxisValues": [
+              "ResponseTime"
+            ],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "connect",
+          "hiddenLegendFields": [
+            "host",
+            "endpoint",
+            "net.peer",
+            "otel.scope",
+            "span",
+            "telemetry.sdk",
+            "service",
+            "upstream_cluster",
+            "dt.kubernetes.workload",
+            "k8s.pod",
+            "process.executable",
+            "k8sspace.name",
+            "thread",
+            "k8s.container",
+            "network.protocol",
+            "nodejs.app",
+            "net.host",
+            "nodejs.script",
+            "interval"
+          ],
+          "leftYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "legend": {
+            "hidden": false,
+            "position": "bottom"
+          },
+          "pointsDisplay": "auto",
+          "rightYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "tooltip": {
+            "seriesDisplayMode": "single-line",
+            "variant": "single"
+          },
+          "truncationMode": "end",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "timeframe",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "interval"
+            }
+          ],
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {
+            "value": "dt.entity.service.name"
+          },
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "trace.id",
+          "prefixIcon": "",
+          "recordField": "trace.id",
+          "showLabel": true,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": [
+                "ResponseTime"
+              ],
+              "id": 1738090645823,
+              "value": "sparkline"
+            }
+          ],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "added": 1734446036862,
+            "baseUnit": "nanosecond",
+            "decimals": 2,
+            "delimiter": true,
+            "displayUnit": null,
+            "identifier": "ResponseTime",
+            "suffix": "",
+            "unitCategory": "time"
+          }
+        ]
+      }
+    },
+    "8": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch spans\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter in(dt.entity.service.name, $Service) AND  request.is_failed == true\nAND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \nAND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n| filterOut contains(endpoint.name, \"json\")\n| fieldsAdd request.name = coalesce(http.route, span.name)\n| fieldsAdd request.name = if(request.name == \"POST\" OR request.name == \"GET\", endpoint.name)\n| filterOut isNull(request.name)\n| makeTimeseries  {count=count()}\n  , by: {dt.entity.service.name}, bins:250, nonempty:true\n| limit 20",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Failed Requests Over Time",
+      "type": "data",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "dt.entity.service.name"
+            ],
+            "categoryAxisLabel": "dt.entity.service.name",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [
+              "interval"
+            ],
+            "valueAxisLabel": "interval"
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "fireplace",
+          "curve": "linear",
+          "fieldMapping": {
+            "leftAxisValues": [
+              "count"
+            ],
+            "timestamp": "timeframe"
+          },
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "host",
+            "endpoint",
+            "net.peer",
+            "otel.scope",
+            "span",
+            "telemetry.sdk",
+            "service",
+            "upstream_cluster",
+            "dt.kubernetes.workload",
+            "k8s.pod",
+            "process.executable",
+            "k8sspace.name",
+            "thread",
+            "k8s.container",
+            "network.protocol",
+            "nodejs.app",
+            "net.host",
+            "nodejs.script",
+            "interval"
+          ],
+          "leftYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "legend": {
+            "hidden": false,
+            "position": "bottom"
+          },
+          "pointsDisplay": "auto",
+          "rightYAxisSettings": {
+            "isLabelVisible": false,
+            "scale": "linear"
+          },
+          "tooltip": {
+            "seriesDisplayMode": "single-line",
+            "variant": "single"
+          },
+          "truncationMode": "end",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "timeframe",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [
+            {
+              "rangeAxis": "",
+              "valueAxis": "interval"
+            }
+          ],
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {
+            "value": "dt.entity.service.name"
+          },
+          "displayedFields": [
+            "dt.entity.service.name"
+          ],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "trace.id",
+          "prefixIcon": "",
+          "recordField": "trace.id",
+          "showLabel": true,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": [
+                "count"
+              ],
+              "id": 1737514108511,
+              "value": "sparkline"
+            }
+          ],
+          "columnWidths": {},
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "added": 1734446036862,
+            "baseUnit": "nanosecond",
+            "decimals": 2,
+            "delimiter": false,
+            "displayUnit": null,
+            "identifier": "p99",
+            "suffix": "",
+            "unitCategory": "time"
+          }
+        ]
+      }
+    },
+    "9": {
+      "davis": {
+        "davisVisualization": {
+          "isAvailable": true
+        },
+        "enabled": false
+      },
+      "query": "fetch logs\n| fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n| filter isNotNull(trace_id)\n| filter in(dt.entity.service.name, $Service) \n| fieldsAdd trace_id = toString(trace_id)\n| parse content, \"\"\"(\"[!dt\" LD \"]\")? LD:content\"\"\" // fixes ugly logs\n| join [\n  fetch spans\n  | fieldsAdd entityName(dt.entity.service) // adds dt.entity.service.name\n  | filter in(dt.entity.service.name, $Service) \n    AND if($SessionID != \"ALL\", matchesValue(request_attribute.sessionID, $SessionID), else:true) \n    AND if($DeveloperName != \"NONE\", matchesValue(`http.request.header.x-developer`, $DeveloperName), else:true) \n  | fieldsKeep trace.id | dedup trace.id | fieldsAdd trace.id = toString(trace.id)\n], kind:inner, on:right[trace.id]==left[trace_id]\n| fieldsKeep timestamp, log.level, k8s.namespace.name, service.version, content, dt.entity.service.name, trace_id\n",
+      "querySettings": {
+        "defaultSamplingRatio": 10,
+        "defaultScanLimitGbytes": 500,
+        "enableSampling": false,
+        "maxResultMegaBytes": 1,
+        "maxResultRecords": 1000
+      },
+      "title": "Logs based on service, sessionId and DeveloperName. Only works on smaller data sets.",
+      "type": "data",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "chartSettings": {
+          "categoricalBarChartSettings": {
+            "categoryAxis": [
+              "dt.entity.service.name",
+              "trace_id",
+              "content",
+              "k8s.namespace.name",
+              "service.version"
+            ],
+            "categoryAxisLabel": "dt.entity.service.name,trace_id,content,k8s.namespace.name,service.version",
+            "categoryAxisTickLayout": "horizontal",
+            "colorPaletteMode": "multi-color",
+            "groupMode": "stacked",
+            "layout": "horizontal",
+            "scale": "absolute",
+            "tooltipVariant": "single",
+            "valueAxis": [],
+            "valueAxisLabel": ""
+          },
+          "categoryOverrides": {},
+          "circleChartSettings": {
+            "groupingThresholdType": "relative",
+            "groupingThresholdValue": 0,
+            "valueType": "relative"
+          },
+          "colorPalette": "categorical",
+          "curve": "linear",
+          "gapPolicy": "gap",
+          "hiddenLegendFields": [
+            "dt.entity.service",
+            "request",
+            "host",
+            "nodejs.app",
+            "nodejs.script",
+            "endpoint",
+            "k8s.pod",
+            "process.executable",
+            "span",
+            "service",
+            "k8sspace.name",
+            "k8s.container",
+            "otel.scope"
+          ],
+          "leftYAxisSettings": {},
+          "pointsDisplay": "auto",
+          "truncationMode": "middle",
+          "valueRepresentation": "absolute",
+          "xAxisIsLabelVisible": false,
+          "xAxisLabel": "start_time",
+          "xAxisScaling": "analyzedTimeframe"
+        },
+        "histogram": {
+          "colorPalette": "categorical",
+          "dataMappings": [],
+          "displayedFields": [
+            "dt.entity.service.name",
+            "trace_id",
+            "content",
+            "k8s.namespace.name",
+            "service.version"
+          ],
+          "legend": "auto",
+          "truncationMode": "middle",
+          "variant": "single",
+          "yAxis": {
+            "label": "Frequency",
+            "scale": "linear"
+          }
+        },
+        "honeycomb": {
+          "colorMode": "color-palette",
+          "colorPalette": "categorical",
+          "dataMappings": {
+            "value": "dt.entity.service.name"
+          },
+          "displayedFields": [
+            "dt.entity.service.name",
+            "trace_id",
+            "content",
+            "k8s.namespace.name",
+            "service.version"
+          ],
+          "legend": {
+            "hidden": false,
+            "position": "auto"
+          },
+          "shape": "hexagon",
+          "truncationMode": "middle"
+        },
+        "singleValue": {
+          "alignment": "center",
+          "autoscale": true,
+          "colorThresholdTarget": "value",
+          "label": "http.request.method",
+          "prefixIcon": "",
+          "recordField": "http.request.method",
+          "showLabel": true,
+          "trend": {
+            "isVisible": true,
+            "trendType": "auto"
+          }
+        },
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": [
+                "content"
+              ],
+              "id": 1736198733607,
+              "value": "log-content"
+            }
+          ],
+          "columnWidths": {
+            "[\"content\"]": 2029,
+            "[\"http.route\"]": 330.265625,
+            "[\"k8s.namespace.name\"]": 160.046875,
+            "[\"trace_id\"]": 264.28125
+          },
+          "enableSparklines": false,
+          "hiddenColumns": [],
+          "lineWrapIds": [],
+          "linewrapEnabled": false,
+          "monospacedFontColumns": [],
+          "monospacedFontEnabled": false,
+          "rowDensity": "condensed"
+        },
+        "thresholds": []
+      }
+    }
+  },
+  "variables": [
+    {
+      "input": "fetch dt.entity.service\n| fields entity.name",
+      "key": "Service",
+      "multiple": true,
+      "type": "query",
+      "visible": true
+    },
+    {
+      "defaultValue": "ALL",
+      "input": "data record(sessionIDs = \"ALL\")\n| append [\n  fetch spans \n  | filter isNotNull(`request_attribute.sessionID`)\n  | summarize sessionIDs = collectDistinct(`request_attribute.sessionID`)\n  | expand sessionIDs\n  | limit 500\n]",
+      "key": "SessionID",
+      "multiple": false,
+      "type": "query",
+      "visible": true
+    },
+    {
+      "defaultValue": "NONE",
+      "key": "DeveloperName",
+      "type": "text",
+      "visible": true
+    }
+  ],
+  "version": 17
+}

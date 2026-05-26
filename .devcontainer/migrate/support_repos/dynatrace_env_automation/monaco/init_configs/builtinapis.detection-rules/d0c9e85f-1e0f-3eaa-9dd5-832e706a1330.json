@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In Java IBM MQ",
+  "apiColor": "#ffd0ab",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.ibm.mq."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "key": "db.redis.operation",
+  "masking": "NOT_MASKED"
+}

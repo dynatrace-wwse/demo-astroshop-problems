@@ -1,0 +1,41 @@
+configs:
+- id: 3930be33-559a-35df-b69d-934cb1f82854
+  config:
+    template: 3930be33-559a-35df-b69d-934cb1f82854.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOnNwYW4tZXZlbnQtYXR0cmlidXRlAAZ0ZW5hbnQABnRlbmFudAAkY2QyNDJjMGYtZjA3Yy00NzY3LTk1ZDQtNGNmM2Y1NTgyM2Fhvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:span-event-attribute
+      schemaVersion: 1.0.17
+      scope: environment
+- id: 735fc90e-2f0c-367f-81dc-b45be4078153
+  config:
+    template: 735fc90e-2f0c-367f-81dc-b45be4078153.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOnNwYW4tZXZlbnQtYXR0cmlidXRlAAZ0ZW5hbnQABnRlbmFudAAkNTAxMDA3YTUtZDkwYS00NmYxLTk2YjYtMDRlMDVlMTJkOGEzvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:span-event-attribute
+      schemaVersion: 1.0.17
+      scope: environment
+- id: 786506fe-c14c-3a83-97a2-b6597a51f9bf
+  config:
+    template: 786506fe-c14c-3a83-97a2-b6597a51f9bf.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOnNwYW4tZXZlbnQtYXR0cmlidXRlAAZ0ZW5hbnQABnRlbmFudAAkNzUzYzI1MWMtNGVkZi00ZWEyLWI3NTgtOWUyNWMyMzIxMzRkvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:span-event-attribute
+      schemaVersion: 1.0.17
+      scope: environment
+- id: aeb8a860-977b-39b2-9a6a-7fa645f31691
+  config:
+    template: aeb8a860-977b-39b2-9a6a-7fa645f31691.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOnNwYW4tZXZlbnQtYXR0cmlidXRlAAZ0ZW5hbnQABnRlbmFudAAkZDRhMzg4M2MtMTQyZi00NzI1LTliODAtZjcyYmU1YjIwY2Exvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:span-event-attribute
+      schemaVersion: 1.0.17
+      scope: environment

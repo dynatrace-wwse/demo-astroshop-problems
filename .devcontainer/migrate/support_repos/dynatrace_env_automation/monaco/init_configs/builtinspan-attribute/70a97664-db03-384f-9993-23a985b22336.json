@@ -1,0 +1,4 @@
+{
+  "key": "aggregation.latest_endtime_micros",
+  "masking": "NOT_MASKED"
+}

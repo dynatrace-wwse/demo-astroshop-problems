@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "forcible": false,
+  "key": "DOTNET_ASP_SENSOR_V2_FORCIBLE"
+}

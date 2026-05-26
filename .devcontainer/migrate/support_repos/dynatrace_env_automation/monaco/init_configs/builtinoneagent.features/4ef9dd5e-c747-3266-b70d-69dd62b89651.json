@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "instrumentation": true,
+  "key": "SENSOR_SDK_JAVA_CUSTOM_REQUEST_ATTRIBUTE"
+}

@@ -1,0 +1,4 @@
+{
+  "key": "db.cassandra.consistency_level",
+  "masking": "NOT_MASKED"
+}

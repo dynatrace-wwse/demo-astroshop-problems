@@ -1,0 +1,397 @@
+configs:
+- id: 01a325c5-7dae-3770-ac95-e42d9b2a5a25
+  config:
+    template: 01a325c5-7dae-3770-ac95-e42d9b2a5a25.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkZmFiNzJkZWYtZDFjYy0zM2RhLTkwYzMtMzAwYzFkZmY0NjA4vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 0abb156d-e8dd-3a80-ae9b-9991ea863d25
+  config:
+    template: 0abb156d-e8dd-3a80-ae9b-9991ea863d25.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNDhiMGZmODgtM2UzYy0zMjBmLWFiODctNmM0ZTQ5MTI5YzM1vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 10d792ed-9f62-3e2b-9aff-cef8fe2b8eec
+  config:
+    template: 10d792ed-9f62-3e2b-9aff-cef8fe2b8eec.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYmRmY2RhNjUtNjg4OC0zMjNkLWE1MDktNmNjOTZlYWNjMDJivu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 205f7705-e665-36c9-8fa0-4677a1d99eae
+  config:
+    template: 205f7705-e665-36c9-8fa0-4677a1d99eae.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMzNlMWViNTUtZjQyNy0zNjk3LTg4OWYtMDNmNzhjYTA4NDZlvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 275481b7-b561-3f68-9913-8693c8b674c4
+  config:
+    template: 275481b7-b561-3f68-9913-8693c8b674c4.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkZTEwZmE2NzgtMTY0NS0zODg4LTg0NTMtMGYwYWZmZDZiMGI5vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 2af599ae-498f-31a3-b8fd-0164b79fafbe
+  config:
+    template: 2af599ae-498f-31a3-b8fd-0164b79fafbe.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkOWU3NWEwNDktMzc1Yi0zYjcyLTkwM2MtODg0YTEzMWUyZjhkvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 37641e99-cb8c-3f34-ac45-b41767b5ad17
+  config:
+    template: 37641e99-cb8c-3f34-ac45-b41767b5ad17.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkOTkzNzc4Y2QtYTQ5OC0zN2M2LTkzMmEtMjM5MTk5YTZkMTdlvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 3d7a5ab8-768c-3abe-b559-5e6e2f12effb
+  config:
+    template: 3d7a5ab8-768c-3abe-b559-5e6e2f12effb.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkY2U0Yzk3MjEtYTZlYS0zMDNiLWE3NTItODdjNzY1Y2EwOTI0vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: 4c706afe-ebf4-31d8-b7c2-a6007b81a919
+        property: id
+        type: reference
+- id: 4c706afe-ebf4-31d8-b7c2-a6007b81a919
+  config:
+    template: 4c706afe-ebf4-31d8-b7c2-a6007b81a919.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkZTA5OWVlMmMtMDZjNC0zMTQ0LWE1N2ItMTk2ZTg3MzVkNTJkvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: a9f504ef-c64e-305d-87bd-7c8ed5fce5b8
+        property: id
+        type: reference
+- id: 4d75fe67-ee25-3bb5-b800-fde32d947b0c
+  config:
+    template: 4d75fe67-ee25-3bb5-b800-fde32d947b0c.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkODA3MWE2OGMtNTRmOC0zZWUyLTlmOGItNDJhYWVkMWRiMzZkvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 5b74b78a-8bc4-3851-b1b2-86befb44c379
+  config:
+    template: 5b74b78a-8bc4-3851-b1b2-86befb44c379.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMTZlYzRlOTQtY2UxOC0zNzQ0LWE3YzgtMGY2Y2I4NTllOTcxvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 62ada06e-76ed-3a60-8a09-a0add6785d97
+  config:
+    template: 62ada06e-76ed-3a60-8a09-a0add6785d97.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkN2Y4OWViN2ItYzZhNC0zYTgxLThkMDMtMDA2MzgzMTAzODU2vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 6502545b-2a23-3946-a810-031238f78c6e
+  config:
+    template: 6502545b-2a23-3946-a810-031238f78c6e.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkZjk4MTgxOTYtOTJiNi0zNTc0LWE2MzYtNzU3ZTEzNTg0M2Y2vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 67067a89-02d4-3d8b-a111-57739496f84f
+  config:
+    template: 67067a89-02d4-3d8b-a111-57739496f84f.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYWNlZGZkYTgtNzY0Mi0zYjU4LWJlNWUtZmE3Nzk4MDdmY2Vlvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: 3d7a5ab8-768c-3abe-b559-5e6e2f12effb
+        property: id
+        type: reference
+- id: 6e089130-f993-3ff3-a467-a64ebe7c28dd
+  config:
+    template: 6e089130-f993-3ff3-a467-a64ebe7c28dd.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYzNhNzNjZWQtOTBhMC0zYzYyLWFlMjItMTU3MTNmMzYwYjdkvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 759823d1-73d0-3ecb-893e-19e2edb1d40a
+  config:
+    template: 759823d1-73d0-3ecb-893e-19e2edb1d40a.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkOThhNjYwZTAtZjhjZC0zMzQxLWJjYzMtNmZhODhjMjA2ZmZivu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 85603a37-5579-36d1-89a7-79b81a59d84d
+  config:
+    template: 85603a37-5579-36d1-89a7-79b81a59d84d.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNTQ4OTMxNTUtNjU0Yy0zMDQ5LWFhNWUtODE1MTFmZGMwZmYyvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 884c4485-8267-3210-9791-297630c3861d
+  config:
+    template: 884c4485-8267-3210-9791-297630c3861d.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMTZhNDIxMWItMDljMi0zMDJkLWJmMTAtOTU3MGEzZjE0NjY4vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: 8c75f42c-b81a-36aa-ab5b-5029c8bd8111
+  config:
+    template: 8c75f42c-b81a-36aa-ab5b-5029c8bd8111.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkY2Q0NDEwNTMtYTllMy0zYTQwLWJlYzMtYzUwN2E3ZDZhNDEyvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: a9f504ef-c64e-305d-87bd-7c8ed5fce5b8
+  config:
+    template: a9f504ef-c64e-305d-87bd-7c8ed5fce5b8.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMzlkMzZjNGMtMzYxMC0zMTVlLWFmYTYtMTk1YTkyNTQ0YzZjvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: dbd26636-e05f-33dc-ad2f-59268d349f4e
+        property: id
+        type: reference
+- id: b6839ee3-8024-395b-8777-22599fa8e903
+  config:
+    template: b6839ee3-8024-395b-8777-22599fa8e903.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNjM2ZTkwOGYtOTJlMC0zNDZlLWJjMjYtM2RhZTI4MWQ0MjI0vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: bbf8eeee-947e-391c-aa23-31db3a3e8e82
+  config:
+    template: bbf8eeee-947e-391c-aa23-31db3a3e8e82.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkODFiNDQ2YzMtYjcxNC0zYzgyLTgyN2QtYmFkMzAzMGUxM2Vjvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: e687088a-1d69-3f72-ba73-924e243d51c0
+        property: id
+        type: reference
+- id: c959b0d4-0de1-3c01-97ae-3bf34707b58d
+  config:
+    template: c959b0d4-0de1-3c01-97ae-3bf34707b58d.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkZGQ5ZGE2ZjYtNTA1OS0zZWQ4LWIwY2EtMzg2ZjNkZjZlNWE2vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: cb21eec3-de37-3bb5-92a2-6d138c719686
+  config:
+    template: cb21eec3-de37-3bb5-92a2-6d138c719686.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYTk0YmRlNTUtMzBjMy0zOWE5LTg1OWQtYWQ4YWFiMWI4YWIzvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: d0c9e85f-1e0f-3eaa-9dd5-832e706a1330
+  config:
+    template: d0c9e85f-1e0f-3eaa-9dd5-832e706a1330.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYmI3YjUzMGQtOWExNi0zNzQ2LWFiY2MtOTRiNWViMGFlMmNjvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: d50cf184-5d8c-338e-8915-692d473c0f8d
+  config:
+    template: d50cf184-5d8c-338e-8915-692d473c0f8d.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYmI2YWI2ZTktNTU0Mi0zOWNmLWIwNTgtMWFhYjI5YjY0YWI1vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: d9029a3f-3b31-3e76-9183-fade1da6c72d
+  config:
+    template: d9029a3f-3b31-3e76-9183-fade1da6c72d.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMDNlYTQ2MzYtY2E1ZC0zMjljLWIyOTQtMzg1OTgwM2NkYzRlvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: e3208dad-6e9f-308e-a512-9277efe5b3ec
+        property: id
+        type: reference
+- id: dbd26636-e05f-33dc-ad2f-59268d349f4e
+  config:
+    template: dbd26636-e05f-33dc-ad2f-59268d349f4e.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNzFmY2E2NGYtNDYxMS0zY2EyLWFlOWItYWYzMTdhMjI4YzBlvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: bbf8eeee-947e-391c-aa23-31db3a3e8e82
+        property: id
+        type: reference
+- id: e0ce5283-0908-3c28-afda-bb6c06a804b4
+  config:
+    template: e0ce5283-0908-3c28-afda-bb6c06a804b4.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMzhhODI5ZTAtYzQxZS0zNTE0LWIyNGYtZWNkM2FhMWU1MmRivu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: e3208dad-6e9f-308e-a512-9277efe5b3ec
+  config:
+    template: e3208dad-6e9f-308e-a512-9277efe5b3ec.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkZjg2MmNmZmItNTAxOC0zY2ZlLThhODctODQxYjE3ZmI0MzFhvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: 5b74b78a-8bc4-3851-b1b2-86befb44c379
+        property: id
+        type: reference
+- id: e687088a-1d69-3f72-ba73-924e243d51c0
+  config:
+    template: e687088a-1d69-3f72-ba73-924e243d51c0.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkOWNlNzg0MGYtMGI4Mi0zM2VlLWIxNjMtN2Q3MmU0Yzc1NWQxvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+      insertAfter:
+        configId: d9029a3f-3b31-3e76-9183-fade1da6c72d
+        property: id
+        type: reference
+- id: e80ead15-e4ea-3380-9630-cfd66b02c987
+  config:
+    template: e80ead15-e4ea-3380-9630-cfd66b02c987.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNmNhNDk5N2EtZTE0Yi0zMzQ4LWIxNzEtOWQxN2QwNDE4Mjkyvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: eda9df0b-9c75-33a5-bfd9-1c89d57f5de7
+  config:
+    template: eda9df0b-9c75-33a5-bfd9-1c89d57f5de7.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNjUzMzBkZTEtMDFlNi0zNmYzLTgzYjctOTEyMjNiNjc3NTcxvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: ee40ec18-4b8a-315c-beb7-fe6e3fb1a348
+  config:
+    template: ee40ec18-4b8a-315c-beb7-fe6e3fb1a348.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkNjJkMWViNGItOGVjOS0zOTFhLWEzMGMtMmFhMTY1NWE3MDI0vu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: f094d0a0-8c81-3989-8bd7-35daec5cf491
+  config:
+    template: f094d0a0-8c81-3989-8bd7-35daec5cf491.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkMjQ4YjhiNDUtMjk0Mi0zMDk1LTk0ODUtMGE5YWMyNjFmZWNjvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment
+- id: fc1b2dcb-9258-3707-b6ea-0e0986985af3
+  config:
+    template: fc1b2dcb-9258-3707-b6ea-0e0986985af3.json
+    skip: false
+    originObjectId: vu9U3hXa3q0AAAABABxidWlsdGluOmFwaXMuZGV0ZWN0aW9uLXJ1bGVzAAZ0ZW5hbnQABnRlbmFudAAkYzQ2MzA5YmEtZDRlNy0zMTNmLTkyNWYtZGZkOWE1Yjk2YzAxvu9U3hXa3q0
+  type:
+    settings:
+      schema: builtin:apis.detection-rules
+      schemaVersion: 3.1.3
+      scope: environment

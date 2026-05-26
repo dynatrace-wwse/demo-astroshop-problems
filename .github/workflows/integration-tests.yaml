@@ -9,8 +9,9 @@ on:
 jobs:
   codespaces-integration-test-with-dynatrace-deployment:
     runs-on: ubuntu-24.04
-    # No CI Test should run longer than 10 minutes.
-    timeout-minutes: 10
+    # Bumped from 10 -> 20 to accommodate the workshop bootstrap (k3d cluster
+    # + astroshop comes up in post-create when the CI gate is lifted).
+    timeout-minutes: 20
     env:
       DT_ENVIRONMENT: ${{ secrets.DT_ENVIRONMENT }}
       DT_OPERATOR_TOKEN: ${{ secrets.DT_OPERATOR_TOKEN }}

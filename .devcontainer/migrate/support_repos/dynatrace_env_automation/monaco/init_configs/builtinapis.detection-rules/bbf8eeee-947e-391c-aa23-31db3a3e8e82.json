@@ -1,0 +1,13 @@
+{
+  "apiName": "Bank of Anthos",
+  "apiColor": "#00b9cc",
+  "technology": "Java",
+  "thirdPartyApi": false,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "anthos.samples.bankofanthos"
+    }
+  ]
+}

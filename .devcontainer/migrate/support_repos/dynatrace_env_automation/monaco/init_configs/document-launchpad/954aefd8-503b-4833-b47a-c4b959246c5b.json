@@ -1,0 +1,226 @@
+{
+  "background": "default",
+  "containerList": {
+    "containers": [
+      {
+        "blocks": [
+          {
+            "content": "# Welcome to the HoT Lab \"Why Devs ❤️ Dynatrace\". \n\n![Perform](https://na-admin.eventscloud.com/image.php?acc=5763\u0026id=2106839)\n\nThis launchpad contains important links to various services, environments and detail that you need! If there is anything important missing from this launchpad, please reach out to your instructors so we can adjust the content accordingly.\n\nIf you are lost during the HoT Lab, come back to the launchpads by clicking on the Dynatrace logo on the top left bar. \n\nBelow here is a list of all important apps in Generation 3 or Generation 2.",
+            "id": "{{ .extractedIDs.id_5f463d61_459d_4192_8118_5e6e3f17e8fd }}",
+            "properties": {
+              "expanded": true
+            },
+            "type": "markdown"
+          },
+          {
+            "appearance": "tile",
+            "content": [
+              {
+                "action": {
+                  "appId": "dynatrace.distributedtracing",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.distributedtracing?appVersion=1.2.1",
+                "id": "{{ .extractedIDs.id_263e094c_b921_433a_93cd_e4b866473cab }}",
+                "title": "Distributed Tracing",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.services",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.services?appVersion=1.5.0",
+                "id": "{{ .extractedIDs.id_336d63e3_6bf2_407e_aef2_b02389b712c1 }}",
+                "title": "Services",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.notebooks",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.notebooks?appVersion=1.306.7",
+                "id": "{{ .extractedIDs.id_e1f7c632_c1ff_4dcf_bad5_29c049dd54bc }}",
+                "title": "Notebooks",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.dashboards",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.dashboards?appVersion=1.306.5",
+                "id": "{{ .extractedIDs.id_303282aa_2f90_45d6_9dd4_4c05a43ff621 }}",
+                "title": "Dashboards",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.kubernetes",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.kubernetes?appVersion=1.24.1",
+                "id": "{{ .extractedIDs.id_afdc56d1_3974_4e2e_8b34_3b95793d9795 }}",
+                "title": "Kubernetes",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.automations",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.automations?appVersion=1.1216.0",
+                "id": "{{ .extractedIDs.id_1acf8802_c448_4e33_9d42_79e19c39d814 }}",
+                "title": "Workflows",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.site.reliability.guardian",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.site.reliability.guardian?appVersion=1.15.0",
+                "id": "{{ .extractedIDs.id_2c128223_b71f_4dc1_ad58_bd02c614c391 }}",
+                "title": "Site Reliability Guardian",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.devobs.debugger",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.devobs.debugger?appVersion=1.0.8",
+                "id": "{{ .extractedIDs.id_52f871c1_8243_45d4_bc95_94ee98c486e2 }}",
+                "title": "Live Debugger",
+                "type": "app"
+              }
+            ],
+            "contentType": "static",
+            "id": "{{ .extractedIDs.id_eb53def6_6794_48d3_966a_706648124d8d }}",
+            "properties": {
+              "expanded": true
+            },
+            "title": "Generation 3 Dynatrace Apps for the HoT lab",
+            "type": "links"
+          },
+          {
+            "appearance": "tile",
+            "content": [
+              {
+                "action": {
+                  "appId": "dynatrace.classic.mda",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.classic.mda?appVersion=1.306.62%2B20250121-091128",
+                "id": "{{ .extractedIDs.id_65d637ab_775f_4d18_9605_71b0ff43a59e }}",
+                "title": "Multidimensional Analysis",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.classic.services",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.classic.services?appVersion=1.306.62%2B20250121-091128",
+                "id": "{{ .extractedIDs.id_d427d946_6cc8_4354_abc5_004eb706f201 }}",
+                "title": "Services Classic",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.classic.smartscape",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.classic.smartscape?appVersion=1.306.62%2B20250121-091128",
+                "id": "{{ .extractedIDs.id_c12a24a7_6d90_43fb_909f_ae7c9068b8c9 }}",
+                "title": "Smartscape Topology",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.classic.profiling",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.classic.profiling?appVersion=1.306.62%2B20250121-091128",
+                "id": "{{ .extractedIDs.id_53e87952_bbf5_4825_836d_c0809c1365e2 }}",
+                "title": "Profiling \u0026 Optimization",
+                "type": "app"
+              },
+              {
+                "action": {
+                  "appId": "dynatrace.classic.technologies",
+                  "type": "openApp"
+                },
+                "categoryId": "apps",
+                "icon": "/platform/app-engine/registry/v1/app-icons/dynatrace.classic.technologies?appVersion=1.306.62%2B20250121-091128",
+                "id": "{{ .extractedIDs.id_580814d8_2f8c_4122_8b7d_d0e6a3be53be }}",
+                "title": "Technologies \u0026 Processes Classic",
+                "type": "app"
+              }
+            ],
+            "contentType": "static",
+            "id": "{{ .extractedIDs.id_b43439e9_415d_4a1d_bb33_0194c16bda07 }}",
+            "properties": {
+              "expanded": true
+            },
+            "title": "Generation 2 Dynatrace Apps for the HoT lab",
+            "type": "links"
+          },
+          {
+            "content": "## Description of all document sources\n\nTo enable all important content to be easily accessed, below here is a table with the names of the important content and a short description. Just above this tile, all the content is linked.\n\n| App | Name | Description \n --- | --- | --- \n `Dashboards` | `Advanced Diagnostics` | This is the primary dashboard used in this HoT. Check it out!\n \u0026nbsp; | `Traces on Grail` | Uses various metrics and **traces on Grail** to zoom in to services running the Astroshop, delivering great level of detail across millions of transactions! \n \u0026nbsp; | `Astroshop loadtest overview` | This dashboard focusses on all the loadtests that are executed on the environment. Furthermore additional links are part of the dashboard for easy access.\n `Notebooks` | `DQL for Traces - Dynatrace for Developers` | This is a **awesome** notebook with various hints and tips for using DQL on traces. A great reference that is downloadable and executable on your own tenants when `Traces on Grail` becomes GA. \n `Workflows*` | `astroshop staging quality gate Validation` | This workflow collects various bits of information, creates a ticket, execute a Site Reliability Guardian and finally document the success or failure.\n \u0026nbsp; | `astroshop-cicd-events-smoketest` | This workflow is executed during the build process in order to execute a smoke test to validate the release of the Astroshop deployment.\n `Site Reliability Guardian` | `Astroshop - Staging - Quality gate` | This is the SRG that checks the quality of the deployed ActiveGate by analysing over 20 Service Level Objectives (SLO's)! \n\n* Note: If you do not see any of the workflows in the `Workflows` app, click on your name in the `owner` dropdown and select `Clear selection` so that all created Workflows are shown.\n\n\nUtilise the search function to find the items that are reuired. This also supports searching on a name, returning a specific app and results!",
+            "id": "{{ .extractedIDs.id_9dca3fd7_b961_4bc1_8e4f_523a6b6792ac }}",
+            "properties": {
+              "expanded": true
+            },
+            "type": "markdown"
+          },
+          {
+            "content": [
+              {
+                "action": {
+                  "type": "openExternalLink",
+                  "url": "https://university.dynatrace.com/"
+                },
+                "buttonName": "Click here to go to the Dynatrace University",
+                "description": "",
+                "id": "{{ .extractedIDs.id_95267e94_0461_4217_a3fc_51afc1afcb19 }}",
+                "imageDark": "https://cdn.dm.dynatrace.com/assets/Marketing/screenshots/DTU_heroscreenshot.png",
+                "imageLight": "https://cdn.dm.dynatrace.com/assets/Marketing/screenshots/DTU_heroscreenshot.png",
+                "title": "Dynatrace University"
+              }
+            ],
+            "id": "{{ .extractedIDs.id_4af833f4_c4dc_4e1d_8690_21a979e90535 }}",
+            "properties": {
+              "expanded": true
+            },
+            "type": "cards"
+          },
+          {
+            "content": [],
+            "id": "{{ .extractedIDs.id_4c6fc725_32fd_47a7_8747_4b282c84f6d2 }}",
+            "properties": {
+              "expanded": true
+            },
+            "type": "cards"
+          }
+        ],
+        "horizontalLayoutWeight": 1
+      }
+    ]
+  },
+  "icon": "default",
+  "schemaVersion": 2
+}

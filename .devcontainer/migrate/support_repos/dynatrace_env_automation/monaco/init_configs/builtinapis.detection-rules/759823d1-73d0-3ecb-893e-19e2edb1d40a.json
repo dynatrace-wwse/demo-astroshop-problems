@@ -1,0 +1,18 @@
+{
+  "apiName": "Built-In .NET IBM MQ",
+  "apiColor": "#ffd0ab",
+  "technology": "dotNet",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "IBM.XMS."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "IBM.WMQ."
+    }
+  ]
+}

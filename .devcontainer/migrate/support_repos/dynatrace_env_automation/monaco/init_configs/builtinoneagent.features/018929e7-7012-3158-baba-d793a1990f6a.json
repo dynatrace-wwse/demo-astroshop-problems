@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "key": "DOTNET_HTTPTAGGING_HTTPCLIENT"
+}

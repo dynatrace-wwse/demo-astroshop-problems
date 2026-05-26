@@ -1,0 +1,20 @@
+configs:
+  - id: d15aae28-e9b0-3bfb-a9a1-bdfc01b22bdd
+    config:
+      template: d15aae28-e9b0-3bfb-a9a1-bdfc01b22bdd.json
+      skip: false
+      originObjectId: vu9U3hXa3q0AAAABABlidWlsdGluOm9uZWFnZW50LmZlYXR1cmVzAAZ0ZW5hbnQABnRlbmFudAAkZGU4YTNjYTItOTM0OS0zMGY0LWFjMWItM2UxZWY2MDY0MmM5vu9U3hXa3q0
+    type:
+      settings:
+        schema: builtin:oneagent.features
+
+        scope: environment
+  - id: be42ac0a-3e59-3108-8c06-a8be9817b564
+    config:
+      template: be42ac0a-3e59-3108-8c06-a8be9817b564.json
+      skip: false
+    type:
+      settings:
+        schema: builtin:oneagent.features
+
+        scope: environment

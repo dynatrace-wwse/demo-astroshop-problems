@@ -1,0 +1,80 @@
+stages:
+  - init_configs
+  - init_app
+  - deploy_cpu_issue
+  - memory_issue
+  - nplusone_issue
+  - reset_deployment
+  - start_load_generator
+
+init_configs:
+  stage: init_configs
+  trigger:
+    project: Support/Dynatrace_Monitoring_as_Code
+    strategy: depend
+
+init_app:
+  stage: init_app
+  needs: ["init_configs"]
+  variables:
+    VERSION: "1.12.0"
+    PROBLEM: "none"
+  trigger:
+    include:
+      - local: ".gitlab.release-ci.yml"
+    strategy: depend
+
+deploy_cpu_issue:
+  stage: deploy_cpu_issue
+  needs: ["init_app"]
+  variables:
+    VERSION: "1.12.1"
+    PROBLEM: "cpu"
+  trigger:
+    include:
+      - local: ".gitlab.release-ci.yml"
+    strategy: depend
+
+memory_issue:
+  stage: memory_issue
+  needs: ["deploy_cpu_issue"]
+  variables:
+    VERSION: "1.12.2"
+    PROBLEM: "memory"
+  trigger:
+    include:
+      - local: ".gitlab.release-ci.yml"
+    strategy: depend
+
+nplusone_issue:
+  stage: nplusone_issue
+  needs: ["memory_issue"]
+  variables:
+    VERSION: "1.12.3"
+    PROBLEM: "nplusone"
+  trigger:
+    include:
+      - local: ".gitlab.release-ci.yml"
+    strategy: depend
+
+reset_deployment:
+  stage: reset_deployment
+  needs: ["nplusone_issue"]
+  variables:
+    VERSION: "1.12.0"
+    PROBLEM: "none"
+  trigger:
+    include:
+      - local: ".gitlab.release-ci.yml"
+    strategy: depend
+
+start_load_generator:
+  stage: start_load_generator
+  needs: ["reset_deployment"]
+  variables:
+    VERSION: "1.12.0"
+    PROBLEM: "none"
+    START_LOAD_GENERATOR: "true"
+  trigger:
+    project: Otel-App/loadgenerator
+    strategy: depend

@@ -1,0 +1,72 @@
+configs:
+  - id: guardian_astroshop_staging
+    config:
+      template: srg-staging.json
+      skip: false
+    type:
+      settings:
+        schema: app:dynatrace.site.reliability.guardian:guardians
+        scope: environment
+
+  - id: 10ce7bca-a871-4943-9982-65285ad7c335
+    config:
+      name:
+        type: value
+        value: astroshop staging quality gate Validation
+      parameters:
+        gitlab_connection_id:
+          configId: my.gitlab.connection
+          configType: app:dynatrace.gitlab.connector:connection
+          property: id
+          type: reference
+        wfActorId:
+          type: environment
+          name: WORKFLOW_ACTOR_ID
+        guardian_id:
+          configId: guardian_astroshop_staging
+          configType: app:dynatrace.site.reliability.guardian:guardians
+          property: id
+          type: reference
+      template: srg-workflow.json
+      skip: false
+    type:
+      automation:
+        resource: workflow
+
+  - id: 7bf78cb3-a53b-427b-847b-dcd247591471
+    config:
+      name:
+        type: value
+        value: astroshop-cicd-events-smoketest
+      parameters:
+        wfActorId:
+          type: environment
+          name: WORKFLOW_ACTOR_ID
+        extractedIDs:
+          type: value
+          value:
+            id_SYNTHETIC_TEST_74DB97B4BCAEB257: SYNTHETIC_TEST-74DB97B4BCAEB257
+      template: event-wf.json
+      skip: false
+    type:
+      automation:
+        resource: workflow
+
+  - id: my.gitlab.connection
+    config:
+      name: my.gitlab.connection
+      template: gitlab-connection.json
+      parameters:
+        gitlabUrl:
+          type: environment
+          name: GITLAB_EXTERNAL_ENDPOINT
+        gitlabToken:
+          type: environment
+          name: GITLAB_PRIVATE_TOKEN
+      skip: false
+    type:
+      settings:
+        schema: app:dynatrace.gitlab.connector:connection
+        scope: environment
+        permissions:
+          allUsers: read

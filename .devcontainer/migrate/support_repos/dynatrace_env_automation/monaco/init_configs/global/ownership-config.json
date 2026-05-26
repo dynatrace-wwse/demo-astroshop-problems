@@ -1,0 +1,8 @@
+{
+    "ownershipIdentifiers": [
+        {
+            "enabled": true,
+            "key": "dt.owner"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "{{ .team_name }}",
+  "description": "{{ .team_description }}",
+  "identifier": "{{ .team_identifier }}",
+  "supplementaryIdentifiers": [],
+  "responsibilities": {
+    "development": true,
+    "security": true,
+    "operations": true,
+    "infrastructure": false,
+    "lineOfBusiness": false
+  },
+  "contactDetails": [
+    {
+      "integrationType": "SLACK",
+      "slackChannel": "#open-tel-devs"
+    },
+    {
+      "integrationType": "EMAIL",
+      "email": "open-tel-devs@dynatracehot.com"
+    }
+  ],
+  "links": [],
+  "additionalInformation": [
+    {
+      "key": "gitlab-user-id",
+      "value": "1"
+    }
+  ]
+}

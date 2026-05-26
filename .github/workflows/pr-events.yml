@@ -1,0 +1,90 @@
+# Emit a CHANGE event to Dynatrace on PR open / sync / merge so the
+# CI/CD Observability app sees PR lifecycle, and so any Davis problem
+# raised after a merge can correlate back to "which PR caused this".
+#
+# Sends to the SDLC ingest endpoint with event.category=change, which
+# the app's OpenPipeline rules route to the PR/Change view.
+
+name: PR change events to Dynatrace
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  emit-change-event:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send SDLC change event
+        shell: bash
+        env:
+          DT: ${{ secrets.DT_TENANT_URL }}
+          TOKEN: ${{ secrets.DT_API_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # No tenant configured? Skip silently — public forks can still
+          # exercise this workflow without DT secrets.
+          if [ -z "$DT" ] || [ -z "$TOKEN" ]; then
+            echo "DT_TENANT_URL / DT_API_TOKEN not set — skipping"; exit 0
+          fi
+
+          # PR lifecycle -> outcome mapping for the app
+          case "${{ github.event.action }}" in
+            opened|reopened)       status="started";  outcome="success" ;;
+            synchronize)           status="started";  outcome="success" ;;
+            closed)
+              if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+                status="finished"; outcome="success"
+              else
+                status="finished"; outcome="rejected"
+              fi
+              ;;
+            *)                     status="started";  outcome="success" ;;
+          esac
+
+          now=$(date -u +"%Y-%m-%dT%H:%M:%S.000000000Z")
+          payload=$(cat <<JSON
+          {
+            "cicd.pipeline.id": "${{ github.repository }}-pr",
+            "cicd.pipeline.run.id": ${{ github.event.pull_request.number }},
+            "cicd.pipeline.name": "PR lifecycle",
+            "cicd.pipeline.run.outcome": "${outcome}",
+            "cicd.pipeline.run.url.full": "${{ github.event.pull_request.html_url }}",
+            "ext.pipeline.build.name": "PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}",
+            "ext.pipeline.run.trigger.user": "${{ github.event.pull_request.user.login }}",
+            "vcs.ref.head.name": "${{ github.event.pull_request.head.ref }}",
+            "vcs.ref.base.name": "${{ github.event.pull_request.base.ref }}",
+            "vcs.repository.name": "${{ github.repository }}",
+            "vcs.pr.number": ${{ github.event.pull_request.number }},
+            "vcs.pr.url": "${{ github.event.pull_request.html_url }}",
+            "vcs.pr.title": "${{ github.event.pull_request.title }}",
+            "vcs.pr.author": "${{ github.event.pull_request.user.login }}",
+            "vcs.pr.action": "${{ github.event.action }}",
+            "vcs.pr.merged": ${{ github.event.pull_request.merged || false }},
+            "vcs.pr.files_changed": ${{ github.event.pull_request.changed_files || 0 }},
+            "vcs.pr.additions": ${{ github.event.pull_request.additions || 0 }},
+            "vcs.pr.deletions": ${{ github.event.pull_request.deletions || 0 }},
+            "event.category": "change",
+            "event.status": "${status}",
+            "event.type": "pr",
+            "event.provider": "github-actions",
+            "duration": 0,
+            "start_time": "${now}",
+            "end_time": "${now}"
+          }
+          JSON
+          )
+
+          code=$(curl -sk -o /tmp/dt-pr.out -w '%{http_code}' \
+            -X POST "${DT%/}/platform/ingest/custom/events.sdlc/github" \
+            -H "Authorization: Api-Token ${TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$payload" || echo "000")
+          echo "PR change event response: HTTP $code"
+          cat /tmp/dt-pr.out | head -c 500 || true

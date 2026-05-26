@@ -1,0 +1,12 @@
+{
+  "apiName": "Derby Database",
+  "apiColor": "#fd8232",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "org.apache.derby"
+    }
+  ]
+}

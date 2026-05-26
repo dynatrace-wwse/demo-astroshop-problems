@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In Java IBM CTG",
+  "apiColor": "#c9a000",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.ibm.ctg."
+    }
+  ]
+}

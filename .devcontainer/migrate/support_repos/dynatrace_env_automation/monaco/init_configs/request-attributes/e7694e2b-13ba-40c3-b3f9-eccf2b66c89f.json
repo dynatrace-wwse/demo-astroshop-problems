@@ -1,0 +1,21 @@
+{
+  "aggregation": "FIRST",
+  "confidential": false,
+  "dataSources": [
+    {
+      "capturingAndStorageLocation": "CAPTURE_AND_STORE_ON_SERVER",
+      "enabled": true,
+      "parameterName": "x-developer",
+      "source": "REQUEST_HEADER",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      }
+    }
+  ],
+  "dataType": "STRING",
+  "enabled": true,
+  "name": "{{.name}}",
+  "normalization": "ORIGINAL",
+  "skipPersonalDataMasking": false
+}

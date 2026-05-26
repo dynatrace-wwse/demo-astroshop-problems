@@ -1,0 +1,15 @@
+{
+  "contextPropagationRule": {
+    "ruleName": "Astroshop",
+    "ruleAction": "PROPAGATE",
+    "matchers": [
+      {
+        "source": "ATTRIBUTE",
+        "sourceKey": "service.namespace",
+        "type": "CONTAINS",
+        "value": "astroshop",
+        "caseSensitive": false
+      }
+    ]
+  }
+}

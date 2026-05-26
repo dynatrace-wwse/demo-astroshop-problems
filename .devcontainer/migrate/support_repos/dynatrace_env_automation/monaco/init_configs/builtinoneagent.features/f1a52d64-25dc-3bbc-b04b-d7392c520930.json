@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "forcible": false,
+  "key": "JAVA_AKKA_HTTP_CLIENT_FORCIBLE"
+}

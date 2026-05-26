@@ -1,0 +1,14 @@
+configs:
+- id: webapp_astronomyshop
+  config:
+    name: Astronomy Shop
+    parameters:
+      requestattributes__8e519dc0aa18464cbc7f9276aae208ce__id:
+        configId: 8e519dc0-aa18-464c-bc7f-9276aae208ce
+        configType: request-attributes
+        property: id
+        type: reference
+    template: web-app.json
+    skip: false
+  type:
+    api: application-web

@@ -1,0 +1,39 @@
+# Canonical CUSTOM_DEPLOYMENT payload. POST to /api/v2/events.
+# Used by the reusable GitHub workflow in .github/workflows/dt-deployment-event.yml
+# and by the bash helper in this repo. Tokens come from env vars.
+
+eventType: CUSTOM_DEPLOYMENT
+title: "astroshop release ${RELEASE_VERSION}"
+timeout: 5      # minutes
+
+entitySelector: |
+  type(SERVICE),
+  fromRelationships.runsOn(
+    type(KUBERNETES_CLUSTER),
+    entityName.equals(${CLUSTER_NAME})
+  ),
+  toRelationships.partOf(
+    type(NAMESPACE),
+    entityName.equals(astroshop)
+  )
+
+properties:
+  # business / pipeline context
+  deploymentName: "astroshop release ${RELEASE_VERSION}"
+  deploymentVersion: "${RELEASE_VERSION}"
+  deploymentProject: "astroshop"
+  ciBackLink: "${CI_JOB_URL}"
+  remediationAction: "${ROLLBACK_URL}"
+
+  # release stage / environment
+  Release_Stage: "${RELEASE_STAGE}"   # staging | production
+  Application: "astroshop"
+
+  # source-of-change context (OTel conventions where they exist)
+  git.commit.id: "${GIT_COMMIT_SHA}"
+  git.commit.branch: "${GIT_BRANCH}"
+  git.commit.timestamp: "${GIT_COMMIT_TS}"
+  Repository: "${GIT_REPO_URL}"
+
+  # workshop-specific: the deliberate "problem" injected
+  PROBLEM: "${PROBLEM}"               # none | cpu | memory | nplusone | error

@@ -1,0 +1,33 @@
+{
+  "apiName": "Built-In Go Standard Library",
+  "apiColor": "#4fd5e0",
+  "technology": "Go",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "PACKAGE",
+      "matcher": "BEGINS_WITH",
+      "pattern": "runtime"
+    },
+    {
+      "base": "PACKAGE",
+      "matcher": "BEGINS_WITH",
+      "pattern": "io"
+    },
+    {
+      "base": "PACKAGE",
+      "matcher": "BEGINS_WITH",
+      "pattern": "net"
+    },
+    {
+      "base": "PACKAGE",
+      "matcher": "BEGINS_WITH",
+      "pattern": "os"
+    },
+    {
+      "base": "PACKAGE",
+      "matcher": "BEGINS_WITH",
+      "pattern": "sync"
+    }
+  ]
+}

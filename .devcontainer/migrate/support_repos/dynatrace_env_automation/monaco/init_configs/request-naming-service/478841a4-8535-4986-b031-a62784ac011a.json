@@ -1,0 +1,19 @@
+{
+  "conditions": [
+    {
+      "attribute": "REQUEST_NAME",
+      "comparisonInfo": {
+        "caseSensitive": false,
+        "comparison": "BEGINS_WITH",
+        "negate": false,
+        "type": "STRING",
+        "value": "/api/products/",
+        "values": null
+      }
+    }
+  ],
+  "enabled": true,
+  "managementZones": [],
+  "namingPattern": "/api/products/[PRODUCT_ID]",
+  "placeholders": []
+}

@@ -1,0 +1,69 @@
+
+variables:
+
+  # Dynamically set the RELEASE_VERSION and RELEASE_BUILD_VERSION based on DEPLOY_ID
+  DEPLOY_ID: "1"
+  RELEASE_VERSION: "v$DEPLOY_ID.0.0"
+  RELEASE_BUILD_VERSION: "v$DEPLOY_ID.0.0-$CI_COMMIT_SHORT_SHA"
+  CHART_VERSION: "v$OTEL_HELM_CHART_VERSION"
+  STAGE_NAME: "prod" # default
+  RELEASE_PRODUCT: "astroshop"
+  RELEASE_SERVICE_NAME: "$RELEASE_PRODUCT-carts"
+  RELEASE_STAGE: "$STAGE_NAME"
+  GITLAB_URL_VAR: "$GITLAB_EXTERNAL_ENDPOINT"
+  GITLAB_TOKEN_VAR: "$GITLAB_PRIVATE_TOKEN"
+  IMAGE_TAG: "$RELEASE_BUILD_VERSION"
+  IMAGE_NAME: "$DOCKER_REGISTRY_URL/$RELEASE_SERVICE_NAME"
+
+stages:
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: always
+# Builds the image using docker in docker
+build:
+  image: docker:27.2.0
+  stage: build
+  #needs: ["monaco", "init_keptn"]
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 0
+    DOCKER_DRIVER: overlay2
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    #important! MTU 1410 makes the MTU packages compatible with the underlying network. Otherwise, it will get stuck in downloads 
+    DOCKER_DAEMON_OPTIONS: "--insecure-registry=$DOCKER_REGISTRY_URL --mtu=1410"
+  services:
+    - name: docker:27.2.0-dind
+      entrypoint: [ "sh", "-c", "dockerd-entrypoint.sh $DOCKER_DAEMON_OPTIONS" ]
+  before_script:
+    - until docker info; do sleep 1; done
+  script:
+    - docker info
+    - docker build --build-arg BUILD_NUMBER="$BUILD_ID" -t "$IMAGE_NAME:$IMAGE_TAG" -f ./src/cartservice/src/Dockerfile .
+    - docker push "$IMAGE_NAME:$IMAGE_TAG" 
+
+deploy:
+  stage: deploy
+  image: bitnami/kubectl:1.31
+  needs: ["build"]
+  script:
+   - sed -i -e "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" ./src/cartservice/patch.yaml
+   - kubectl patch deployment astroshop-cartservice --patch-file ./src/cartservice/patch.yaml -n staging-astroshop
+
+# deploy:
+#   stage: deploy
+#   needs: ["build"]
+#   variables:
+#     COMPONENT_NAME: "cartService"
+#     NAMESPACE: opentelemetry-demo
+#     IMG_REPO: components.$COMPONENT_NAME.imageOverride.repository
+#     IMG_TAG: components.$COMPONENT_NAME.imageOverride.tag
+#   trigger:
+#     project: Core-App/Release_Pipeline
+#     strategy: depend

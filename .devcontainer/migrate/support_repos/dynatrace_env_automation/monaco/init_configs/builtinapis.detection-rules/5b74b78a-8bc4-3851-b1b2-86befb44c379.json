@@ -1,0 +1,13 @@
+{
+  "apiName": "Astroshop",
+  "apiColor": "#4556d7",
+  "technology": "Go",
+  "thirdPartyApi": false,
+  "conditions": [
+    {
+      "base": "PACKAGE",
+      "matcher": "CONTAINS",
+      "pattern": "checkoutservice"
+    }
+  ]
+}

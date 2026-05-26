@@ -1,0 +1,4 @@
+{
+  "key": "messaging.kafka.tombstone",
+  "masking": "NOT_MASKED"
+}

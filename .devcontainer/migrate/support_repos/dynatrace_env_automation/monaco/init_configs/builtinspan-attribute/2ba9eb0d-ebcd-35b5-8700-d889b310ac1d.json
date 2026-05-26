@@ -1,0 +1,4 @@
+{
+  "key": "db.cassandra.coordinator.id",
+  "masking": "NOT_MASKED"
+}

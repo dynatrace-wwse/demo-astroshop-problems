@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "key": "DOTNET_HTTP_SERVER_HEADERS_AND_PARAMETERS_CAPTURING"
+}

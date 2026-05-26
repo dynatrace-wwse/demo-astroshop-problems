@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "key": "DOTNET_THREAD_POOL_METRICS"
+}

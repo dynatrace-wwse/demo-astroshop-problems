@@ -1,0 +1,13 @@
+{
+  "apiName": "Bank BalanceReader",
+  "apiColor": "#7dc540",
+  "technology": "Java",
+  "thirdPartyApi": false,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "anthos.samples.bankofanthos.balancereader"
+    }
+  ]
+}

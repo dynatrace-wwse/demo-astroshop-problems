@@ -1,0 +1,28 @@
+variables:
+  VERSION: 
+     value: "1.12.0"
+     description: "Version of the Astroshop application. 1.12.x where x is the use case"
+
+stages:
+  - deploy
+
+deploy:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+    - if: $CI_PIPELINE_SOURCE != "pipeline"
+      when: manual
+  stage: deploy
+  resource_group: staging
+  image: 
+    name: bash:devel-alpine3.21
+  variables:
+    VERSION: $VERSION
+    ENVIRONMENT: "staging"
+  script:
+   - apk update
+   - apk add curl
+   - chmod +rx ./scripts/rollout.sh
+   - apk add gettext
+   - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+   - ./scripts/rollout.sh

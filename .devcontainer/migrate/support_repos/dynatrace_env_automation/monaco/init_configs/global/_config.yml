@@ -1,0 +1,100 @@
+configs:
+  - id: autoTagAppHotSrg
+    config:
+      name: app-hot-srg
+      template: auto-tag-app.json
+      skip: false
+    type:
+      settings:
+        schema: builtin:tags.auto-tagging
+        scope: environment
+  - id: autoTagEnvironmentHotSrg
+    config:
+      name: environment-hot-srg
+      template: auto-tag-environment.json
+      skip: false
+    type:
+      settings:
+        schema: builtin:tags.auto-tagging
+        scope: environment
+
+  - id: log-ingestion-rule
+    type:
+      settings:
+        schema: builtin:logmonitoring.log-storage-settings
+        scope: environment
+    config:
+      name: Log Ingest Rule
+      template: log-ingest-rule.json
+      skip: false
+  - id: one-agent-features-node-js-otel
+    config:
+      template: one-agent-feature-nodejs-otel.json
+      skip: false
+    type:
+      settings:
+        schema: builtin:oneagent.features
+
+        scope: environment
+  - id: ownership-teams-microservices
+    config:
+      template: ownership-teams.json
+      skip: false
+      parameters:
+        team_name: dev-team-microservices
+        team_identifier: dev-team-microservices
+        team_description: "Development team responsible for the Open tel app microservices"
+    type:
+      settings:
+        schema: builtin:ownership.teams
+        schemaVersion: 1.0.6
+        scope: environment
+
+  - id: ownership-teams-ux
+    config:
+      template: ownership-teams.json
+      skip: false
+      parameters:
+        team_name: dev-team-ux
+        team_identifier: dev-team-ux
+        team_description: "Development team responsible for the Open Telemetry app UX and frontend services"
+    type:
+      settings:
+        schema: builtin:ownership.teams
+        schemaVersion: 1.0.6
+        scope: environment
+
+  - id: ownership-teams-qa
+    config:
+      template: ownership-teams.json
+      skip: false
+      parameters:
+        team_name: qa-team
+        team_identifier: qa-team
+        team_description: "QA team responsible for testing services"
+    type:
+      settings:
+        schema: builtin:ownership.teams
+        schemaVersion: 1.0.6
+        scope: environment
+  - id: ownership-config
+    config:
+      template: ownership-config.json
+      skip: false
+    type:
+      settings:
+        schema: builtin:ownership.config
+        schemaVersion: 1.0.4
+        scope: environment
+
+  - id: CREDENTIALS_VAULT-65B247EBCA5D1826
+    config:
+      name: hot-session-token
+      template: session-token.json
+      parameters:
+        session_token:
+          type: environment
+          name: DT_API_TOKEN
+      skip: false
+    type:
+      api: credential-vault

@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In .NET Entity Framework Core",
+  "apiColor": "#4fd5e0",
+  "technology": "dotNet",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "Microsoft.EntityFrameworkCore."
+    }
+  ]
+}

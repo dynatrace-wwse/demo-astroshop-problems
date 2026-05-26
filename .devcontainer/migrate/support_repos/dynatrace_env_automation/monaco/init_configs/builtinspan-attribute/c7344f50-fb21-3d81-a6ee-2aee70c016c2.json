@@ -1,0 +1,4 @@
+{
+  "key": "aws.x_amzn_request_id",
+  "masking": "NOT_MASKED"
+}

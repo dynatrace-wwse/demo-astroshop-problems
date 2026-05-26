@@ -1,0 +1,13 @@
+{
+  "apiName": "Bank LedgerWriter",
+  "apiColor": "#e6be00",
+  "technology": "Java",
+  "thirdPartyApi": false,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "anthos.samples.bankofanthos.ledgerwriter"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "key": "aggregation.duration_sum_micros",
+  "masking": "NOT_MASKED"
+}

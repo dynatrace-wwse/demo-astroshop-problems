@@ -1,0 +1,17 @@
+configs:
+- id: my.outbound.connection
+  config:
+    name: gitlab-url
+    template: gitlab-url.json
+    parameters:
+      gitlabUrl:
+        type: environment
+        name: GITLAB_HOST
+      dtUrl:
+        type: environment
+        name: DT_TENANT_URL_NO_HTTP
+    skip: false
+  type:
+    settings:
+      schema: builtin:dt-javascript-runtime.allowed-outbound-connections
+      scope: environment

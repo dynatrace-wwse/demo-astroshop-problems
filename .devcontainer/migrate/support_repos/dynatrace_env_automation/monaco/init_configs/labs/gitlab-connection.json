@@ -1,0 +1,5 @@
+{
+          "name": "{{ .name }}",
+          "url": "{{ .gitlabUrl }}",
+          "token": "{{ .gitlabToken }}"
+}

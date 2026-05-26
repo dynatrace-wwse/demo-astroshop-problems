@@ -1,0 +1,264 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  annotations:
+    metrics.dynatrace.com/port: "8888"
+    metrics.dynatrace.com/scrape: "true"
+    oneagent.dynatrace.com/inject: "false"
+  labels:
+    app.kubernetes.io/managed-by: opentelemetry-operator
+  name: astroshop-otel-gateway
+  namespace: production-astroshop
+spec:
+  args:
+    feature-gates: -component.UseLocalHostAsDefaultHost
+  config:
+    connectors:
+      spanmetrics: {}
+    exporters:
+      debug:
+        sampling_initial: 5
+        sampling_thereafter: 2000
+        verbosity: basic
+      otlphttp:
+        endpoint: ${env:DT_ENDPOINT}
+        headers:
+          Authorization: Api-Token ${env:DT_API_TOKEN}
+    processors:
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+      cumulativetodelta: {}
+      k8sattributes:
+        extract:
+          annotations:
+          - from: pod
+            key_regex: metadata.dynatrace.com/(.*)
+            tag_name: $$1
+          metadata:
+          - k8s.cluster.uid
+          - k8s.node.name
+          - k8s.namespace.name
+          - k8s.pod.name
+          - k8s.pod.uid
+          - k8s.pod.ip
+          - k8s.deployment.name
+          - k8s.replicaset.name
+          - k8s.statefulset.name
+          - k8s.daemonset.name
+          - k8s.cronjob.name
+          - k8s.job.name
+        pod_association:
+        - sources:
+          - from: resource_attribute
+            name: k8s.pod.name
+          - from: resource_attribute
+            name: k8s.namespace.name
+        - sources:
+          - from: resource_attribute
+            name: k8s.pod.ip
+        - sources:
+          - from: resource_attribute
+            name: k8s.pod.uid
+        - sources:
+          - from: connection
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 15
+      resourcedetection/aks:
+        detectors:
+        - env
+        - aks
+        override: false
+        timeout: 2s
+      transform:
+        error_mode: ignore
+        log_statements:
+        - context: resource
+          statements:
+          - set(attributes["dt.kubernetes.workload.kind"], "statefulset") where IsString(attributes["k8s.statefulset.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.statefulset.name"])
+            where IsString(attributes["k8s.statefulset.name"])
+          - set(attributes["dt.kubernetes.workload.kind"], "deployment") where IsString(attributes["k8s.deployment.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.deployment.name"])
+            where IsString(attributes["k8s.deployment.name"])
+          - set(attributes["dt.kubernetes.workload.kind"], "daemonset") where IsString(attributes["k8s.daemonset.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.daemonset.name"])
+            where IsString(attributes["k8s.daemonset.name"])
+          - set(attributes["dt.kubernetes.cluster.id"], attributes["k8s.cluster.uid"])
+            where IsString(attributes["k8s.cluster.uid"])
+        metric_statements:
+        - context: resource
+          statements:
+          - set(attributes["dt.kubernetes.workload.kind"], "statefulset") where IsString(attributes["k8s.statefulset.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.statefulset.name"])
+            where IsString(attributes["k8s.statefulset.name"])
+          - set(attributes["dt.kubernetes.workload.kind"], "deployment") where IsString(attributes["k8s.deployment.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.deployment.name"])
+            where IsString(attributes["k8s.deployment.name"])
+          - set(attributes["dt.kubernetes.workload.kind"], "daemonset") where IsString(attributes["k8s.daemonset.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.daemonset.name"])
+            where IsString(attributes["k8s.daemonset.name"])
+          - set(attributes["dt.kubernetes.cluster.id"], attributes["k8s.cluster.uid"])
+            where IsString(attributes["k8s.cluster.uid"])
+        trace_statements:
+        - context: resource
+          statements:
+          - set(attributes["dt.kubernetes.workload.kind"], "statefulset") where IsString(attributes["k8s.statefulset.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.statefulset.name"])
+            where IsString(attributes["k8s.statefulset.name"])
+          - set(attributes["dt.kubernetes.workload.kind"], "deployment") where IsString(attributes["k8s.deployment.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.deployment.name"])
+            where IsString(attributes["k8s.deployment.name"])
+          - set(attributes["dt.kubernetes.workload.kind"], "daemonset") where IsString(attributes["k8s.daemonset.name"])
+          - set(attributes["dt.kubernetes.workload.name"], attributes["k8s.daemonset.name"])
+            where IsString(attributes["k8s.daemonset.name"])
+          - set(attributes["dt.kubernetes.cluster.id"], attributes["k8s.cluster.uid"])
+            where IsString(attributes["k8s.cluster.uid"])
+    receivers:
+      hostmetrics:
+        root_path: /hostfs
+        scrapers:
+          cpu:
+            metrics:
+              system.cpu.utilization:
+                enabled: true
+          disk: {}
+          filesystem:
+            exclude_fs_types:
+              fs_types:
+              - autofs
+              - binfmt_misc
+              - bpf
+              - cgroup2
+              - configfs
+              - debugfs
+              - devpts
+              - devtmpfs
+              - fusectl
+              - hugetlbfs
+              - iso9660
+              - mqueue
+              - nsfs
+              - overlay
+              - proc
+              - procfs
+              - pstore
+              - rpc_pipefs
+              - securityfs
+              - selinuxfs
+              - squashfs
+              - sysfs
+              - tracefs
+              match_type: strict
+            exclude_mount_points:
+              match_type: regexp
+              mount_points:
+              - /dev/*
+              - /proc/*
+              - /sys/*
+              - /run/k3s/containerd/*
+              - /var/lib/docker/*
+              - /var/lib/kubelet/*
+              - /snap/*
+          load: {}
+          memory:
+            metrics:
+              system.memory.utilization:
+                enabled: true
+          network: {}
+          paging: {}
+          process:
+            mute_process_exe_error: true
+            mute_process_io_error: true
+            mute_process_user_error: true
+          processes: {}
+      otlp:
+        protocols:
+          grpc:
+            endpoint: ${env:MY_POD_IP}:4317
+          http:
+            endpoint: ${env:MY_POD_IP}:4318
+    service:
+      pipelines:
+        logs:
+          exporters:
+          - otlphttp
+          - debug
+          processors:
+          - memory_limiter
+          - resourcedetection/aks
+          - k8sattributes
+          - transform
+          - batch
+          receivers:
+          - otlp
+        metrics:
+          exporters:
+          - otlphttp
+          - debug
+          processors:
+          - memory_limiter
+          - cumulativetodelta
+          - resourcedetection/aks
+          - k8sattributes
+          - transform
+          - batch
+          receivers:
+          - otlp
+          - spanmetrics
+        traces:
+          exporters:
+          - otlphttp
+          - spanmetrics
+          - debug
+          processors:
+          - memory_limiter
+          - resourcedetection/aks
+          - k8sattributes
+          - transform
+          - batch
+          receivers:
+          - otlp
+  configVersions: 3
+  daemonSetUpdateStrategy: {}
+  deploymentUpdateStrategy: {}
+  env:
+  - name: MY_POD_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP
+  envFrom:
+  - secretRef:
+      name: dynatrace-otelcol-dt-api-credentials
+  image: otel/opentelemetry-collector-contrib:0.108.0
+  ingress:
+    route: {}
+  ipFamilyPolicy: SingleStack
+  managementState: managed
+  mode: deployment
+  observability:
+    metrics: {}
+  podDnsConfig: {}
+  replicas: 1
+  resources:
+    limits:
+      memory: 512Mi
+  targetAllocator:
+    allocationStrategy: consistent-hashing
+    filterStrategy: relabel-config
+    observability:
+      metrics: {}
+    prometheusCR:
+      scrapeInterval: 30s
+    resources: {}
+  upgradeStrategy: automatic
+  volumeMounts:
+  - mountPath: /hostfs
+    name: hostfs
+    readOnly: true
+  volumes:
+  - hostPath:
+      path: /
+    name: hostfs

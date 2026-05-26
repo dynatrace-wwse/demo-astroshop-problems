@@ -1,0 +1,188 @@
+{
+    "actor": "{{ .wfActorId }}",
+    "description": "",
+    "isPrivate": false,
+    "owner": "{{ .wfActorId }}",
+    "ownerType": "USER",
+    "schemaVersion": 3,
+    "taskDefaults": {},
+    "tasks": {
+        "get-ids": {
+            "action": "dynatrace.automations:execute-dql-query",
+            "conditions": {
+                "states": {
+                    "set-variables": "OK"
+                }
+            },
+            "description": "Executes DQL query",
+            "input": {
+                "failOnEmptyResult": true,
+                "query": "fetch dt.entity.process_group_instance \n| filter matchesValue(tags, \"[Kubernetes]namespace:staging-astroshop\")\n| fields id, entity.type\n| append [fetch dt.entity.service\n| filter matchesValue(tags, \"[Kubernetes]namespace:staging-astroshop\")\n| fields id, entity.type  ]\n| append [fetch dt.entity.host \n| fields id, entity.type  ]\n| append [fetch dt.entity.kubernetes_service\n| filter matchesPhrase(namespaceName,\"staging-astroshop\")\n| fields id, entity.type  ]\n| append [fetch dt.entity.kubernetes_cluster\n| fields id, entity.type  ]\n| append [fetch dt.entity.kubernetes_node\n| fields id, entity.type  ]\n| append [fetch dt.entity.kubernetes_service\n| filter matchesPhrase(entity.name,\"nginx\")\n| fields id, entity.type  ]\n| append [fetch dt.entity.process_group_instance \n| filter matchesPhrase(entity.name,\"nginx\")\n| fields id, entity.type  ]\n| append [fetch dt.entity.application\n| filter matchesPhrase(entity.name,\"staging\") and contains(lower(entity.name),\"astroshop\")\n| fields id, entity.type  ]\n| append [fetch dt.entity.synthetic_test\n| filter contains(lower(entity.name), \"astroshop\")\n| fields id, entity.type  ]"
+            },
+            "name": "get-ids",
+            "position": {
+                "x": 0,
+                "y": 2
+            },
+            "predecessors": [
+                "set-variables"
+            ]
+        },
+        "run-synth-test": {
+            "action": "dynatrace.automations:run-javascript",
+            "conditions": {
+                "states": {
+                    "send-deployment-event": "OK"
+                }
+            },
+            "description": "Build a custom task running js Code",
+            "input": {
+                "script": "// Dont Change Code from here\n// optional import of sdk modules\nimport { execution } from '@dynatrace-sdk/automation-utils';\nimport { executionsClient, actionExecutionsClient  } from '@dynatrace-sdk/client-automation';\nimport { queryExecutionClient } from '@dynatrace-sdk/client-query';\nimport { credentialVaultClient } from '@dynatrace-sdk/client-classic-environment-v2';\n\nexport default async function ({ execution_id, action_execution_id }) {\n  // transform tenant url to gen2 for api calls\n  let chk_tenant_dev_or_sprit = globalThis.environmentUrl.includes(\".dev.\") || globalThis.environmentUrl.includes(\".sprint.\") ;\n  if (chk_tenant_dev_or_sprit === true) {\n  var tenantURL = globalThis.environmentUrl.replace(\".apps\", \"\").replace(\".com/\", \".com\");\n  } else {\n  var tenantURL = globalThis.environmentUrl.replace(\".apps\", \".live\").replace(\".com/\", \".com\");\n  }\n  const ex = await execution(execution_id);\n   var params = await ex.result('set-variables');\n  const rawResponsex = await fetch(''+ tenantURL + '/api/v1/synthetic/monitors?type=BROWSER\u0026enabled=true', {\n    method: 'get',\n    headers: {\n      'Accept': 'application/json',\n      'Content-Type': 'application/json',\n      'Authorization': 'api-token ' + params.dt_access_token\n\n\n    },\n  });\n  //console.log(rawResponse);\n  const getid = await rawResponsex.json();\n  //console.log(getid.monitors)\n  let i = 0;\n  while (i \u003c getid.monitors.length) {\n      //console.log(getid.monitors[i]);\n      if (getid.monitors[i].name == \"staging_astroshop\") {\n      var syn_id = getid.monitors[i].entityId        \n      }\n      i++;\n  }\n  console.log(\"syn_ids: \")\n  console.log(syn_id)\n  console.log(\"trigger synthetic test\");\n  var decodedString = '{ \"monitors\": [ { \"executionCount\": 2, \"monitorId\": \"' + syn_id + '\", \"repeatMode\": \"SEQUENTIAL\" } ] }'\n\n  const rawResponse = await fetch(''+ tenantURL + '/api/v2/synthetic/executions/batch', {\n    method: 'POST',\n    headers: {\n      'Accept': 'application/json',\n      'Content-Type': 'application/json',\n      'Authorization': 'api-token ' + params.dt_access_token\n    },\n    body: decodedString\n  });\n  //console.log(rawResponse);\n  const rtriggertest = await rawResponse.json();\n\n  console.log(rtriggertest);\n  console.log(rtriggertest.batchId);\n  console.log(rtriggertest.executions);\n\n\n  console.log(\"Finished Event Found!\");\n  return { \"batchid\": rtriggertest.batchId };\n}"
+            },
+            "name": "run-synth-test",
+            "position": {
+                "x": -1,
+                "y": 4
+            },
+            "predecessors": [
+                "send-deployment-event"
+            ]
+        },
+        "send-deployment-event": {
+            "action": "dynatrace.automations:http-function",
+            "active": true,
+            "concurrency": 1,
+            "conditions": {
+                "custom": " {{`{{`}} result(\"set-variables\").event_type == \"CUSTOM_DEPLOYMENT\" {{`}}`}}",
+                "states": {
+                    "get-ids": "OK"
+                }
+            },
+            "description": "Issue an HTTP request to any API",
+            "input": {
+                "headers": {
+                    "Authorization": "Api-Token {{`{{`}} result(\"set-variables\").dt_access_token {{`}}`}}",
+                    "content-type": "application/json"
+                },
+                "method": "POST",
+                "payload": "{\n  \"eventType\": \"CUSTOM_DEPLOYMENT\",\n  \"title\": \"Deployment of {{`{{`}}result(\"set-variables\").Application {{`}}`}} version {{`{{`}} result(\"set-variables\").Release_Version {{`}}`}} to {{`{{`}}result(\"set-variables\").stage {{`}}`}}\",\n  \"entitySelector\":  \"entityId({{`{{`}} _.ids.id {{`}}`}})\",\n  \"properties\": {\n  \"dt.event.deployment.name\": \"Deployment of {{`{{`}}result(\"set-variables\").Application {{`}}`}} to {{`{{`}}result(\"set-variables\").stage {{`}}`}} with Problem {{`{{`}}result(\"set-variables\").PROBLEM {{`}}`}}\",\n  \"dt.event.deployment.version\": \"{{`{{`}} result(\"set-variables\").Release_Version {{`}}`}}\",\n  \"dt.event.deployment.release_stage\": \"{{`{{`}} result(\"set-variables\").stage {{`}}`}}\",\n  \"dt.event.deployment.release_product\": \"{{`{{`}} result(\"set-variables\").Application {{`}}`}}\",\n  \"dt.event.deployment.release_build_version\": \"{{`{{`}} result(\"set-variables\").Build_Version {{`}}`}}\",\n  \"dt.event.deployment.ci_back_link\": \"{{`{{`}} result(\"set-variables\").Releaseurl {{`}}`}}\",\n  \"dt_workflow_link\": \"https://sro97894.apps.dynatrace.com/ui/apps/dynatrace.automations/executions/{{`{{`}} execution().id {{`}}`}}\",\n  \"source\": \"{{`{{`}} result(\"set-variables\").Repository {{`}}`}}\"\n                  }\n}",
+                "url": "{{`{{`}} result(\"set-variables\").dt_url {{`}}`}}/api/v2/events/ingest"
+            },
+            "name": "send-deployment-event",
+            "position": {
+                "x": -1,
+                "y": 3
+            },
+            "predecessors": [
+                "get-ids"
+            ],
+            "withItems": "ids in {{`{{`}} result(\"get-ids\").records {{`}}`}}"
+        },
+        "send-end-test-event": {
+            "action": "dynatrace.automations:http-function",
+            "concurrency": 1,
+            "conditions": {
+                "custom": " {{`{{`}} result(\"set-variables\").event_type == \"END_TEST\" {{`}}`}}",
+                "states": {
+                    "get-ids": "OK"
+                }
+            },
+            "description": "Issue an HTTP request to any API",
+            "input": {
+                "headers": {
+                    "Authorization": "Api-Token {{`{{`}} result(\"set-variables\").dt_access_token {{`}}`}}",
+                    "content-type": "application/json"
+                },
+                "method": "POST",
+                "payload": "{\n  \"eventType\": \"CUSTOM_INFO\",\n  \"title\": \"End Jmeter Test for {{`{{`}}result(\"set-variables\").Application {{`}}`}} version {{`{{`}} result(\"set-variables\").Release_Version {{`}}`}} in {{`{{`}}result(\"set-variables\").stage {{`}}`}}\",\n  \"entitySelector\":  \"entityId({{`{{`}} _.ids.id {{`}}`}})\",\n  \"properties\": {\n  \"deployment.name\": \"Deployment of {{`{{`}}result(\"set-variables\").Application {{`}}`}} version {{`{{`}} result(\"set-variables\").Release_Version {{`}}`}} to {{`{{`}}result(\"set-variables\").stage {{`}}`}}\",\n  \"deployment.version\": \"{{`{{`}} result(\"set-variables\").Release_Version {{`}}`}}\",\n  \"deployment.release_stage\": \"{{`{{`}} result(\"set-variables\").stage {{`}}`}}\",\n  \"deployment.release_product\": \"{{`{{`}} result(\"set-variables\").Application {{`}}`}}\",\n  \"deployment.release_build_version\": \"{{`{{`}} result(\"set-variables\").Build_Version {{`}}`}}\",\n  \"dt_workflow_link\": \"https://sro97894.apps.dynatrace.com/ui/apps/dynatrace.automations/executions/{{`{{`}} execution().id {{`}}`}}\",\n  \"deployment.ci_back_link\": \"{{`{{`}} result(\"set-variables\").Releaseurl {{`}}`}}\"\n                  }\n}",
+                "url": "{{`{{`}} result(\"set-variables\").dt_url {{`}}`}}/api/v2/events/ingest"
+            },
+            "name": "send-end-test-event",
+            "position": {
+                "x": 1,
+                "y": 3
+            },
+            "predecessors": [
+                "get-ids"
+            ],
+            "withItems": "ids in {{`{{`}} result(\"get-ids\").records {{`}}`}}"
+        },
+        "send-start-test-event": {
+            "action": "dynatrace.automations:http-function",
+            "concurrency": 1,
+            "conditions": {
+                "custom": " {{`{{`}} result(\"set-variables\").event_type == \"START_TEST\" {{`}}`}}",
+                "states": {
+                    "get-ids": "OK"
+                }
+            },
+            "description": "Issue an HTTP request to any API",
+            "input": {
+                "headers": {
+                    "Authorization": "Api-Token {{`{{`}} result(\"set-variables\").dt_access_token {{`}}`}}",
+                    "content-type": "application/json"
+                },
+                "method": "POST",
+                "payload": "{\n  \"eventType\": \"CUSTOM_INFO\",\n  \"title\": \"Start Jmeter Test for {{`{{`}}result(\"set-variables\").Application {{`}}`}} version {{`{{`}} result(\"set-variables\").Release_Version {{`}}`}} in {{`{{`}}result(\"set-variables\").stage {{`}}`}}\",\n  \"entitySelector\":  \"entityId({{`{{`}} _.ids.id {{`}}`}})\",\n  \"properties\": {\n  \"deployment.name\": \"Deployment of {{`{{`}}result(\"set-variables\").Application {{`}}`}} version {{`{{`}} result(\"set-variables\").Release_Version {{`}}`}} to {{`{{`}}result(\"set-variables\").stage {{`}}`}}\",\n  \"deployment.version\": \"{{`{{`}} result(\"set-variables\").Release_Version {{`}}`}}\",\n  \"deployment.release_stage\": \"{{`{{`}} result(\"set-variables\").stage {{`}}`}}\",\n  \"deployment.release_product\": \"{{`{{`}} result(\"set-variables\").Application {{`}}`}}\",\n  \"deployment.release_build_version\": \"{{`{{`}} result(\"set-variables\").Build_Version {{`}}`}}\",\n  \"dt_workflow_link\": \"https://sro97894.apps.dynatrace.com/ui/apps/dynatrace.automations/executions/{{`{{`}} execution().id {{`}}`}}\",\n  \"deployment.ci_back_link\": \"{{`{{`}} result(\"set-variables\").Releaseurl {{`}}`}}\"\n                  }\n}",
+                "url": "{{`{{`}} result(\"set-variables\").dt_url {{`}}`}}/api/v2/events/ingest"
+            },
+            "name": "send-start-test-event",
+            "position": {
+                "x": 0,
+                "y": 3
+            },
+            "predecessors": [
+                "get-ids"
+            ],
+            "withItems": "ids in {{`{{`}} result(\"get-ids\").records {{`}}`}}"
+        },
+        "set-variables": {
+            "action": "dynatrace.automations:run-javascript",
+            "description": "Build a custom task running js Code",
+            "input": {
+                "script": "// Dont Change Code from here\nimport { execution } from '@dynatrace-sdk/automation-utils';\nimport { executionsClient, actionExecutionsClient  } from '@dynatrace-sdk/client-automation';\nimport { queryExecutionClient } from '@dynatrace-sdk/client-query';\nimport { credentialVaultClient } from '@dynatrace-sdk/client-classic-environment-v2';\n\nexport default async function ({ execution_id, action_execution_id }) {\n  // transform tenant url to gen2 for api calls\n  let chk_tenant_dev_or_sprit = globalThis.environmentUrl.includes(\".dev.\") || globalThis.environmentUrl.includes(\".sprint.\") ;\n  if (chk_tenant_dev_or_sprit === true) {\n  var tenantURL = globalThis.environmentUrl.replace(\".apps\", \"\").replace(\".com/\", \".com\");\n  } else {\n  var tenantURL = globalThis.environmentUrl.replace(\".apps\", \".live\").replace(\".com/\", \".com\");\n  }\n  //get tokens from vault\n  const dtaccestokenx = await credentialVaultClient.listCredentials({ name: 'hot-session-token', });\n  const dtaccestoken = await credentialVaultClient.getCredentialsDetails({ id: dtaccestokenx.credentials[0].id, });\n\n  const { params } = await fetch(`/platform/automation/v1/executions/${execution_id}`).then((res) =\u003e res.json());\n\n\n\n  var variables = {\n  \"dt_access_token\": dtaccestoken.token,\n  \"dt_url\": tenantURL,\n  \"Release\": \"\"+params.Release+\"\",\n  \"stage\": \"\"+params.stage+\"\",\n  \"Namespace\": \"\"+params.Namespace+\"\",\n  \"Repository\": \"\"+params.Repository+\"\",\n  \"Application\": \"\"+params.Application+\"\",\n  \"Build_Version\": \"\"+params.Build_Version+\"\",\n  \"Release_Version\": \"\"+params.Release_Version+\"\",  \n  \"event_type\": \"\"+params.event_type+\"\",\n  \"PROBLEM\": \"\"+params.PROBLEM+\"\",\n  \"Releaseurl\": params.Pipelineurl\n    \n  }\n\n  return variables;\n}"
+            },
+            "name": "set-variables",
+            "position": {
+                "x": 0,
+                "y": 1
+            },
+            "predecessors": []
+        },
+        "wait-for-test-results": {
+            "action": "dynatrace.automations:run-javascript",
+            "conditions": {
+                "states": {
+                    "run-synth-test": "OK"
+                }
+            },
+            "description": "Build a custom task running js Code",
+            "input": {
+                "script": "// Dont Change Code from here\n// optional import of sdk modules\nimport { execution } from '@dynatrace-sdk/automation-utils';\nimport { executionsClient, actionExecutionsClient  } from '@dynatrace-sdk/client-automation';\nimport { queryExecutionClient } from '@dynatrace-sdk/client-query';\nimport { credentialVaultClient } from '@dynatrace-sdk/client-classic-environment-v2';\n\nexport default async function ({ execution_id, action_execution_id }) {\n  // transform tenant url to gen2 for api calls\n  let chk_tenant_dev_or_sprit = globalThis.environmentUrl.includes(\".dev.\") || globalThis.environmentUrl.includes(\".sprint.\") ;\n  if (chk_tenant_dev_or_sprit === true) {\n  var tenantURL = globalThis.environmentUrl.replace(\".apps\", \"\").replace(\".com/\", \".com\");\n  } else {\n  var tenantURL = globalThis.environmentUrl.replace(\".apps\", \".live\").replace(\".com/\", \".com\");\n  }\n  const ex = await execution(execution_id);\n   var params = await ex.result('set-variables');\n  const r = await fetch(`/platform/automation/v1/executions/${execution_id}/tasks/run-synth-test/result`);\n  const body = await r.json();\n\n  console.log(\"wait for workflow result\");\n\n  const rawResponsex = await fetch(''+ tenantURL + '/api/v2/synthetic/executions/batch/' + body.batchid + '', {\n    method: 'GET',\n    headers: {\n      'Accept': 'application/json',\n      'Content-Type': 'application/json',\n      'Authorization': 'api-token ' + params.dt_access_token\n    },\n  });\n\n  const rtestresults= await rawResponsex.json();\n  console.log(rtestresults)\n\n  if(rtestresults.executedCount == 0){ // Sometimes there is a Synth test running at the same time. Fixed by checking if _ANY_ are done.\n        console.log(\"Restarting trying again in 30 seconds\");\n        throw new Error(\"No Finished Event yet!\");\n  } \n// get execution result\n  \n\n  console.log(\"Finished Event Found!\");\n  return { \"result\": rtestresults };\n}"
+            },
+            "name": "wait-for-test-results",
+            "position": {
+                "x": -1,
+                "y": 5
+            },
+            "predecessors": [
+                "run-synth-test"
+            ],
+            "retry": {
+                "count": 99,
+                "delay": 60,
+                "failedLoopIterationsOnly": true
+            }
+        }
+    },
+    "throttle": {
+        "isLimitHit": false,
+        "limitEvents": []
+    },
+    "title": "{{.name}}",
+    "trigger": {},
+    "triggerType": "Manual",
+    "type": "STANDARD",
+    "usages": [],
+    "version": 10
+}

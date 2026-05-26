@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="PORT" elementType="Argument">
+            <stringProp name="Argument.name">PORT</stringProp>
+            <stringProp name="Argument.value">${__P(PORT,443)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="SERVER_URL" elementType="Argument">
+            <stringProp name="Argument.name">SERVER_URL</stringProp>
+            <stringProp name="Argument.value">${__P(SERVER_URL,staging.astroshop.whydevslovedynatrace.com)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="VUCount" elementType="Argument">
+            <stringProp name="Argument.name">VUCount</stringProp>
+            <stringProp name="Argument.value">${__P(VUCount,10)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="LoopCount" elementType="Argument">
+            <stringProp name="Argument.name">LoopCount</stringProp>
+            <stringProp name="Argument.value">${__P(LoopCount,10)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="ThinkTime" elementType="Argument">
+            <stringProp name="Argument.name">ThinkTime</stringProp>
+            <stringProp name="Argument.value">${__P(ThinkTime,250)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DATE_ID" elementType="Argument">
+            <stringProp name="Argument.name">DATE_ID</stringProp>
+            <stringProp name="Argument.value">${__time(d MMM yyyy HH:mm:ss)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="scheme" elementType="Argument">
+            <stringProp name="Argument.name">scheme</stringProp>
+            <stringProp name="Argument.value">${__P(scheme,https)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Test Astroshop Buying Process">
+        <stringProp name="TestPlan.comments">the Ramp-up will divide the amount of seconds by the number of users</stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+        <stringProp name="ThreadGroup.num_threads">${VUCount}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${VUCount}</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">${LoopCount}</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.implementation"></stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+          <collectionProp name="CookieManager.cookies"/>
+          <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+          <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
+        </CookieManager>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Accept-Language" elementType="Header">
+              <stringProp name="Header.name">Accept-Language</stringProp>
+              <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+            </elementProp>
+            <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
+              <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
+              <stringProp name="Header.value">1</stringProp>
+            </elementProp>
+            <elementProp name="Content-Type" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="Accept-Encoding" elementType="Header">
+              <stringProp name="Header.name">Accept-Encoding</stringProp>
+              <stringProp name="Header.value">gzip, deflate</stringProp>
+            </elementProp>
+            <elementProp name="User-Agent" elementType="Header">
+              <stringProp name="Header.name">User-Agent</stringProp>
+              <stringProp name="Header.value">JMeter</stringProp>
+            </elementProp>
+            <elementProp name="Accept" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">*/*</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Baggage</stringProp>
+              <stringProp name="Header.value">session.id=${sessionId}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Variables - Products, Currency, Context">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="products" elementType="Argument">
+              <stringProp name="Argument.name">products</stringProp>
+              <stringProp name="Argument.value">OLJCESPC7Z,66VCHSJNUP,1YMWWN1N4O,L9ECAV7KIM,2ZYFJ3GM2N,0PUK6V6EV0,LS4PSXUNUM,9SIQT8TOJO,6E92ZMYYFZ</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="currencies" elementType="Argument">
+              <stringProp name="Argument.name">currencies</stringProp>
+              <stringProp name="Argument.value">ZAR,ISK,ILS,RON,GBP,BRL,CZK,AUD,BGN,JPY,PHP,HUF,USD,SGD,IDR,CHF,TRY,NZD,THB,DKK,PLN,NOK,HRK,HKD,EUR,RUB,CAD,INR,SEK,KRW,CNY,MXN,MYR</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="keys" elementType="Argument">
+              <stringProp name="Argument.name">keys</stringProp>
+              <stringProp name="Argument.value">binoculars,telescopes,accessories,assembly,travel</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="random variables">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.util.Random;
+
+String[] currencies = (vars.get(&quot;currencies&quot;)).split(&quot;,&quot;);
+String[] products = (vars.get(&quot;products&quot;)).split(&quot;,&quot;);
+String[] keys = (vars.get(&quot;keys&quot;)).split(&quot;,&quot;);
+
+int cA = new Random().nextInt(currencies.length);
+int cB = new Random().nextInt(currencies.length);
+
+int pA = new Random().nextInt(products.length);
+int pB = new Random().nextInt(products.length);
+
+int k = new Random().nextInt(keys.length);
+
+vars.put(&quot;currencyA&quot;, currencies[cA]);
+vars.put(&quot;currencyB&quot;, currencies[cB]);
+vars.put(&quot;productA&quot;, products[pA]);
+vars.put(&quot;productB&quot;, products[pB]);
+vars.put(&quot;key&quot;, keys[k]);
+
+</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="dynatrace Tagging" enabled="true">
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+StringBuilder headerValue = new StringBuilder();
+String trid = JMeterUtils.getProperty(&quot;testrunId&quot;);
+String headerKey = &quot;x-dynatrace-test&quot;;
+String groupName = ctx.getThreadGroup().getName();
+String samplerName = sampler.getName();
+int threadNum = ctx.getThreadGroup().getNumThreads();
+
+/*
+ * 
+ * Setting variables as described in our documentation https://www.dynatrace.com/support/help/setup-and-configuration/integrations/third-party-integrations/test-automation-frameworks/dynatrace-and-load-testing-tools-integration/
+ * 
+ */
+
+ //TODO Add currencies, contextKeys, products in Iterator.
+ 
+// Just mark Dynatrace header for numeric values e.g. &quot;1 - Home&quot;, &quot;2 - ....&quot;
+if(samplerName != null &amp;&amp; !Character.isDigit(samplerName.charAt(0))){
+	break;
+}
+
+// Do not clear the whole header (for sessionbased applications), it&apos;ll mess up subsequent headers if you have
+// different requests like partial and full requests.
+//sampler.getHeaderManager().clear();
+
+// Just clearing the x-dynatrace-test Variable.
+sampler.getHeaderManager().removeHeaderNamed(headerKey);
+
+//DATE_ID is just a TimeStamp (defined in the Test Plan)
+String DATEID = vars.get(&quot;DATE_ID&quot;);
+
+// LoopCount the amount of loops
+String LoopCount = vars.get(&quot;LoopCount&quot;);
+
+// VU Count (VirtualUser Count) same as Num of Threads
+// String VUCount = vars.get(&quot;VUCount&quot;);
+
+
+//LSN Load Script Name - name of the load testing script. This groups a set of test steps that make up a multi-step transaction (for example, an online purchase).
+headerValue.append(&quot;LSN=&quot;+groupName+&quot;;&quot;);
+
+// LTN The Load Test Name uniquely identifies a test execution (for example, 6h Load Test – June 25)
+headerValue.append(&quot;LTN=LoadTest via JMeterService - &quot; +groupName+&quot; - VU(&quot; + threadNum +&quot;) Loops(&quot;+LoopCount+&quot;) - &quot;+ DATEID+&quot;;&quot;);
+
+// Test Step Name is a logical test step within your load testing script (for example, Login or Add to cart.
+headerValue.append(&quot;TSN=&quot;+samplerName+&quot;;&quot;);
+
+// AgentName
+headerValue.append(&quot;AN= &quot; + JMeterUtils.getProperty(&quot;username&quot;) +&quot;;&quot;);
+
+//Virtual User ID of the unique user who sent the request.
+headerValue.append(&quot;VU=&quot;+ctx.getThreadNum()+&quot;;&quot;);
+
+headerValue.append(&quot;SI=JMeter Service;&quot;);
+
+sampler.getHeaderManager().add(new org.apache.jmeter.protocol.http.control.Header(headerKey, headerValue.toString()));</stringProp>
+          <stringProp name="TestPlan.comments">this will run for every sampler</stringProp>
+        </BeanShellPreProcessor>
+        <hashTree/>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Transaction UUID" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="607796817">sessionId</stringProp>
+          </collectionProp>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="681405977">
+              <stringProp name="118040362">${__UUID()}</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">true</boolProp>
+          <stringProp name="TestPlan.comments">PreProcessor</stringProp>
+        </UserParameters>
+        <hashTree/>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler">
+          <boolProp name="displayJMeterProperties">true</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="01 - homepage">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="getSessionId" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">sessionId</stringProp>
+            <stringProp name="RegexExtractor.regex">session-id: (.+?)&lt;/br&gt;</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">not_found</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Print sessionId" enabled="false">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+//vars.put(&quot;sessionId2&quot;, UUID.randomUUID().toString())
+print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="02 - get products">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/products?currencyCode=${currencyA}</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="getSessionId" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">sessionId</stringProp>
+            <stringProp name="RegexExtractor.regex">session-id: (.+?)&lt;/br&gt;</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">not_found</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Print sessionId" enabled="false">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="03 - get currencies">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/currency</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="getSessionId" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">sessionId</stringProp>
+            <stringProp name="RegexExtractor.regex">session-id: (.+?)&lt;/br&gt;</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">not_found</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Print sessionId" enabled="false">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="04 - ad service ">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/data</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="contextKeys" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${key}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">contextKeys</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="getSessionId" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">sessionId</stringProp>
+            <stringProp name="RegexExtractor.regex">session-id: (.+?)&lt;/br&gt;</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">not_found</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Print sessionId" enabled="false">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="05 - add product A">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/cart?currencyCode=${currencyA}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;item&quot;:{&quot;productId&quot;:&quot;${productA}&quot;,&quot;quantity&quot;:1},&quot;userId&quot;:&quot;${sessionId}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="06 - get recommendations">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/recommendations</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="productIds" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${productA}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">productIds</stringProp>
+              </elementProp>
+              <elementProp name="sessionId" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${sessionId}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">sessionId</stringProp>
+              </elementProp>
+              <elementProp name="currencyCode" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${currencyA}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">currencyCode</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="07 - get cart in B">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/cart</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="sessionId" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${sessionId}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">sessionId</stringProp>
+              </elementProp>
+              <elementProp name="currencyCode" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${currencyB}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">currencyCode</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="08 - empty cart">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/cart?</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">DELETE</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;userId&quot;: &quot;${sessionId}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="09 - add product B">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/cart?currencyCode=${currencyB}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;item&quot;:{&quot;productId&quot;:&quot;${productB}&quot;,&quot;quantity&quot;:1},&quot;userId&quot;:&quot;${sessionId}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="10 - get cart in A">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/cart</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="sessionId" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${sessionId}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">sessionId</stringProp>
+              </elementProp>
+              <elementProp name="currencyCode" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${currencyA}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">currencyCode</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="11 - checkout">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/checkout?currencyCode=${currencyB}</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;userId&quot;:&quot;${sessionId}&quot;,&quot;email&quot;:&quot;someone@example.com&quot;,&quot;address&quot;:{&quot;streetAddress&quot;:&quot;1600 Amphitheatre Parkway&quot;,&quot;state&quot;:&quot;CA&quot;,&quot;country&quot;:&quot;United States&quot;,&quot;city&quot;:&quot;Mountain View&quot;,&quot;zipCode&quot;:&quot;94043&quot;},&quot;userCurrency&quot;:&quot;${currencyB}&quot;,&quot;creditCard&quot;:{&quot;creditCardCvv&quot;:672,&quot;creditCardExpirationMonth&quot;:1,&quot;creditCardExpirationYear&quot;:2030,&quot;creditCardNumber&quot;:&quot;4432-8015-6152-0454&quot;}}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="12 - get empty cart">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/api/cart</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="sessionId" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${sessionId}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">sessionId</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="xx - shipping" enabled="false">
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+          <stringProp name="HTTPSampler.path">/</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="getSessionId" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">sessionId</stringProp>
+            <stringProp name="RegexExtractor.regex">session-id: (.+?)&lt;/br&gt;</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">not_found</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Print sessionId" enabled="false">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Default Think Time" enabled="false">
+            <stringProp name="ConstantTimer.delay">${ThinkTime}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Recording Controller" enabled="false"/>
+        <hashTree/>
+      </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <boolProp name="ResultCollector.error_logging">true</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>false</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>false</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>true</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <hostname>true</hostname>
+            <threadCounts>true</threadCounts>
+            <sampleCount>true</sampleCount>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+        <stringProp name="RespTimeGraph.interval">1000</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="false">
+        <stringProp name="ProxyControlGui.port">8888</stringProp>
+        <collectionProp name="ProxyControlGui.exclude_list">
+          <stringProp name="805311387">windowsupdate\.microsoft\.com.*</stringProp>
+          <stringProp name="1179605444">(?i).*\.(bmp|css|js|gif|ico|jpe?g|png|swf|eot|otf|ttf|mp4|woff|woff2)</stringProp>
+          <stringProp name="110431874">.*msg\.yahoo\.com.*</stringProp>
+          <stringProp name="-88591710">www\.download\.windowsupdate\.com.*</stringProp>
+          <stringProp name="1323576868">toolbarqueries\.google\..*</stringProp>
+          <stringProp name="1739087931">http?://self-repair\.mozilla\.org.*</stringProp>
+          <stringProp name="1206954446">tiles.*\.mozilla\.com.*</stringProp>
+          <stringProp name="-1424663473">.*detectportal\.firefox\.com.*</stringProp>
+          <stringProp name="1779943373">us\.update\.toolbar\.yahoo\.com.*</stringProp>
+          <stringProp name="-190610036">.*\.google\.com.*/safebrowsing/.*</stringProp>
+          <stringProp name="-1899150273">api\.bing\.com.*</stringProp>
+          <stringProp name="-958112859">toolbar\.google\.com.*</stringProp>
+          <stringProp name="-192420923">.*yimg\.com.*</stringProp>
+          <stringProp name="-576820688">toolbar\.msn\.com.*</stringProp>
+          <stringProp name="305776760">(?i).*\.(bmp|css|js|gif|ico|jpe?g|png|swf|eot|otf|ttf|mp4|woff|woff2)[\?;].*</stringProp>
+          <stringProp name="-1435252351">toolbar\.avg\.com/.*</stringProp>
+          <stringProp name="2118375536">www\.google-analytics\.com.*</stringProp>
+          <stringProp name="-1279148329">pgq\.yahoo\.com.*</stringProp>
+          <stringProp name="1815174768">safebrowsing.*\.google\.com.*</stringProp>
+          <stringProp name="-1314416226">sqm\.microsoft\.com.*</stringProp>
+          <stringProp name="587935979">g\.msn.*</stringProp>
+          <stringProp name="1629558731">clients.*\.google.*</stringProp>
+          <stringProp name="11072252">.*toolbar\.yahoo\.com.*</stringProp>
+          <stringProp name="1726898318">geo\.yahoo\.com.*</stringProp>
+          <stringProp name="-362321805">.*rb_bf.*</stringProp>
+        </collectionProp>
+        <collectionProp name="ProxyControlGui.include_list"/>
+        <boolProp name="ProxyControlGui.capture_http_headers">true</boolProp>
+        <intProp name="ProxyControlGui.grouping_mode">0</intProp>
+        <boolProp name="ProxyControlGui.add_assertion">false</boolProp>
+        <stringProp name="ProxyControlGui.sampler_type_name"></stringProp>
+        <boolProp name="ProxyControlGui.sampler_redirect_automatically">false</boolProp>
+        <boolProp name="ProxyControlGui.sampler_follow_redirects">true</boolProp>
+        <boolProp name="ProxyControlGui.use_keepalive">true</boolProp>
+        <boolProp name="ProxyControlGui.sampler_download_images">false</boolProp>
+        <boolProp name="ProxyControlGui.regex_match">true</boolProp>
+        <stringProp name="ProxyControlGui.content_type_include"></stringProp>
+        <stringProp name="ProxyControlGui.content_type_exclude"></stringProp>
+        <boolProp name="ProxyControlGui.notify_child_sl_filtered">false</boolProp>
+        <stringProp name="ProxyControlGui.proxy_prefix_http_sampler_name"></stringProp>
+        <intProp name="ProxyControlGui.proxy_http_sampler_naming_mode">2</intProp>
+        <stringProp name="ProxyControlGui.proxy_pause_http_sampler"></stringProp>
+        <boolProp name="ProxyControlGui.detect_graphql_request">true</boolProp>
+        <stringProp name="ProxyControlGui.default_encoding">UTF-8</stringProp>
+      </ProxyControl>
+      <hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>true</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>true</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <url>true</url>
+              <fileName>true</fileName>
+              <hostname>true</hostname>
+              <threadCounts>true</threadCounts>
+              <sampleCount>true</sampleCount>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">recording.xml</stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

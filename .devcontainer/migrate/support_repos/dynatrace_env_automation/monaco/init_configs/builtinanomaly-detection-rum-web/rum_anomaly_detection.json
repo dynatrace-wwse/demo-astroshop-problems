@@ -1,0 +1,33 @@
+{
+  "responseTime": {
+    "enabled": true,
+    "detectionMode": "auto",
+    "responseTimeAuto": {
+      "responseTimeAll": {
+        "degradationMilliseconds": 100.0,
+        "degradationPercent": 50.0
+      },
+      "responseTimeSlowest": {
+        "slowestDegradationMilliseconds": 1000.0,
+        "slowestDegradationPercent": 100.0
+      },
+      "overAlertingProtection": {
+        "actionsPerMinute": 10.0,
+        "minutesAbnormalState": 1.0
+      }
+    }
+  },
+  "errorRate": {
+    "enabled": false
+  },
+  "trafficDrops": {
+    "enabled": true,
+    "trafficDrops": {
+      "trafficDropPercentage": 50.0,
+      "abnormalStateAbnormalState": 1.0
+    }
+  },
+  "trafficSpikes": {
+    "enabled": false
+  }
+}

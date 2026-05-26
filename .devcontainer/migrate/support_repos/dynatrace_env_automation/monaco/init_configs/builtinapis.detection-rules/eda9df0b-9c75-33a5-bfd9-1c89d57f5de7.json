@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In .NET CLR",
+  "apiColor": "#7c38a1",
+  "technology": "dotNet",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "System."
+    }
+  ]
+}

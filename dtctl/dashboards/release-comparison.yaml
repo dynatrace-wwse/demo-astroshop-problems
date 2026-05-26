@@ -1,0 +1,38 @@
+kind: dashboard
+name: Release Comparison - Astroshop
+description: |
+  Side-by-side comparison of two release variants in the same namespace.
+  Variables: $release_a, $release_b (e.g. 1.12.0 vs 1.12.1).
+
+tiles:
+  - title: Response time p95 by release
+    type: data
+    query: |
+      timeseries p95 = percentile(dt.service.request.response_time, 95),
+                 by: { dt.entity.service, k8s.deployment.label.version }
+      | filter k8s.namespace.name == "astroshop"
+        and k8s.deployment.label.version in ($release_a, $release_b)
+    visualization: lineChart
+    position: { x: 0, y: 0, w: 12, h: 5 }
+
+  - title: Failure rate by release
+    type: data
+    query: |
+      timeseries fr = avg(dt.service.request.failure_rate),
+                 by: { dt.entity.service, k8s.deployment.label.version }
+      | filter k8s.namespace.name == "astroshop"
+        and k8s.deployment.label.version in ($release_a, $release_b)
+    visualization: lineChart
+    position: { x: 0, y: 5, w: 12, h: 5 }
+
+  - title: CPU & memory by release
+    type: data
+    query: |
+      timeseries { cpu = avg(dt.containers.cpu.usage_user_total),
+                   mem = avg(dt.containers.memory.usage) },
+                 by: { dt.entity.container_group_instance,
+                       k8s.deployment.label.version }
+      | filter k8s.namespace.name == "astroshop"
+        and k8s.deployment.label.version in ($release_a, $release_b)
+    visualization: lineChart
+    position: { x: 0, y: 10, w: 12, h: 5 }

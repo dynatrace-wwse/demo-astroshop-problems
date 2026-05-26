@@ -1,0 +1,4 @@
+{
+  "key": "db.cassandra.table",
+  "masking": "NOT_MASKED"
+}

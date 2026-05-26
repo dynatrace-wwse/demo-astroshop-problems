@@ -1,0 +1,62 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dynatrace-otel-collector-k8s-erichment
+  labels:
+    app: dynatrace-otel-collector-k8s-erichment
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - 'pods'
+      - 'namespaces'
+    verbs:
+      - 'get'
+      - 'watch'
+      - 'list'
+  - apiGroups:
+      - 'apps'
+    resources:
+      - 'replicasets'
+    verbs:
+      - 'get'
+      - 'list'
+      - 'watch'
+  - apiGroups:
+      - 'extensions'
+    resources:
+      - 'replicasets'
+    verbs:
+      - 'get'
+      - 'list'
+      - 'watch'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: astroshop-otel-gateway-collector-k8s-erichment
+  labels:
+    app: astroshop-otel-gateway-collector-k8s-erichment
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dynatrace-otel-collector-k8s-erichment
+subjects:
+  - kind: ServiceAccount
+    name: astroshop-otel-gateway-collector
+    namespace: staging-astroshop
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: astroshop-k8s-erichment
+  labels:
+    app: astroshop-k8s-erichment
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dynatrace-otel-collector-k8s-erichment
+subjects:
+  - kind: ServiceAccount
+    name: staging-astroshop
+    namespace: staging-astroshop

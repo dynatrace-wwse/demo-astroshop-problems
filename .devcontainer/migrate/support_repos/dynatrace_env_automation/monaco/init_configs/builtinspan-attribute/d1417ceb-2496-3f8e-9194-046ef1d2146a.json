@@ -1,0 +1,4 @@
+{
+  "key": "messaging.rabbitmq.routing_key",
+  "masking": "NOT_MASKED"
+}

@@ -1,0 +1,4 @@
+{
+  "key": "http.client_ip",
+  "masking": "NOT_MASKED"
+}

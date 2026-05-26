@@ -1,0 +1,22 @@
+{
+  "displayName": "{{ .name }}",
+  "enabled": true,
+  "nameFormat": "{ProcessGroup:KubernetesNamespace}-{ProcessGroup:KubernetesContainerName}",
+  "rules": [
+    {
+      "comparisonInfo": {
+        "caseSensitive": true,
+        "negate": false,
+        "operator": "CONTAINS",
+        "type": "STRING",
+        "value": "astroshop"
+      },
+      "key": {
+        "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+        "dynamicKey": "KUBERNETES_NAMESPACE",
+        "type": "PROCESS_PREDEFINED_METADATA_KEY"
+      }
+    }
+  ],
+  "type": "SERVICE"
+}

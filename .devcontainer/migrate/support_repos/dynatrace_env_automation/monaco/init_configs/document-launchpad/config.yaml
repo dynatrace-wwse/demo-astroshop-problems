@@ -1,0 +1,68 @@
+configs:
+- id: 954aefd8-503b-4833-b47a-c4b959246c5b
+  config:
+    name: 'HoT Lab - Why Devs ❤️ Dynatrace '
+    parameters:
+      # document__1ed16d12e320491dbd3381bce99b7a76__id:
+      #   configId: 1ed16d12-e320-491d-bd33-81bce99b7a76
+      #   property: id
+      #   type: reference
+      # document__3d98bee5180c41b99cb9b3ce14da3d32__id:
+      #   configId: 3d98bee5-180c-41b9-9cb9-b3ce14da3d32
+      #   property: id
+      #   type: reference
+      # document__cbd4d542351c452a97443c33b4d8f45c__id:
+      #   configId: cbd4d542-351c-452a-9744-3c33b4d8f45c
+      #   property: id
+      #   type: reference
+      # document__e3a069442b95499ba8f39b4c85edc2cc__id:
+      #   configId: e3a06944-2b95-499b-a8f3-9b4c85edc2cc
+      #   property: id
+      #   type: reference
+      extractedIDs:
+        type: value
+        value:
+          id_1acf8802_c448_4e33_9d42_79e19c39d814: 1acf8802-c448-4e33-9d42-79e19c39d814
+          id_1ca7ce6e_f3f3_49f6_9143_c5763813e8f1: 1ca7ce6e-f3f3-49f6-9143-c5763813e8f1
+          id_2c128223_b71f_4dc1_ad58_bd02c614c391: 2c128223-b71f-4dc1-ad58-bd02c614c391
+          id_4af833f4_c4dc_4e1d_8690_21a979e90535: 4af833f4-c4dc-4e1d-8690-21a979e90535
+          id_4c6fc725_32fd_47a7_8747_4b282c84f6d2: 4c6fc725-32fd-47a7-8747-4b282c84f6d2
+          id_5f463d61_459d_4192_8118_5e6e3f17e8fd: 5f463d61-459d-4192-8118-5e6e3f17e8fd
+          id_65d637ab_775f_4d18_9605_71b0ff43a59e: 65d637ab-775f-4d18-9605-71b0ff43a59e
+          id_6fa68fd9_9f97_4222_9776_93407b7afe53: 6fa68fd9-9f97-4222-9776-93407b7afe53
+          id_52f871c1_8243_45d4_bc95_94ee98c486e2: 52f871c1-8243-45d4-bc95-94ee98c486e2
+          id_53e87952_bbf5_4825_836d_c0809c1365e2: 53e87952-bbf5-4825-836d-c0809c1365e2
+          id_263e094c_b921_433a_93cd_e4b866473cab: 263e094c-b921-433a-93cd-e4b866473cab
+          id_336d63e3_6bf2_407e_aef2_b02389b712c1: 336d63e3-6bf2-407e-aef2-b02389b712c1
+          id_95267e94_0461_4217_a3fc_51afc1afcb19: 95267e94-0461-4217-a3fc-51afc1afcb19
+          id_9dca3fd7_b961_4bc1_8e4f_523a6b6792ac: 9dca3fd7-b961-4bc1-8e4f-523a6b6792ac
+          id_897c7000_1de7_44c6_b55d_ec4591cf3f0c: 897c7000-1de7-44c6-b55d-ec4591cf3f0c
+          id_303282aa_2f90_45d6_9dd4_4c05a43ff621: 303282aa-2f90-45d6-9dd4-4c05a43ff621
+          id_580814d8_2f8c_4122_8b7d_d0e6a3be53be: 580814d8-2f8c-4122-8b7d-d0e6a3be53be
+          id_a5432f80_c431_456f_8179_e858e2d516f8: a5432f80-c431-456f-8179-e858e2d516f8
+          id_afdc56d1_3974_4e2e_8b34_3b95793d9795: afdc56d1-3974-4e2e-8b34-3b95793d9795
+          id_b43439e9_415d_4a1d_bb33_0194c16bda07: b43439e9-415d-4a1d-bb33-0194c16bda07
+          id_b1686199_0474_4b15_94e0_f23bd33b61c8: b1686199-0474-4b15-94e0-f23bd33b61c8
+          id_c12a24a7_6d90_43fb_909f_ae7c9068b8c9: c12a24a7-6d90-43fb-909f-ae7c9068b8c9
+          id_d6fa572a_f968_4b45_a3ae_c2a0a35f9ff4: d6fa572a-f968-4b45-a3ae-c2a0a35f9ff4
+          id_d427d946_6cc8_4354_abc5_004eb706f201: d427d946-6cc8-4354-abc5-004eb706f201
+          id_d776787b_0dbc_45f7_9413_0aa1e91d94c8: d776787b-0dbc-45f7-9413-0aa1e91d94c8
+          id_e1f7c632_c1ff_4dcf_bad5_29c049dd54bc: e1f7c632-c1ff-4dcf-bad5-29c049dd54bc
+          id_eb53def6_6794_48d3_966a_706648124d8d: eb53def6-6794-48d3-966a-706648124d8d
+          id_f692bfd4_78b5_46a5_8e5e_f700184b8fc2: f692bfd4-78b5-46a5-8e5e-f700184b8fc2
+      # workflow__7bf78cb3a53b427b847bdcd247591471__id:
+      #   configId: 7bf78cb3-a53b-427b-847b-dcd247591471
+      #   configType: workflow
+      #   property: id
+      #   type: reference
+      # workflow__10ce7bcaa8714943998265285ad7c335__id:
+      #   configId: 10ce7bca-a871-4943-9982-65285ad7c335
+      #   configType: workflow
+      #   property: id
+      #   type: reference
+    template: 954aefd8-503b-4833-b47a-c4b959246c5b.json
+    skip: false
+    originObjectId: 954aefd8-503b-4833-b47a-c4b959246c5b
+  type:
+    document:
+      kind: launchpad

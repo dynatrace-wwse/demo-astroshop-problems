@@ -1,0 +1,4 @@
+{
+  "key": "messaging.kafka.partition",
+  "masking": "NOT_MASKED"
+}

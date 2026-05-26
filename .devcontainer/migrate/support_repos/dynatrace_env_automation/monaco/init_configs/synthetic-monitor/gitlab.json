@@ -1,0 +1,497 @@
+{
+  "anomalyDetection": {
+    "loadingTimeThresholds": {
+      "enabled": false,
+      "thresholds": []
+    },
+    "outageHandling": {
+      "globalOutage": true,
+      "globalOutagePolicy": {
+        "consecutiveRuns": 1
+      },
+      "localOutage": false,
+      "localOutagePolicy": {
+        "affectedLocations": null,
+        "consecutiveRuns": null
+      },
+      "retryOnError": true
+    }
+  },
+  "automaticallyAssignedApps": [],
+  "createdFrom": "GUI",
+  "enabled": true,
+  "events": [
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_487EB6EE2CB4EEEB }}",
+      "name": "Loading of \"{{ .gitlabUrl }}\"",
+      "sequenceNumber": 1
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_E5C619684D0DDFA0 }}",
+      "name": "keystrokes on \"Username or primary email\"",
+      "sequenceNumber": 2
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_CD9AD7A99C80A60F }}",
+      "name": "keystrokes on \"Password\"",
+      "sequenceNumber": 3
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_60935598315E9984 }}",
+      "name": "click on \"Dynatrace_Monitoring_as_Code\"",
+      "sequenceNumber": 4
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_5CF79101259EC836 }}",
+      "name": "click on \"Code\"",
+      "sequenceNumber": 5
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_D15E7DB152A27630 }}",
+      "name": "click",
+      "sequenceNumber": 6
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_2180F53B8CA74ABD }}",
+      "name": "click on \"Web IDE\"",
+      "sequenceNumber": 7
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_B1314963B4DA57D7 }}",
+      "name": "Loading of \"{{ .gitlabUrl }}/admin/applications\"",
+      "sequenceNumber": 8
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_091519792A2B5EBA }}",
+      "name": "click",
+      "sequenceNumber": 9
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_9DEF25F1DC5E7D37 }}",
+      "name": "click on \"Redirect URI\"",
+      "sequenceNumber": 10
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_6AD1A7AA604FDD4D }}",
+      "name": "keystrokes on \"Redirect URI\"",
+      "sequenceNumber": 11
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_E4223284EABE1FD8 }}",
+      "name": "click",
+      "sequenceNumber": 12
+    },
+    {
+      "entityId": "{{ .extractedIDs.id_SYNTHETIC_TEST_STEP_A264A6EA3C85AEE6 }}",
+      "name": "click on \"Save application\"",
+      "sequenceNumber": 13
+    }
+  ],
+  "frequencyMin": 0,
+  "keyPerformanceMetrics": {
+    "loadActionKpm": "VISUALLY_COMPLETE",
+    "xhrActionKpm": "VISUALLY_COMPLETE"
+  },
+  "locations": [
+    "{{ .location }}"
+  ],
+  "managementZones": [],
+  "manuallyAssignedApps": [],
+  "name": "{{.name}}",
+  "script": {
+    "configuration": {
+      "chromiumStartupFlags": {
+        "disable-web-security": false
+      },
+      "device": {
+        "deviceName": "Desktop",
+        "orientation": "landscape"
+      }
+    },
+    "events": [
+      {
+        "description": "Loading of \"{{ .gitlabHttpsUrl }}\"",
+        "type": "navigate",
+        "url": "{{ .gitlabHttpsUrl }}",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "description": "keystrokes on \"Username or primary email\"",
+        "masked": false,
+        "simulateBlurEvent": true,
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#user_login"
+            },
+            {
+              "type": "css",
+              "value": "input[type=\"text\"][name=\"user[login]\"]"
+            },
+            {
+              "type": "css",
+              "value": ".form-control:eq(0)"
+            },
+            {
+              "type": "css",
+              "value": "html body:nth-child(4) div:nth-child(2) div div div:nth-child(2) div:nth-child(2) div form div:nth-child(2) input:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#user_login"
+            }
+          ]
+        },
+        "textValue": "root",
+        "type": "keystrokes"
+      },
+      {
+        "description": "keystrokes on \"Password\"",
+        "masked": false,
+        "simulateBlurEvent": true,
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#user_password"
+            },
+            {
+              "type": "css",
+              "value": "input[type=\"password\"][name=\"user[password]\"]"
+            },
+            {
+              "type": "css",
+              "value": ".gl-form-input:eq(1)"
+            },
+            {
+              "type": "css",
+              "value": "html body:nth-child(4) div:nth-child(2) div div div:nth-child(2) div:nth-child(2) div form div:nth-child(3) div:nth-child(2) input"
+            },
+            {
+              "type": "css",
+              "value": "#user_password"
+            }
+          ]
+        },
+        "textValue": "{{ .gitlabToken }}",
+        "type": "keystrokes",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        },
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "button[type=\"submit\"]"
+            },
+            {
+              "type": "css",
+              "value": "button:contains(\"Sign in\")"
+            },
+            {
+              "type": "css",
+              "value": ".gl-button:eq(1)"
+            },
+            {
+              "type": "css",
+              "value": "html body:nth-child(4) div:nth-child(2) div div div:nth-child(2) div:nth-child(2) div form button:nth-child(6)"
+            },
+            {
+              "type": "css",
+              "value": "body.gl-h-full div.gl-h-full div.container div.content div.gl-my-5 div.gl-w-full div.js-non-oauth-login form.gl-show-field-errors button.gl-button:eq(1)"
+            }
+          ]
+        },
+        "button": 0,
+        "description": "click on \"Sign in\""
+      },
+      {
+        "button": 0,
+        "description": "click on \"Dynatrace_Monitoring_as_Code\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "a:contains(\"Dynatrace_Monitoring_as_Code\")"
+            },
+            {
+              "type": "css",
+              "value": "span:contains(\"Dynatrace_Monitoring_as_Code\")"
+            },
+            {
+              "type": "css",
+              "value": ".project-name:eq(5)"
+            },
+            {
+              "type": "css",
+              "value": "#content-body div:nth-child(4) ul li:nth-child(6) div:nth-child(2) div div h2 a span:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#content-body div.js-projects-list-holder ul.projects-list li.project-row div.project-cell div.project-details div.gl-flex h2.gl-text-base a.gl-text-default span.project-name:eq(5)"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Code\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "span:contains(\"Code\"):eq(3)"
+            },
+            {
+              "type": "css",
+              "value": ".gl-new-dropdown-button-text:eq(5)"
+            },
+            {
+              "type": "css",
+              "value": "#dropdown-toggle-btn-50 span span"
+            },
+            {
+              "type": "css",
+              "value": "#dropdown-toggle-btn-50 span.gl-button-text span.gl-new-dropdown-button-text"
+            }
+          ]
+        },
+        "type": "click"
+      },
+      {
+        "button": 0,
+        "description": "click",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "span:contains(\"Edit\"):eq(1)"
+            },
+            {
+              "type": "css",
+              "value": ".gl-button-icon:eq(65)"
+            },
+            {
+              "type": "css",
+              "value": "#dropdown-toggle-btn-76 span svg:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#dropdown-toggle-btn-76 span.gl-button-text svg.gl-button-icon"
+            }
+          ]
+        },
+        "type": "click"
+      },
+      {
+        "button": 0,
+        "description": "click on \"Web IDE\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "span:contains(\"Web IDE\"):eq(2)"
+            },
+            {
+              "type": "css",
+              "value": ".gl-font-bold:eq(18)"
+            },
+            {
+              "type": "css",
+              "value": "#disclosure-77 li ul li button span div span span"
+            },
+            {
+              "type": "css",
+              "value": "#disclosure-77 li.edit-dropdown-group-width ul.gl-mb-0 li.gl-new-dropdown-item button.gl-new-dropdown-item-content span.gl-new-dropdown-item-text-wrapper div.gl-flex span.gl-mb-2 span.gl-font-bold"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "description": "Loading of \"{{ .gitlabHttpsUrl }}/admin/applications\"",
+        "type": "navigate",
+        "url": "{{ .gitlabHttpsUrl }}/admin/applications/",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "a[href$=\"/admin/applications/12/edit\"]"
+            },
+            {
+              "type": "css",
+              "value": ".s16:eq(31)"
+            },
+            {
+              "type": "css",
+              "value": "#application_12 td:nth-child(5) div a svg"
+            },
+            {
+              "type": "css",
+              "value": "#application_12 td div.gl-flex a.gl-button svg.s16"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      },
+      {
+        "button": 0,
+        "description": "click on \"Redirect URI\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#doorkeeper_application_redirect_uri"
+            },
+            {
+              "type": "css",
+              "value": "textarea[name=\"doorkeeper_application[redirect_uri]\"]"
+            },
+            {
+              "type": "css",
+              "value": "div:contains(\"{{ .gitlabHttpsUrl }}/-/ide/oauth_redirect\"):eq(8)"
+            },
+            {
+              "type": "css",
+              "value": ".form-control:eq(1)"
+            },
+            {
+              "type": "css",
+              "value": "#edit_doorkeeper_application_12 div:nth-child(4) div textarea:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#doorkeeper_application_redirect_uri"
+            }
+          ]
+        },
+        "type": "click"
+      },
+      {
+        "description": "keystrokes on \"Redirect URI\"",
+        "masked": false,
+        "simulateBlurEvent": true,
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "#doorkeeper_application_redirect_uri"
+            },
+            {
+              "type": "css",
+              "value": "textarea[name=\"doorkeeper_application[redirect_uri]\"]"
+            },
+            {
+              "type": "css",
+              "value": "div:contains(\"{{ .gitlabHttpsUrl }}/-/ide/oauth_redirect\"):eq(8)"
+            },
+            {
+              "type": "css",
+              "value": ".form-control:eq(1)"
+            },
+            {
+              "type": "css",
+              "value": "#edit_doorkeeper_application_12 div:nth-child(4) div textarea:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "#doorkeeper_application_redirect_uri"
+            }
+          ]
+        },
+        "textValue": "{{ .gitlabHttpsUrl }}/-/ide/oauth_redirect",
+        "type": "keystrokes"
+      },
+      {
+        "button": 0,
+        "description": "click",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "div:contains(\"Starting with GitLab 17.7, OpenSSL 3 will be used. All TLS connections require TLS 1.2 or higher. Weaker ciphers are no longer supported. Encryption must have at least of 112 bits of security.\"):eq(1)"
+            },
+            {
+              "type": "css",
+              "value": ".content-wrapper"
+            },
+            {
+              "type": "css",
+              "value": "html body:nth-child(2) div:nth-child(2) div:nth-child(2)"
+            },
+            {
+              "type": "css",
+              "value": "body.tab-width-8 div.layout-page div.content-wrapper"
+            }
+          ]
+        },
+        "type": "click"
+      },
+      {
+        "button": 0,
+        "description": "click on \"Save application\"",
+        "target": {
+          "locators": [
+            {
+              "type": "css",
+              "value": "span:contains(\"Save application\")"
+            },
+            {
+              "type": "css",
+              "value": ".gl-button-text:eq(8)"
+            },
+            {
+              "type": "css",
+              "value": "#edit_doorkeeper_application_12 div:nth-child(8) button span"
+            },
+            {
+              "type": "css",
+              "value": "#edit_doorkeeper_application_12 div.gl-mt-5 button.gl-button span.gl-button-text"
+            }
+          ]
+        },
+        "type": "click",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      }
+    ],
+    "type": "clickpath",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "context": "CONTEXTLESS",
+      "key": "cicd",
+      "source": "USER",
+      "value": "gitlab"
+    }
+  ],
+  "type": "BROWSER"
+}

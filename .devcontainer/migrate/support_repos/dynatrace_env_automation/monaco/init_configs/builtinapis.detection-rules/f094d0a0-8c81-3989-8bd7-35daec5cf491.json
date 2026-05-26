@@ -1,0 +1,13 @@
+{
+  "apiName": "Built-In IBM WebSphere",
+  "apiColor": "#4fd5e0",
+  "technology": "Java",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "com.ibm.websphere."
+    }
+  ]
+}

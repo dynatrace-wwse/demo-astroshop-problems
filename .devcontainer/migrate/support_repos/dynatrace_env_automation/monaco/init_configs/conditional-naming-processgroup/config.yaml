@@ -1,0 +1,8 @@
+configs:
+- id: 824e3cc0-e5b7-4aec-9784-fe56f9df1bd6
+  config:
+    name: ACE Box - containername.namespace
+    template: 824e3cc0-e5b7-4aec-9784-fe56f9df1bd6.json
+    skip: false
+  type:
+    api: conditional-naming-processgroup

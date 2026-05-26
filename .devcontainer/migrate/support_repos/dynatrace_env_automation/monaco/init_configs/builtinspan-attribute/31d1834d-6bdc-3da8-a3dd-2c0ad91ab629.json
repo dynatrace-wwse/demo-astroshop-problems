@@ -1,0 +1,4 @@
+{
+  "key": "faas.invoked_region",
+  "masking": "NOT_MASKED"
+}

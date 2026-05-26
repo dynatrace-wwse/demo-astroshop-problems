@@ -1,0 +1,4 @@
+{
+  "key": "http.response.status_code",
+  "masking": "NOT_MASKED"
+}

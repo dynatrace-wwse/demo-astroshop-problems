@@ -1,0 +1,9 @@
+{
+  "allowedOutboundConnections": {
+    "enforced": true,
+    "hostList": [
+      "{{ .gitlabUrl }}",
+      "{{ .dtUrl }}"
+    ]
+  }
+}

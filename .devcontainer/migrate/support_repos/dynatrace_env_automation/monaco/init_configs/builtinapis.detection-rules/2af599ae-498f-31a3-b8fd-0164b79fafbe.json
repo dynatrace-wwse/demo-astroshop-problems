@@ -1,0 +1,28 @@
+{
+  "apiName": "Built-In .NET Logging",
+  "apiColor": "#ffa86c",
+  "technology": "dotNet",
+  "thirdPartyApi": true,
+  "conditions": [
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "Microsoft.EnterpriseInstrumentation.EventSource."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "Microsoft.Extensions.Logging."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "Microsoft.Practices.EnterpriseLibrary.Logging."
+    },
+    {
+      "base": "FQCN",
+      "matcher": "BEGINS_WITH",
+      "pattern": "log4net."
+    }
+  ]
+}

@@ -22,7 +22,9 @@ export SECONDS=0
 source .devcontainer/util/source_framework.sh
 
 setUpTerminal
+
 startK3dCluster
+
 installK9s
 
 # Mirror the Codespace secrets into .devcontainer/.env so the workshop

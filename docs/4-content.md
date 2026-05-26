@@ -1,4 +1,3 @@
---8<-- "snippets/4-content.js"
 
 # Workshop labs — ace-box order
 

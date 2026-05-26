@@ -1,0 +1,1114 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../stop-bad-builds/">
+      
+      
+        <link rel="next" href="../apply-to-your-app/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+    
+    
+      
+        <title>6. Workshop labs (ace-box order) - Astroshop CI/CD Observability — Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+  
+      
+    
+  
+  <script type="text/javascript"
+    src="https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"
+    crossorigin="anonymous"></script>
+  
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#workshop-labs-ace-box-order" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Astroshop CI/CD Observability — Workshop" class="md-header__button md-logo" aria-label="Astroshop CI/CD Observability — Workshop" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Astroshop CI/CD Observability — Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6. Workshop labs (ace-box order)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Astroshop CI/CD Observability — Workshop" class="md-nav__button md-logo" aria-label="Astroshop CI/CD Observability — Workshop" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    Astroshop CI/CD Observability — Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codespace-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Codespace setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4. How it all connects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stop-bad-builds/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Stop bad builds
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    6. Workshop labs (ace-box order)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    6. Workshop labs (ace-box order)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lab-1-diagnostic-tools-traces-on-grail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 1 — Diagnostic tools: traces on Grail
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-2-developer-feedback-with-the-live-debugger" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 2 — Developer feedback with the Live Debugger
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-3-intelligent-release-evaluations-the-srg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 3 — Intelligent release evaluations (the SRG)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-4-foundations-of-load-test-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 4 — Foundations of load test analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-5-release-comparison-response-time-decrease-1121" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 5 — Release comparison: response time decrease (1.12.1)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-6-release-comparison-garbage-collection-1122" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 6 — Release comparison: garbage collection (1.12.2)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-7-runtime-optimization-cpu-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 7 — Runtime optimization: CPU analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-8-runtime-optimization-memory-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 8 — Runtime optimization: memory analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bringing-the-workshop-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bringing the workshop up
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-the-astroshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing the Astroshop
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flipping-the-release-problem-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flipping the release / problem variant
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apply-to-your-app/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7. Apply to your app
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cicd-observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8. Open questions Q&A
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monaco-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9. Monaco config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-codespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    10. Codespaces (local)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cleanup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    11. Cleanup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    12. Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-next/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    13. What's next?
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lab-1-diagnostic-tools-traces-on-grail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 1 — Diagnostic tools: traces on Grail
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-2-developer-feedback-with-the-live-debugger" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 2 — Developer feedback with the Live Debugger
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-3-intelligent-release-evaluations-the-srg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 3 — Intelligent release evaluations (the SRG)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-4-foundations-of-load-test-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 4 — Foundations of load test analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-5-release-comparison-response-time-decrease-1121" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 5 — Release comparison: response time decrease (1.12.1)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-6-release-comparison-garbage-collection-1122" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 6 — Release comparison: garbage collection (1.12.2)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-7-runtime-optimization-cpu-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 7 — Runtime optimization: CPU analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-8-runtime-optimization-memory-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab 8 — Runtime optimization: memory analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bringing-the-workshop-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bringing the workshop up
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-the-astroshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing the Astroshop
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flipping-the-release-problem-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flipping the release / problem variant
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  dynatrace.sendBizEvent('page_load', {"page": "4. Content"});
+});
+</script>
+
+<h1 id="workshop-labs-ace-box-order">Workshop labs — ace-box order<a class="headerlink" href="#workshop-labs-ace-box-order" title="Permanent link">#</a></h1>
+<p>After <a href="../codespace-setup/">bootstrapWorkshop</a> finishes, the cluster
++ tenant are ready. This page walks through the eight labs from the
+original HOT2025 deck in order. Each one builds on the previous.</p>
+<p>If you came straight here, the <a href="../stop-bad-builds/">stop-bad-builds</a>
+narrative is the elevator pitch; this page is the <strong>labs</strong>.</p>
+<hr />
+<h2 id="lab-1-diagnostic-tools-traces-on-grail">Lab 1 — Diagnostic tools: traces on Grail<a class="headerlink" href="#lab-1-diagnostic-tools-traces-on-grail" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Get comfortable with the Traces app and DQL so you can find
+what you're looking for under load.</p>
+<ol>
+<li>Open the Services app (Ctrl+K → <em>services</em>).</li>
+<li>Filter to services in the <code>astroshop</code> namespace.</li>
+<li>Add the column <strong>Last seen</strong>.</li>
+<li>Save the result as a DQL notebook called <code>Lab 1</code>.</li>
+<li>Filter requests for <code>astroshop-cartservice</code> (or your closest match
+   — <code>cart</code> in the migrated repo) with response time &gt; 100 ms.</li>
+<li>Group failing services by endpoint.</li>
+</ol>
+<p><strong>Where the data comes from:</strong> OneAgent (AppOnly) is injected on every
+astroshop entrypoint pod. Spans land in Grail with <code>service.name</code> +
+<code>request_attribute.TSN</code> populated by the <a href="../monaco-config/#labs--the-workshop-deliverables">monaco request-attribute
+rules</a>.</p>
+<hr />
+<h2 id="lab-2-developer-feedback-with-the-live-debugger">Lab 2 — Developer feedback with the Live Debugger<a class="headerlink" href="#lab-2-developer-feedback-with-the-live-debugger" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Find an issue end-to-end without rebuilding: code-level
+debug data without redeployment.</p>
+<p>The loadgen drives the Astroshop continuously, so problems are always
+on. Reproduce in three steps:</p>
+<ol>
+<li>Open the Distributed Traces app and find a failed request with the
+   trailing <code>x-dynatrace-test</code> header (filter by <code>request_attribute.TSN</code>).</li>
+<li>Open the Live Debugger (Ctrl+K → <em>debug</em>).</li>
+<li>Set a non-breaking breakpoint on the responsible line; collect
+   variable values without changing the code.</li>
+</ol>
+<p>In the original ace-box workshop you can debug via the <strong>Omnichannel
+satellite</strong> scripts (<code>satellite_addToCart</code>, <code>satellite_checkout</code>).
+That's optional here — the loadgen already produces the symptom.</p>
+<hr />
+<h2 id="lab-3-intelligent-release-evaluations-the-srg">Lab 3 — Intelligent release evaluations (the SRG)<a class="headerlink" href="#lab-3-intelligent-release-evaluations-the-srg" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> See how the <strong>Site Reliability Guardian</strong> scores a release.</p>
+<p>The bootstrap rolled all four release variants. Each has a guardian
+evaluation that you can re-run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># from the dev container</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>rollAstroshopRelease<span class="w"> </span><span class="m">1</span>.12.1<span class="w"> </span>cpu<span class="w">     </span><span class="c1"># rolls + triggers the SRG workflow</span>
+</span></code></pre></div>
+<p>The SRG in monaco is <code>Astroshop - Staging - Quality gate</code> with <strong>20
+objectives</strong>:</p>
+<ul>
+<li>12 DQL-based <strong>test-step latency</strong> objectives (one per load-test
+  step), threshold ≤ 1000 ms median, warn at 900 ms.</li>
+<li>4 infrastructure: CPU throttling, CPU Max, Max Memory in MB,
+  Failed requests.</li>
+<li>4 traffic / quality: Total Traces and Spans, Total amount Load Test
+  Requests, Sum of 5XX requests, Logs with errors.</li>
+</ul>
+<p>All 20 queries verified to return data on a properly bootstrapped
+COE-style tenant.</p>
+<hr />
+<h2 id="lab-4-foundations-of-load-test-analysis">Lab 4 — Foundations of load test analysis<a class="headerlink" href="#lab-4-foundations-of-load-test-analysis" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Find one load test run in Grail; compare steps across
+releases.</p>
+<ol>
+<li>Use Traces on Grail to find all traces in the last 6 hours where
+   <code>request_attribute.LTN</code> contains "Astroshop".</li>
+<li>Group by <code>request_attribute.TSN</code> — each group is one of the 12
+   test steps.</li>
+<li>Open a trace from <code>04 - ad service</code> (the trailing space is real
+   and intentional in the SRG DQL).</li>
+<li>Compare p95 latency across the four release variants
+   (<code>service.version</code> is now per release thanks to
+   <code>rollAstroshopRelease</code>).</li>
+</ol>
+<hr />
+<h2 id="lab-5-release-comparison-response-time-decrease-1121">Lab 5 — Release comparison: response time decrease (1.12.1)<a class="headerlink" href="#lab-5-release-comparison-response-time-decrease-1121" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Find <em>why</em> 1.12.1 failed the SRG.</p>
+<p>The SRG verdict points at the <strong>ad-service</strong> step exceeding the
+1000 ms target. Drill in:</p>
+<ol>
+<li>Open Trace Comparison — filter both sides by the same TSN
+   (<code>04 - ad service</code>).</li>
+<li>Compare 1.12.1 vs 1.12.0 by <code>service.version</code>.</li>
+<li>Look at the slowest method in the call tree. The CPU spike is in
+   <code>AdService.computeAds()</code> — empty loops added on purpose. Source:
+   <code>tmp/perform-…/lab-guide/</code> references it explicitly.</li>
+</ol>
+<hr />
+<h2 id="lab-6-release-comparison-garbage-collection-1122">Lab 6 — Release comparison: garbage collection (1.12.2)<a class="headerlink" href="#lab-6-release-comparison-garbage-collection-1122" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Find the GC-driven memory blow-up on 1.12.2.</p>
+<ol>
+<li>Compare 1.12.2 with 1.12.0 in trace comparison.</li>
+<li>The ad service is now 504ing on a 15s timeout, but the underlying
+   span runs for several minutes — that's GC suspension time.</li>
+<li>Open Profiling &amp; Optimization for the ad PG. Survived memory
+   peaks at ~3 GB; main responsible class is the
+   <code>GarbageCollectionTrigger</code> holding a 1.23 GB <code>byte[]</code>.</li>
+</ol>
+<hr />
+<h2 id="lab-7-runtime-optimization-cpu-analysis">Lab 7 — Runtime optimization: CPU analysis<a class="headerlink" href="#lab-7-runtime-optimization-cpu-analysis" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Identify which release is the most CPU-intensive and why.</p>
+<ol>
+<li>Open Profiling &amp; Optimization.</li>
+<li>Filter by <code>k8s.namespace.name == "astroshop"</code>.</li>
+<li>Find the PG (ad service) with highest consumption; split by
+   <code>service.version</code>.</li>
+<li>Drill into method hotspots — <code>computeAds()</code> is the culprit on
+   1.12.1.</li>
+</ol>
+<hr />
+<h2 id="lab-8-runtime-optimization-memory-analysis">Lab 8 — Runtime optimization: memory analysis<a class="headerlink" href="#lab-8-runtime-optimization-memory-analysis" title="Permanent link">#</a></h2>
+<p><strong>Goal.</strong> Quantify the GC impact, find the leak.</p>
+<ol>
+<li>Notebook → explore metrics → <strong>Garbage Collection time</strong>.</li>
+<li>Filter by <code>k8s.namespace.name == "astroshop"</code>, split by PG.</li>
+<li>On the high-suspension PG, open Technologies &amp; Processes.</li>
+<li>From the PGI, navigate to the flame graph → memory survived
+   objects → the <code>TransactionMemoryLeak</code> (1.12.3 use case).</li>
+</ol>
+<hr />
+<h2 id="bringing-the-workshop-up">Bringing the workshop up<a class="headerlink" href="#bringing-the-workshop-up" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Where</th>
+<th>Bootstrapped by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k3d cluster</td>
+<td>dev container</td>
+<td>framework <code>startK3dCluster</code></td>
+</tr>
+<tr>
+<td>Dynatrace operator + AppOnly</td>
+<td>dynatrace ns</td>
+<td><code>dynatraceDeployOperator</code> + <code>deployApplicationMonitoring</code></td>
+</tr>
+<tr>
+<td>Astroshop</td>
+<td><code>astroshop</code> ns</td>
+<td><code>deployApp astroshop</code> (OneAgent-injected)</td>
+</tr>
+<tr>
+<td>In-cluster GitLab</td>
+<td><code>gitlab</code> ns, <code>gitlab.&lt;ip&gt;.sslip.io</code></td>
+<td><code>installGitlab</code></td>
+</tr>
+<tr>
+<td>22 seeded repos</td>
+<td>inside GitLab</td>
+<td><code>seedGitlabRepos</code></td>
+</tr>
+<tr>
+<td>Locust loadgen</td>
+<td><code>astroshop-load</code> ns</td>
+<td><code>deployLoadgenerator</code></td>
+</tr>
+<tr>
+<td>SRG + workflows + dashboards + tagging</td>
+<td>tenant</td>
+<td><code>applyMonacoConfig</code> (269+ resources)</td>
+</tr>
+<tr>
+<td>Vault credential <code>hot-session-token</code></td>
+<td>tenant</td>
+<td><code>createWorkshopCredentials</code></td>
+</tr>
+<tr>
+<td>Four releases rolled (1.12.0/1/2/3)</td>
+<td>astroshop deployments + Davis events</td>
+<td><code>rollAstroshopRelease</code> × 4</td>
+</tr>
+</tbody>
+</table>
+<p>All of that happens automatically from <code>bootstrapWorkshop</code> when the
+five Codespace secrets are present (see <a href="../codespace-setup/">Codespace setup</a>).</p>
+<h2 id="accessing-the-astroshop">Accessing the Astroshop<a class="headerlink" href="#accessing-the-astroshop" title="Permanent link">#</a></h2>
+<p><code>printGreeting</code> in the terminal lists the public URL on <code>sslip.io</code>
+(or <code>https://&lt;codespace&gt;-80.app.github.dev/</code> in Codespaces).</p>
+<h2 id="flipping-the-release-problem-variant">Flipping the release / problem variant<a class="headerlink" href="#flipping-the-release-problem-variant" title="Permanent link">#</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Roll one variant (patches pod labels, sets service.version,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># restarts pods, fires CUSTOM_DEPLOYMENT + bizevent that triggers</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># the SRG workflow)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>rollAstroshopRelease<span class="w"> </span><span class="m">1</span>.12.1<span class="w"> </span>cpu
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Replay all four</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>seedWorkshopReleases
+</span></code></pre></div>
+<p>The four release variants live on dedicated branches in the seeded
+GitLab repos (<code>main</code>, <code>usecase/cpu</code>, <code>usecase/memory</code>, <code>usecase/n+1</code>,
+<code>usecase/error</code>).</p>
+<p>Hourly auto-flip works the same way — the seeded
+<code>Support/Astroshop_Automated_Load_test</code> repo's pipeline walks the
+four versions on a schedule.</p>
+<div class="grid cards">
+<ul>
+<li><a href="../stop-bad-builds/">Stop bad builds <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
+<li><a href="../cicd-observability/">Open questions Q&amp;A <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
+<li><a href="../cleanup/">Cleanup <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span></a></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../stop-bad-builds/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 5. Stop bad builds">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                5. Stop bad builds
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../apply-to-your-app/" class="md-footer__link md-footer__link--next" aria-label="Next: 7. Apply to your app">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                7. Apply to your app
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.tracking", "navigation.top", "navigation.sections", "navigation.footer", "toc.follow", "search.highlight", "search.suggest", "search.share"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

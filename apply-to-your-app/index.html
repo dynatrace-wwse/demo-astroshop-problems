@@ -1,0 +1,1243 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../4-content/">
+      
+      
+        <link rel="next" href="../cicd-observability/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+    
+    
+      
+        <title>7. Apply to your app - Astroshop CI/CD Observability — Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+  
+      
+    
+  
+  <script type="text/javascript"
+    src="https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"
+    crossorigin="anonymous"></script>
+  
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#apply-this-workshop-to-your-app" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Astroshop CI/CD Observability — Workshop" class="md-header__button md-logo" aria-label="Astroshop CI/CD Observability — Workshop" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Astroshop CI/CD Observability — Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. Apply to your app
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Astroshop CI/CD Observability — Workshop" class="md-nav__button md-logo" aria-label="Astroshop CI/CD Observability — Workshop" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    Astroshop CI/CD Observability — Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codespace-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Codespace setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4. How it all connects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stop-bad-builds/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Stop bad builds
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-content/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6. Workshop labs (ace-box order)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    7. Apply to your app
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    7. Apply to your app
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#decisions-to-make-first-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decisions to make first (15 minutes)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-make-the-application-observable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1 — Make the application observable
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-make-a-load-test-that-produces-those-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2 — Make a load test that produces those traces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-define-the-slos-that-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3 — Define the SLOs that matter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-create-the-srg-with-monaco" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4 — Create the SRG with monaco
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-wire-the-ci-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5 — Wire the CI pipeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-run-the-guardian-on-every-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6 — Run the guardian on every deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Run the guardian on every deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-a-pipeline-triggered-pull" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern A — pipeline-triggered (pull)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-b-dynatrace-triggered-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern B — Dynatrace-triggered (push)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-block-the-promote-stage-on-the-verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7 — Block the promote stage on the verdict
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cheat-sheet-what-to-install-where" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cheat-sheet — what to install where
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-applied-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recipe-applied checklist
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-looks-like-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      What this looks like in production
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cicd-observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8. Open questions Q&A
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monaco-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9. Monaco config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-codespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    10. Codespaces (local)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cleanup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    11. Cleanup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    12. Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-next/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    13. What's next?
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#decisions-to-make-first-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decisions to make first (15 minutes)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-make-the-application-observable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1 — Make the application observable
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-make-a-load-test-that-produces-those-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2 — Make a load test that produces those traces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-define-the-slos-that-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3 — Define the SLOs that matter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-create-the-srg-with-monaco" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4 — Create the SRG with monaco
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-wire-the-ci-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5 — Wire the CI pipeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-run-the-guardian-on-every-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6 — Run the guardian on every deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Run the guardian on every deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-a-pipeline-triggered-pull" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern A — pipeline-triggered (pull)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-b-dynatrace-triggered-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern B — Dynatrace-triggered (push)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-block-the-promote-stage-on-the-verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7 — Block the promote stage on the verdict
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cheat-sheet-what-to-install-where" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cheat-sheet — what to install where
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-applied-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recipe-applied checklist
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-looks-like-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      What this looks like in production
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="apply-this-workshop-to-your-app">Apply this workshop to your app<a class="headerlink" href="#apply-this-workshop-to-your-app" title="Permanent link">#</a></h1>
+<p>This page is the recipe. The Astroshop demo is one instance of a
+pattern that drops into any application + any CI system. Seven steps;
+expect a half-day of work for a single service, a sprint for an
+organisation-wide rollout.</p>
+<p>The whole story is in <a href="../architecture/">How it all connects</a>; this
+page is the <em>to-do list</em> version.</p>
+<hr />
+<h2 id="decisions-to-make-first-15-minutes">Decisions to make first (15 minutes)<a class="headerlink" href="#decisions-to-make-first-15-minutes" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Default</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Which app(s) first?</strong></td>
+<td>The one with the worst recent change-failure-rate</td>
+<td>Highest leverage — the team feels the pain</td>
+</tr>
+<tr>
+<td><strong>Which environment is the gate?</strong></td>
+<td>Staging</td>
+<td>Production gates are riskier; nail staging first</td>
+</tr>
+<tr>
+<td><strong>Test-step model</strong></td>
+<td>One SLO objective per critical user journey step</td>
+<td>Mirrors what users actually do; matches what Astroshop ships</td>
+</tr>
+<tr>
+<td><strong>CI system</strong></td>
+<td>Your existing one (GitLab/GitHub/Jenkins/ADO)</td>
+<td>Don't introduce a new CI as part of this</td>
+</tr>
+<tr>
+<td><strong>Source of truth for platform config</strong></td>
+<td>monaco</td>
+<td>Versioned, peer-reviewable, replayable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-1-make-the-application-observable">Step 1 — Make the application observable<a class="headerlink" href="#step-1-make-the-application-observable" title="Permanent link">#</a></h2>
+<p>You need code-level traces with <strong>test-step context</strong> so the SRG has
+something to compare across releases.</p>
+<p><strong>What this repo does:</strong> OneAgent is installed via the Dynatrace
+Operator on the k3d cluster. Request attributes <code>LTN</code> (load-test
+name) and <code>TSN</code> (test-step name) are configured in monaco
+(<a href="https://github.com/dynatrace-wwse/demo-astroshop-problems/tree/main/.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/init_configs/request-attributes"><code>monaco/init_configs/request-attributes/</code></a>)
+to capture the W3C baggage headers the loadgen propagates.</p>
+<p><strong>What you do for your app:</strong></p>
+<ol>
+<li>Install OneAgent (or otel collector → Dynatrace) on the workloads.</li>
+<li>Pick <strong>5–15 user journeys</strong> that matter. For an e-commerce shop:
+   homepage, browse products, add to cart, checkout. For an API:
+   the top-N endpoints by traffic + the top-N by business value.</li>
+<li>Inject a request attribute per step. Two options:</li>
+<li>Your load test sends <code>traceparent</code> + <code>baggage: teststep=&lt;n&gt;</code>
+     and Dynatrace captures the baggage as a request attribute
+     (<a href="https://github.com/dynatrace-wwse/demo-astroshop-problems/blob/main/.devcontainer/migrate/astroshop_repos/loadgenerator/locustfile.py">this is what we do</a>).</li>
+<li>Or a server-side header your gateway sets — same idea.</li>
+</ol>
+<p><strong>You're done with this step when:</strong> Distributed Traces in Dynatrace
+shows the test-step name as a column or filter.</p>
+<hr />
+<h2 id="step-2-make-a-load-test-that-produces-those-traces">Step 2 — Make a load test that produces those traces<a class="headerlink" href="#step-2-make-a-load-test-that-produces-those-traces" title="Permanent link">#</a></h2>
+<p>Without sustained, repeatable traffic, the SLO percentiles oscillate
+and the SRG verdict is noise.</p>
+<p><strong>What this repo does:</strong> A locust + Playwright generator in
+<code>astroshop-load</code> namespace exercises the entire purchase flow in a
+headless browser, propagating baggage on every request.</p>
+<p><strong>What you do:</strong></p>
+<ol>
+<li>Pick a load test tool you already use (locust, k6, JMeter, Gatling).</li>
+<li>Make sure it propagates W3C trace-context + baggage. Most of them
+   support this with a one-line config now.</li>
+<li>Run it continuously against staging — even at low volume — so the
+   SLO window is always full of signal. Spin it up to high volume
+   only when you're gating a release.</li>
+</ol>
+<p><strong>You're done with this step when:</strong> the test-step request attribute
+populates for 100% of traffic during a load-test window.</p>
+<hr />
+<h2 id="step-3-define-the-slos-that-matter">Step 3 — Define the SLOs that matter<a class="headerlink" href="#step-3-define-the-slos-that-matter" title="Permanent link">#</a></h2>
+<p>This is the part that needs <em>judgement</em>, not tooling.</p>
+<p><strong>What this repo does:</strong> 11 DQL-based latency objectives in
+<a href="https://github.com/dynatrace-wwse/demo-astroshop-problems/tree/main/.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/init_configs/labs/srg-staging.json"><code>monaco/init_configs/labs/srg-staging.json</code></a>,
+one per test step. Target: median ≤ 1000 ms, warning at 900 ms.</p>
+<p><strong>Three SLO categories to cover:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Example DQL pattern</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency</strong> (per step)</td>
+<td><code>median(duration)</code> filtered by <code>request_attribute.TSN</code></td>
+<td>The thing users feel</td>
+</tr>
+<tr>
+<td><strong>Errors</strong> (overall + per step)</td>
+<td><code>1 - sum(failure_count) / sum(count)</code></td>
+<td>Catches regressions that show as 5xx, not slowness</td>
+</tr>
+<tr>
+<td><strong>Saturation</strong> (resource-level)</td>
+<td><code>avg(container.cpu.usage)</code> or <code>avg(container.memory.usage)</code></td>
+<td>Early warning before latency/errors degrade</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Anti-patterns to avoid:</strong></p>
+<ul>
+<li>Static averages instead of percentiles (<code>avg(duration)</code> is useless
+  on noisy traffic; use <code>percentile(duration, 95)</code>).</li>
+<li>Counters instead of ratios for errors. <code>error_count &gt; 100</code> fails on
+  a quiet weekend.</li>
+<li>Targets defined as "this week minus 5%". That's a ratchet that
+  passes once and fails forever.</li>
+</ul>
+<p><strong>You're done with this step when:</strong> Your SLOs report a stable
+percentage against a representative load test.</p>
+<hr />
+<h2 id="step-4-create-the-srg-with-monaco">Step 4 — Create the SRG with monaco<a class="headerlink" href="#step-4-create-the-srg-with-monaco" title="Permanent link">#</a></h2>
+<p>The SRG is just <em>a collection of SLOs</em> with a target threshold for
+each. Define it as code; apply with monaco.</p>
+<p><strong>What this repo does:</strong> the
+<a href="https://github.com/dynatrace-wwse/demo-astroshop-problems/tree/main/.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/init_configs/labs/srg-staging.json"><code>labs/srg-staging.json</code></a>
+schema is <code>app:dynatrace.site.reliability.guardian:guardians</code>. The
+file is referenced from <code>labs/config.yaml</code> and applied by
+<code>monaco deploy manifest.yml</code>.</p>
+<p><strong>What you do:</strong></p>
+<ol>
+<li>Copy the file as a starter. Edit the <code>objectives</code> array — each
+   item is <code>{ name, objectiveType: DQL, dqlQuery, target, warning, comparisonOperator }</code>.</li>
+<li>Add the file to your monaco project under
+   <code>init_configs/&lt;your-folder&gt;/</code>.</li>
+<li>Reference it from <code>config.yaml</code> with schema
+   <code>app:dynatrace.site.reliability.guardian:guardians</code>.</li>
+<li>Apply: <code>monaco deploy manifest.yml</code>.</li>
+</ol>
+<p><strong>You're done with this step when:</strong> The SRG appears in the Dynatrace
+UI and you can run it manually with a custom time range.</p>
+<hr />
+<h2 id="step-5-wire-the-ci-pipeline">Step 5 — Wire the CI pipeline<a class="headerlink" href="#step-5-wire-the-ci-pipeline" title="Permanent link">#</a></h2>
+<p>Two events from the CI side. Bash helpers cover both.</p>
+<p><strong>What this repo does:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># .gitlab-ci.yml or any CI script:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">source</span><span class="w"> </span>.devcontainer/util/my_functions.sh
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 1) the release marker — for Davis correlation + dashboards</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sendDeploymentEvent<span class="w"> </span><span class="nv">$VERSION</span><span class="w"> </span>staging<span class="w"> </span><span class="nv">$PROBLEM</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 2) pipeline-run + task events — for the CI/CD Observability app</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sendPipelineEvent<span class="w"> </span><span class="nv">$PIPELINE_ID</span><span class="w"> </span><span class="nv">$RUN_ID</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PIPELINE_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">$OUTCOME</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                  </span><span class="nv">$BRANCH</span><span class="w"> </span><span class="nv">$REPO</span><span class="w"> </span><span class="nv">$USER</span><span class="w"> </span><span class="nv">$DURATION</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sendTaskEvent<span class="w">     </span><span class="nv">$TASK_ID</span><span class="w">    </span><span class="s2">&quot;build&quot;</span><span class="w"> </span>success<span class="w"> </span><span class="nv">$PIPELINE_ID</span><span class="w"> </span><span class="nv">$RUN_ID</span><span class="w"> </span>…
+</span></code></pre></div>
+<p>GitHub equivalent — one <code>uses:</code> of
+<code>.github/actions/dt-deployment-event/</code> per environment job.</p>
+<p><strong>What you do:</strong></p>
+<ol>
+<li>Source the helpers (or copy them into your CI tools repo).</li>
+<li>Set the env vars in your CI's secrets/variables:</li>
+<li><code>DT_TENANT_URL=https://&lt;id&gt;.live.dynatrace.com</code></li>
+<li><code>DT_API_TOKEN=&lt;token with events.ingest + openpipeline.events_sdlc.custom&gt;</code></li>
+<li>Add a job at the end of every environment-touching stage that
+   calls the helpers.</li>
+</ol>
+<p><strong>You're done with this step when:</strong> A DQL of
+<code>fetch events, from: -1h | filter event.provider == "&lt;your-ci&gt;"</code>
+returns rows after a pipeline run.</p>
+<hr />
+<h2 id="step-6-run-the-guardian-on-every-deployment">Step 6 — Run the guardian on every deployment<a class="headerlink" href="#step-6-run-the-guardian-on-every-deployment" title="Permanent link">#</a></h2>
+<p>Two patterns; pick one.</p>
+<h3 id="pattern-a-pipeline-triggered-pull">Pattern A — pipeline-triggered (pull)<a class="headerlink" href="#pattern-a-pipeline-triggered-pull" title="Permanent link">#</a></h3>
+<p>The CI job that just deployed waits a soak period, then runs the SRG
+via <code>dtctl</code> and reads the verdict:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">EXEC_ID</span><span class="o">=</span><span class="k">$(</span>dtctl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>workflow<span class="w"> </span><span class="nv">$SRG_WF_ID</span><span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span>.id<span class="k">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">until</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dtctl<span class="w"> </span>get<span class="w"> </span>wfe<span class="w"> </span><span class="nv">$EXEC_ID</span><span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span>.state<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;RUNNING&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>sleep<span class="w"> </span><span class="m">10</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">VERDICT</span><span class="o">=</span><span class="k">$(</span>dtctl<span class="w"> </span>get<span class="w"> </span>wfe<span class="w"> </span><span class="nv">$EXEC_ID</span><span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span>.verdict<span class="k">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">test</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VERDICT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pass&quot;</span>
+</span></code></pre></div>
+<p>Pros: simple, all in one pipeline.
+Cons: pipeline runner sits idle during soak.</p>
+<h3 id="pattern-b-dynatrace-triggered-push">Pattern B — Dynatrace-triggered (push)<a class="headerlink" href="#pattern-b-dynatrace-triggered-push" title="Permanent link">#</a></h3>
+<p>A Dynatrace Workflow listens for <code>CUSTOM_DEPLOYMENT</code> events, runs
+the guardian after a soak window, and posts the verdict back via the
+GitLab / GitHub Connector (commit status, issue, or dispatched
+pipeline). The CI promote-job waits on that status.</p>
+<p><strong>This repo ships pattern B</strong> —
+<a href="https://github.com/dynatrace-wwse/demo-astroshop-problems/tree/main/.devcontainer/migrate/support_repos/dynatrace_env_automation/monaco/init_configs/labs/srg-workflow.json"><code>labs/srg-workflow.json</code></a>.</p>
+<p>Pros: no idle runner; richer side-effects (auto-rollback, ticket
+creation).
+Cons: more moving parts.</p>
+<p><strong>You're done with this step when:</strong> a deployment event reliably
+triggers the SRG and produces a verdict you can act on.</p>
+<hr />
+<h2 id="step-7-block-the-promote-stage-on-the-verdict">Step 7 — Block the promote stage on the verdict<a class="headerlink" href="#step-7-block-the-promote-stage-on-the-verdict" title="Permanent link">#</a></h2>
+<p>This is the "stop bad builds" part. Boring on purpose.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># GitLab</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">validate</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gate</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test &quot;$(runDeploymentValidation $VERSION staging $PROBLEM)&quot; = &quot;pass&quot;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">promote-production</span><span class="p">:</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-prod</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">validate</span><span class="p p-Indicator">]</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_success</span>
+</span></code></pre></div>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># GitHub Actions</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">validate</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-staging</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">outputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> verdict</span><span class="p">:</span><span class="w"> </span><span class="nv">$</span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">steps.guardian.outputs.verdict</span><span class="w"> </span><span class="p p-Indicator">}}</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">promote</span><span class="p">:</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">needs.validate.outputs.verdict == &#39;pass&#39;</span>
+</span></code></pre></div>
+<p><strong>Roll-out order — least scary first:</strong></p>
+<ol>
+<li><strong>Audit only.</strong> Emit verdicts but don't block. Run for a week.</li>
+<li><strong>Warn on fail.</strong> Mark the build red but allow promotion.</li>
+<li><strong>Block on fail.</strong> Refuse to promote.</li>
+<li><strong>Auto-rollback.</strong> The workflow dispatches the rollback pipeline.</li>
+</ol>
+<p>Most teams stop at 3 for a year before turning on 4. That's fine.</p>
+<hr />
+<h2 id="cheat-sheet-what-to-install-where">Cheat-sheet — what to install where<a class="headerlink" href="#cheat-sheet-what-to-install-where" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Where</th>
+<th>Install</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workloads</td>
+<td>OneAgent or OTel collector → Dynatrace</td>
+</tr>
+<tr>
+<td>Anywhere CI runs</td>
+<td>Bash helpers from this repo's <code>my_functions.sh</code> <em>or</em> the GitHub composite action <em>or</em> the GitLab include</td>
+</tr>
+<tr>
+<td>Workshop driver (laptop / dev box)</td>
+<td>monaco (config-as-code), dtctl (interactive ops)</td>
+</tr>
+<tr>
+<td>Dynatrace tenant</td>
+<td>Activate the community CI/CD Observability app (one Setup Wizard click) so it consumes your SDLC events</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recipe-applied-checklist">Recipe-applied checklist<a class="headerlink" href="#recipe-applied-checklist" title="Permanent link">#</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> OneAgent (or OTel) on the target workloads</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test-step request attributes captured (<code>TSN</code>, <code>LTN</code> or your names)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Load test sends baggage + runs continuously in staging</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 5–15 SLOs covering latency / errors / saturation</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> SRG defined in monaco with those SLOs as objectives</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> CI pipeline calls <code>sendDeploymentEvent</code> + <code>sendPipelineEvent</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Verdict workflow exists (push) <strong>or</strong> CI polls dtctl (pull)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Promote stage gated <code>when: on_success</code> / <code>if: verdict == pass</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> (Optional) Auto-rollback workflow wired via GitLab/GitHub Connector</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Notification template shows PR/MR fields on Davis problem cards</li>
+</ul>
+<hr />
+<h2 id="what-this-looks-like-in-production">What this looks like in production<a class="headerlink" href="#what-this-looks-like-in-production" title="Permanent link">#</a></h2>
+<p>The four classes of dashboards / apps you'll end up using:</p>
+<ul>
+<li><strong>Davis problem cards</strong> — for the on-call. Show "which MR caused
+  this" inline.</li>
+<li><strong>DORA dashboard</strong> (one tile per metric) — for leadership.
+  Deployment frequency, lead time, change failure rate, MTTR.</li>
+<li><strong>CI/CD Observability community app</strong> — for the platform team.
+  Pipeline durations, queue depth, job retries.</li>
+<li><strong>The SRG verdict timeline</strong> — for the dev team. Shows the
+  history of pass/fail by service, release version.</li>
+</ul>
+<p>Each one consumes the same three signals (deployment events, SDLC
+events, runtime traces) — just sliced differently.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../4-content/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 6. Workshop labs (ace-box order)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                6. Workshop labs (ace-box order)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../cicd-observability/" class="md-footer__link md-footer__link--next" aria-label="Next: 8. Open questions Q&amp;A">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                8. Open questions Q&A
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.tracking", "navigation.top", "navigation.sections", "navigation.footer", "toc.follow", "search.highlight", "search.suggest", "search.share"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

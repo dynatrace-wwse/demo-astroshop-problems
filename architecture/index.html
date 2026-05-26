@@ -1,0 +1,1307 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../codespace-setup/">
+      
+      
+        <link rel="next" href="../stop-bad-builds/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+    
+    
+      
+        <title>4. How it all connects - Astroshop CI/CD Observability — Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+  
+      
+    
+  
+  <script type="text/javascript"
+    src="https://js-cdn.dynatrace.com/jstag/1612cf70810/bf81393wlb/d0d550817d997156_complete.js"
+    crossorigin="anonymous"></script>
+  
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-it-all-connects" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Astroshop CI/CD Observability — Workshop" class="md-header__button md-logo" aria-label="Astroshop CI/CD Observability — Workshop" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Astroshop CI/CD Observability — Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4. How it all connects
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Astroshop CI/CD Observability — Workshop" class="md-nav__button md-logo" aria-label="Astroshop CI/CD Observability — Workshop" data-md-component="logo">
+      
+  <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="logo">
+
+    </a>
+    Astroshop CI/CD Observability — Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dynatrace-wwse/demo-astroshop-problems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    View Code on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codespace-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Codespace setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    4. How it all connects
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    4. How it all connects
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-seven-moving-parts" class="md-nav__link">
+    <span class="md-ellipsis">
+      The seven moving parts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asset-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Asset inventory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Asset inventory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-lands-on-the-dynatrace-tenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      What lands on the Dynatrace tenant
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-1-deployment-event-davis-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data flow #1: deployment event → Davis correlation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-2-pipeline-events-cicd-observability-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data flow #2: pipeline events → CI/CD Observability app
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-3-srg-verdict-pipeline-gate-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data flow #3: SRG verdict → pipeline gate → rollback
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-screen-recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      One-screen recap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stop-bad-builds/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Stop bad builds
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-content/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6. Workshop labs (ace-box order)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apply-to-your-app/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7. Apply to your app
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cicd-observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8. Open questions Q&A
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monaco-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9. Monaco config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-codespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    10. Codespaces (local)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cleanup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    11. Cleanup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    12. Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-next/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    13. What's next?
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-seven-moving-parts" class="md-nav__link">
+    <span class="md-ellipsis">
+      The seven moving parts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asset-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Asset inventory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Asset inventory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-lands-on-the-dynatrace-tenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      What lands on the Dynatrace tenant
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-1-deployment-event-davis-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data flow #1: deployment event → Davis correlation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-2-pipeline-events-cicd-observability-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data flow #2: pipeline events → CI/CD Observability app
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-3-srg-verdict-pipeline-gate-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data flow #3: SRG verdict → pipeline gate → rollback
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-screen-recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      One-screen recap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="how-it-all-connects">How it all connects<a class="headerlink" href="#how-it-all-connects" title="Permanent link">#</a></h1>
+<p>This page is the map of the workshop. It inventories every asset
+deployed, shows the data flow at three zoom levels, and names every
+token and endpoint involved. After reading it you should be able to
+explain to a colleague what speaks to what, and why.</p>
+<p>The same architecture maps to <strong>any application + any CI system</strong> —
+the <a href="../apply-to-your-app/">Apply this to your app</a> page walks the
+recipe for swapping Astroshop and GitLab out.</p>
+<hr />
+<h2 id="the-seven-moving-parts">The seven moving parts<a class="headerlink" href="#the-seven-moving-parts" title="Permanent link">#</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                          Dev container                               │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌────────────────────────────────────────────────────────────────┐  │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │ k3d cluster (&quot;enablement&quot;)                                     │  │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  ┌──────────────┐  ┌──────────────────┐  ┌──────────────────┐  │  │
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  │  Astroshop   │  │   In-cluster     │  │  Locust loadgen  │  │  │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  │ 15+ services │  │     GitLab       │  │  Playwright +    │  │  │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  │ (the app     │  │  + 22 seeded     │  │  HTTP traffic    │  │  │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  │  under load) │  │  projects + CI   │  │  → Astroshop UI  │  │  │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  └──────┬───────┘  └────────┬─────────┘  └───────┬──────────┘  │  │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │         │  traces            │ pipelines        │ traffic       │  │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │         │ (OneAgent)         │ + events         │               │  │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └─────────┼────────────────────┼──────────────────┼───────────────┘  │
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│            │                    │                  │                  │
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  ┌─────────┴────┐  ┌────────────┴──┐  ┌────────────┴────────┐         │
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  monaco CLI  │  │   dtctl CLI   │  │  bash helpers       │         │
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │ (config-as-  │  │ (interactive  │  │ (sendDeploymentEvent│         │
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │  code)       │  │  ops)         │  │ , seedWorkshop…)    │         │
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └─────────┬────┘  └───────┬───────┘  └────────────┬────────┘         │
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└────────────┼───────────────┼───────────────────────┼──────────────────┘
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>             │ apply         │ describe / query     │ POST events
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>             ▼               ▼                       ▼
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  ╔══════════════════════════════════════════════════════════════════╗
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  ║              Dynatrace tenant (geu80787 in this demo)            ║
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  ║                                                                  ║
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  ║   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────────┐   ║
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  ║   │ Settings │  │ Documents│  │Workflows │  │ Events &amp; Davis │   ║
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  ║   │  (SRG,   │  │ (dash,   │  │ (the     │  │   (problems,   │   ║
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  ║   │  tagging │  │ notebook,│  │  SRG-    │  │    bizevents,  │   ║
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  ║   │  rules…) │  │ launch…) │  │  driver) │  │    sdlc evts)  │   ║
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  ║   └──────────┘  └──────────┘  └────┬─────┘  └────────┬───────┘   ║
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  ║                                    │                  │           ║
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  ║                                    │   reads events   │           ║
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>  ║                                    └─────────────────►│           ║
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  ╚══════════════════════════════════════════════════════════════════╝
+</span></code></pre></div>
+<hr />
+<h2 id="asset-inventory">Asset inventory<a class="headerlink" href="#asset-inventory" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Asset</th>
+<th>Where it lives</th>
+<th>Source</th>
+<th>Talks to</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Astroshop</strong> (the application)</td>
+<td>k3d namespace <code>astroshop</code></td>
+<td><code>deployApp astroshop</code> from framework</td>
+<td>OneAgent → Dynatrace</td>
+<td>classic API token (operator)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Locust loadgen</strong></td>
+<td>k3d namespace <code>astroshop-load</code></td>
+<td><code>deployLoadgenerator</code>; image built from <code>migrate/astroshop_repos/loadgenerator/</code></td>
+<td>Astroshop frontend over the cluster ingress</td>
+<td>none — internal</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>In-cluster GitLab</strong></td>
+<td>k3d namespace <code>gitlab</code>, ingress <code>gitlab.&lt;ip&gt;.sslip.io</code></td>
+<td><code>installGitlab</code> (helm chart)</td>
+<td>runs jobs in pods on the same cluster</td>
+<td>local PAT (in k8s secret)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>22 seeded GitLab projects</strong></td>
+<td>19 under <code>Otel-App/*</code>, 3 under <code>Support/*</code></td>
+<td><code>seedGitlabRepos</code> from <code>migrate/{astroshop_repos,support_repos}/</code></td>
+<td>each other (orchestrator → service repos)</td>
+<td>local PAT</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>bash helpers in <code>my_functions.sh</code></strong></td>
+<td>dev container</td>
+<td>the repo</td>
+<td>Events v2 + SDLC ingest endpoints</td>
+<td><code>DT_API_TOKEN</code> (events.ingest + openpipeline.events_sdlc.custom)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>monaco</strong> + the monaco config under <code>migrate/support_repos/dynatrace_env_automation/monaco/</code></td>
+<td>dev container; <code>Support/Dynatrace_Monitoring_as_Code</code> GitLab project re-applies it on commit</td>
+<td>github.com/Dynatrace/dynatrace-configuration-as-code</td>
+<td>Settings, Documents, Workflows APIs</td>
+<td><code>DT_PLATFORM_TOKEN</code> (<code>dt0s16…</code>)</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>dtctl</strong> + the <code>dtctl/</code> YAMLs</td>
+<td>dev container + host</td>
+<td>github.com/dynatrace-oss/dtctl</td>
+<td>same as monaco (documents, settings, workflows) + DQL query endpoint</td>
+<td><code>DT_PLATFORM_TOKEN</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-lands-on-the-dynatrace-tenant">What lands on the Dynatrace tenant<a class="headerlink" href="#what-lands-on-the-dynatrace-tenant" title="Permanent link">#</a></h3>
+<p>After <code>bootstrapWorkshop</code> + <code>applyMonacoConfig</code>, the tenant has:</p>
+<table>
+<thead>
+<tr>
+<th>Resource type</th>
+<th style="text-align: right;">Count</th>
+<th>Source folder</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Settings: <code>app:dynatrace.site.reliability.guardian:guardians</code></td>
+<td style="text-align: right;">1</td>
+<td><code>monaco/init_configs/labs/srg-staging.json</code></td>
+<td>The 11-objective SRG</td>
+</tr>
+<tr>
+<td>Settings: <code>app:dynatrace.gitlab.connector:connection</code></td>
+<td style="text-align: right;">1</td>
+<td><code>monaco/init_configs/labs/gitlab-connection.json</code></td>
+<td>Connector wired with placeholder when on COE</td>
+</tr>
+<tr>
+<td>Settings: <code>builtin:tags.auto-tagging</code></td>
+<td style="text-align: right;">1</td>
+<td><code>monaco/init_configs/builtintags.auto-tagging/</code></td>
+<td>The <code>Astroshop</code> tag</td>
+</tr>
+<tr>
+<td>Settings: <code>builtin:span-attribute</code></td>
+<td style="text-align: right;">197</td>
+<td><code>monaco/init_configs/builtinspan-attribute/</code></td>
+<td>HTTP headers, custom attributes</td>
+</tr>
+<tr>
+<td>Settings: <code>builtin:oneagent.features</code></td>
+<td style="text-align: right;">309</td>
+<td><code>monaco/init_configs/builtinoneagent.features/</code></td>
+<td>OneAgent feature flags</td>
+</tr>
+<tr>
+<td>Settings: <code>builtin:apis.detection-rules</code></td>
+<td style="text-align: right;">37</td>
+<td><code>monaco/init_configs/builtinapis.detection-rules/</code></td>
+<td>Service detection</td>
+</tr>
+<tr>
+<td>Request attributes (classic API)</td>
+<td style="text-align: right;">5</td>
+<td><code>monaco/init_configs/request-attributes/</code></td>
+<td><code>LTN</code>, <code>TSN</code>, session-id</td>
+</tr>
+<tr>
+<td>Workflows</td>
+<td style="text-align: right;">2</td>
+<td><code>monaco/init_configs/labs/srg-workflow.json</code> + <code>event-wf.json</code></td>
+<td>SRG-runner + smoke test</td>
+</tr>
+<tr>
+<td>Documents — dashboards</td>
+<td style="text-align: right;">3 from monaco + 2 from dtctl</td>
+<td><code>document-dashboard/</code> + <code>dtctl/dashboards/</code></td>
+<td>5 total</td>
+</tr>
+<tr>
+<td>Documents — notebooks</td>
+<td style="text-align: right;">2</td>
+<td><code>document-notebook/</code></td>
+<td>DQL playgrounds</td>
+</tr>
+<tr>
+<td>Documents — launchpads</td>
+<td style="text-align: right;">1</td>
+<td><code>document-launchpad/</code></td>
+<td>In-product lab guide entry</td>
+</tr>
+<tr>
+<td>Synthetic monitor + location</td>
+<td style="text-align: right;">2</td>
+<td><code>synthetic-*</code></td>
+<td>Browser monitor for the purchase flow</td>
+</tr>
+<tr>
+<td>RUM application</td>
+<td style="text-align: right;">1</td>
+<td><code>application-web/</code></td>
+<td>Astroshop frontend</td>
+</tr>
+<tr>
+<td>SLOs</td>
+<td style="text-align: right;">3</td>
+<td><code>dtctl/slos/</code> (could also be in monaco)</td>
+<td>availability, ad-svc latency, error rate</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-flow-1-deployment-event-davis-correlation">Data flow #1: deployment event → Davis correlation<a class="headerlink" href="#data-flow-1-deployment-event-davis-correlation" title="Permanent link">#</a></h2>
+<p>What happens when a GitLab pipeline finishes deploying a release.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>GitLab CI job (.gitlab-ci.yml)
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   │ sources my_functions.sh, calls
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   │  sendDeploymentEvent 1.12.1 staging cpu
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   ▼
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>POST /api/v2/events/ingest
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    Authorization: Api-Token dt0c01.…  (events.ingest scope)
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    body: { eventType: CUSTOM_DEPLOYMENT,
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>            title: &quot;astroshop release 1.12.1 (cpu)&quot;,
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            entitySelector: &quot;type(SERVICE),entityName.startsWith(astroshop-)&quot;,
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>            properties: { deploymentName, deploymentVersion,
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                          deploymentProject, ciBackLink,
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                          Release_Stage, PROBLEM, git.commit.id,
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>                          git.commit.branch, Repository, pr.number,
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                          pr.url, pr.title, pr.author, … } }
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   │
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   ▼
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Grail table: dt.davis.events    kind = DEPLOYMENT_EVENT
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   │
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   ▼ Davis AI correlates time-adjacent problems against this marker
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   ▼
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Davis Problem card now shows:
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    &quot;Deployment: astroshop release 1.12.1 (cpu) — MR !34
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>     PR: &#39;switch to async ad cache&#39; by alice@, 5 files changed
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>     [Open MR] [Diff]
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>     Change ticket: CHG-1142&quot;
+</span></code></pre></div>
+<p><strong>Why the entitySelector matters:</strong> Davis only attaches the deployment
+marker to entities that match. On the COE tenant we use a permissive
+<code>entityName.startsWith(astroshop-)</code> so it lands on anything that
+<em>looks</em> like Astroshop. In a real tenant monitoring the cluster, the
+selector would target the precise Smartscape services.</p>
+<hr />
+<h2 id="data-flow-2-pipeline-events-cicd-observability-app">Data flow #2: pipeline events → CI/CD Observability app<a class="headerlink" href="#data-flow-2-pipeline-events-cicd-observability-app" title="Permanent link">#</a></h2>
+<p>What populates the <strong>CI/CD Observability</strong> community app's pipeline,
+job, and PR views.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GitLab CI orchestrator pipeline
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Support/Astroshop_Automated_Load_test
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  │
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  │ for each release variant:
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  │   trigger Otel-App/&lt;service&gt; pipeline
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  │     in each job, source my_functions.sh
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  │     and call:
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  │       sendPipelineEvent astroshop-release $CI_PIPELINE_ID … success/failed
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  │       sendTaskEvent $rid-build &quot;build&quot; success $pid $rid $pname main 45
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  │       sendTaskEvent $rid-deploy …
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  │       …
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  ▼
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>POST /platform/ingest/custom/events.sdlc/gitlab
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    Authorization: Api-Token dt0c01.…  (openpipeline.events_sdlc.custom scope)
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    body: { cicd.pipeline.id, cicd.pipeline.run.id,
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            cicd.pipeline.run.outcome, event.category,
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            event.type, event.provider, duration,
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>            start_time, end_time, … }
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>   │
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>   ▼
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>OpenPipeline rules (installed by the app&#39;s wizard)
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>   normalize and route to →
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>   ▼
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>Grail table: events            event.kind = SDLC_EVENT
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>                               event.provider = gitlab
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>                               event.category = pipeline | task | deployment | guardian
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>   │
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>   ▼
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>CI/CD Observability app
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>   - Pipeline view: status, runs, history
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>   - Stage/Job view: outcomes, durations
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>   - PR view (when `vcs.pr.*` populated)
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>   - Flamegraph of one run
+</span></code></pre></div>
+<p>The same flow with <code>event.provider = github-actions</code> feeds GitHub
+pipelines — the path segment after <code>events.sdlc/</code> is the
+discriminator. PR-lifecycle events (<code>event.category = change</code>) come
+from <code>.github/workflows/pr-events.yml</code> (or the equivalent GitLab
+webhook).</p>
+<hr />
+<h2 id="data-flow-3-srg-verdict-pipeline-gate-rollback">Data flow #3: SRG verdict → pipeline gate → rollback<a class="headerlink" href="#data-flow-3-srg-verdict-pipeline-gate-rollback" title="Permanent link">#</a></h2>
+<p>The "stop bad builds" loop.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Deployment event (flow #1) lands
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   │
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   ▼
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Dynatrace Workflow &quot;astroshop staging quality gate Validation&quot;
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   (defined in monaco: labs/srg-workflow.json)
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   │
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   │ triggered by event filter:
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   │   event.kind == &quot;DEPLOYMENT_EVENT&quot; and
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>   │   deploymentProject == &quot;astroshop&quot;
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   │
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   ├──► task: get_application  (DQL)   ─┐
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   ├──► task: get_frontend_svc (DQL)    ├─ resolve target entity
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>   ├──► task: get_k8s_cluster  (DQL)   ─┘
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>   ├──► task: previous_succesful_evaluation (DQL)
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>   ├──► task: run_validation
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>   │      action: dynatrace.site.reliability.guardian:validate-guardian-action
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   │      input: { guardianIdentifier: guardian_astroshop_staging,
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>   │               timeframe: { from: deploy_ts, to: now } }
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>   │      → evaluates 11 test-step latency objectives
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>   │
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>   ├──► if PASS: task validation_success
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>   │      └─ emit success bizevent, close loop
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>   │
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>   └──► if FAIL: task validation_failure → create_ticket
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>          action: dynatrace.gitlab.connector:gitlab-issue-create
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>          input: { connection: gitlab_connection_id,
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>                   projectId: 3, … }
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>          → opens an issue in Support/astroshop_release_repo
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>GitLab pipeline polls the verdict (or waits on a commit status set by
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>the connector) — `promote-production` runs only if verdict == pass.
+</span></code></pre></div>
+<p><strong>What the SRG actually queries</strong> — all 11 objectives share the same
+shape, with <code>request_attribute.TSN</code> (test-step name) as the
+discriminator:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fetch spans
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| filter isNotNull(request_attribute.TSN)
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>       and contains(request_attribute.LTN, &quot;Astroshop&quot;)
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>       and request_attribute.TSN == &quot;04 - ad service &quot;
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| fieldsAdd duration = toDouble(duration) / 1000000   // ns → ms
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>| summarize { median = round(median(duration), decimals: 0) }
+</span></code></pre></div>
+<p>Target: median ≤ <strong>1000 ms</strong>, warning at <strong>900 ms</strong>. The bad-build
+variants (<code>cpu</code>, <code>memory</code>, <code>nplusone</code>) deliberately push the median
+of the relevant step past 1000 ms.</p>
+<hr />
+<h2 id="authentication-summary">Authentication summary<a class="headerlink" href="#authentication-summary" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Identity</th>
+<th>Form</th>
+<th>Used by</th>
+<th>Stored as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DT_API_TOKEN</code></td>
+<td>classic Api-Token <code>dt0c01.…</code> with <code>events.ingest</code> + <code>openpipeline.events_sdlc.custom</code> (+ optional <code>bizevents.ingest</code>)</td>
+<td>bash helpers, GitHub Actions composite action, GitLab CI scripts</td>
+<td><code>.devcontainer/.env</code> mode 0600; gitignored</td>
+</tr>
+<tr>
+<td><code>DT_PLATFORM_TOKEN</code></td>
+<td>platform OAuth token <code>dt0s16.…</code> with platform scopes</td>
+<td>monaco, dtctl</td>
+<td><code>.devcontainer/.env</code> + <code>~/.config/dtctl/config</code></td>
+</tr>
+<tr>
+<td>GitLab root PAT</td>
+<td>classic token</td>
+<td>seed scripts that push repos + create projects</td>
+<td>k8s secret <code>gitlab/ace-gitlab-root-pat</code></td>
+</tr>
+<tr>
+<td><code>DT_OPERATOR_TOKEN</code></td>
+<td>classic Api-Token</td>
+<td>Dynatrace Operator (OneAgent install)</td>
+<td><code>.devcontainer/.env</code>, also delivered via env to runtime</td>
+</tr>
+</tbody>
+</table>
+<p>Everything ingest-side flows through one token (<code>DT_API_TOKEN</code>); everything
+platform-config-side flows through another (<code>DT_PLATFORM_TOKEN</code>). Two
+secrets, end to end.</p>
+<hr />
+<h2 id="one-screen-recap">One-screen recap<a class="headerlink" href="#one-screen-recap" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where do deployment markers come from?</td>
+<td>The GitLab job (or any CI job) calls <code>sendDeploymentEvent</code> → POST to <code>/api/v2/events/ingest</code></td>
+</tr>
+<tr>
+<td>What feeds the CI/CD Observability app?</td>
+<td><code>sendPipelineEvent</code> / <code>sendTaskEvent</code> → POST to <code>/platform/ingest/custom/events.sdlc/gitlab</code></td>
+</tr>
+<tr>
+<td>What decides pass/fail?</td>
+<td>The SRG <code>Astroshop - Staging - Quality gate</code> (in monaco) runs 11 DQL latency objectives over the load-test window</td>
+</tr>
+<tr>
+<td>What runs the SRG?</td>
+<td>A Dynatrace Workflow (in monaco) triggered by every <code>CUSTOM_DEPLOYMENT</code> event for <code>deploymentProject == "astroshop"</code></td>
+</tr>
+<tr>
+<td>What happens on FAIL?</td>
+<td>The workflow opens a GitLab issue (or dispatches a rollback pipeline) via the GitLab Connector</td>
+</tr>
+<tr>
+<td>What stops the bad build?</td>
+<td>The <code>promote-production</code> job in the GitLab CI has <code>when: on_success</code> — it never runs if <code>validate</code> returned FAIL</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../apply-to-your-app/">Apply this to your app</a> — generic recipe</li>
+<li><a href="../stop-bad-builds/">Stop bad builds</a> — the narrative</li>
+<li><a href="../monaco-config/">Monaco config</a> — every resource inventoried</li>
+<li><a href="../cicd-observability/">CI/CD Observability Q&amp;A</a> — answers to the
+  most common customer questions</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../codespace-setup/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3. Codespace setup">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                3. Codespace setup
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../stop-bad-builds/" class="md-footer__link md-footer__link--next" aria-label="Next: 5. Stop bad builds">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                5. Stop bad builds
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.tracking", "navigation.top", "navigation.sections", "navigation.footer", "toc.follow", "search.highlight", "search.suggest", "search.share"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

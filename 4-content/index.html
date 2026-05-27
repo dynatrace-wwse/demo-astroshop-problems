@@ -800,12 +800,6 @@
   
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  dynatrace.sendBizEvent('page_load', {"page": "4. Content"});
-});
-</script>
-
 <h1 id="workshop-labs-ace-box-order">Workshop labs — ace-box order<a class="headerlink" href="#workshop-labs-ace-box-order" title="Permanent link">#</a></h1>
 <p>After <a href="../codespace-setup/">bootstrapWorkshop</a> finishes, the cluster
 + tenant are ready. This page walks through the eight labs from the
@@ -1107,8 +1101,19 @@ four versions on a schedule.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.tracking", "navigation.top", "navigation.sections", "navigation.footer", "toc.follow", "search.highlight", "search.suggest", "search.share"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
+  
       <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof dynatrace !== 'undefined') {
+        dynatrace.sendBizEvent('page_load', {'page': "6. Workshop labs (ace-box order)"});
+      }
+    });
+  </script>
+  
+
   </body>
 </html>

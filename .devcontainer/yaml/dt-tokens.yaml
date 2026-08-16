@@ -1,0 +1,76 @@
+# Dynatrace token definitions for the CI/CD Observability workshop.
+#
+# This repo overrides the framework default because post-create.sh gates the whole
+# `bootstrapWorkshop` run on DT_API_TOKEN *and* DT_PLATFORM_TOKEN, and the framework
+# default declares neither. Without this file every session came up as an empty dev
+# container: k3d running, no Astroshop, no GitLab, no error (post-create finished in
+# ~41s and printed "bootstrap is opt-in"). See
+# codespaces-framework/ops-server/docs/known-issues/astroshop-never-bootstraps.md
+#
+# `kind` selects the token FAMILY, because this workshop needs both at once:
+#   classic  — dt0c01 Api-Token   (default when kind is omitted)
+#   platform — dt0s16 platform token, minted via the Account Management API
+# Scopes are written in the vocabulary of their own family; classic scopes are
+# translated for gen3-only tenants, platform scopes are passed through as-is.
+#
+# Token naming: enbl-{repo}-{user}-{name_suffix}  (auto-prefixed, max 100 chars)
+# Token expiry: matches training session TTL (default 4h)
+
+tokens:
+  # ── Dynatrace Operator + AppOnly monitoring (bootstrapWorkshop phase 1) ──────────
+  - name_suffix: operator
+    env_var: DT_OPERATOR_TOKEN
+    kind: classic
+    scopes:
+      - activeGateTokenManagement.create
+      - activeGateTokenManagement.write
+      - entities.read
+      - settings.read
+      - settings.write
+      - DataExport
+      - InstallerDownload
+
+  - name_suffix: ingest
+    env_var: DT_INGEST_TOKEN
+    kind: classic
+    scopes:
+      - metrics.ingest
+      - logs.ingest
+      - events.ingest
+      - openTelemetryTrace.ingest
+
+  # ── The workshop token: SDLC events from the bash helpers, GitHub Actions and
+  #    GitLab CI, plus the credential-vault entries createWorkshopCredentials makes.
+  #    DT_BIZEVENTS_TOKEN is the same value (post-create.sh aliases it).
+  - name_suffix: api
+    env_var: DT_API_TOKEN
+    kind: classic
+    aliases:
+      - DT_BIZEVENTS_TOKEN
+    scopes:
+      - events.ingest
+      - bizevents.ingest
+      - openpipeline.events_sdlc.custom
+      - ReadConfig
+      - WriteConfig
+      - CaptureRequestData
+      - credentialVault.read
+      - credentialVault.write
+      - apiTokens.read
+      - apiTokens.write
+
+  # ── monaco + dtctl (applyMonacoConfig, installDtctl). These call the platform
+  #    Documents/Workflows/Settings APIs, which only accept a dt0s16 Bearer — a
+  #    classic Api-Token is refused there regardless of its scopes.
+  - name_suffix: platform
+    env_var: DT_PLATFORM_TOKEN
+    kind: platform
+    scopes:
+      - app-engine:apps:run
+      - automation:workflows:read
+      - automation:workflows:run
+      - automation:workflows:write
+      - document:documents:read
+      - document:documents:write
+      - settings:objects:read
+      - settings:objects:write

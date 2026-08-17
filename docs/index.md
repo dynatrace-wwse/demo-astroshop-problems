@@ -3,6 +3,12 @@
 
 # Astroshop CI/CD Observability — stop bad builds before they hit production
 
+!!! warning "Not yet migrated to the Dynatrace Enablement App"
+    This content has not been migrated to a fully immersive, interactive and self-service training.
+    Questions or feedback? Reach out to the Center of Excellence Enablement Team via
+    [GitHub Issues](https://github.com/dynatrace-wwse/codespaces-framework/issues)
+    or the [feedback form](https://forms.office.com/r/QaCx6VAJe8).
+
 A self-contained, public-shareable workshop that shows how to use Dynatrace
 to **see every release** and **block the ones that will hurt production**.
 

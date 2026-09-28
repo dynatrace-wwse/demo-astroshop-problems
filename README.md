@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Archived (2026-09-28).** This repository is no longer maintained. It is not listed on [dynatrace-wwse.github.io](https://dynatrace-wwse.github.io) and not offered in the Dynatrace Enablement app. For current trainings see the [catalog](https://dynatrace-wwse.github.io).
+
 <!-- markdownlint-disable-next-line -->
 # <img src="https://cdn.bfldr.com/B686QPH3/at/w5hnjzb32k5wcrcxnwcx4ckg/Dynatrace_signet_RGB_HTML.svg?auto=webp&format=pngg" alt="DT logo" width="30"> Demo AstronomyShop Problem triggering and detection in Dynatrace 
 

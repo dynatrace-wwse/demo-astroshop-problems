@@ -1,3 +1,6 @@
+!!! danger "Archived"
+    This training was archived on 2026-09-28 and is no longer maintained. It is not listed on [dynatrace-wwse.github.io](https://dynatrace-wwse.github.io) and not offered in the Dynatrace Enablement app — see the [catalog](https://dynatrace-wwse.github.io) for current trainings.
+
 
 --8<-- "snippets/disclaimer.md"
 
